@@ -193,7 +193,7 @@ export function Sidebar(): JSX.Element {
   return (
     <nav className="sb">
       <div className="sb-brand">
-        <h1>Estud<span style={{ color: 'var(--a)', marginLeft: 1, letterSpacing: '0.5px' }}>IA</span></h1>
+        <h1>Estud <span style={{ color: 'var(--a)' }}>IA</span></h1>
         <p>{t('brand.tagline')}</p>
       </div>
       {NAV.map((item, idx) => {
