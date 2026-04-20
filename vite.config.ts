@@ -13,8 +13,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.png'],
       manifest: {
-        name: 'Estud IA',
-        short_name: 'Estud IA',
+        name: 'EstudIA',
+        short_name: 'EstudIA',
         description: 'La teva arma secreta acadèmica — Ciència del rendiment',
         theme_color: '#6366f1',
         background_color: '#0b0f1a',
