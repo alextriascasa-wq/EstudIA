@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="ca" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+<title>StudyFlow Pro — La teva arma secreta acadèmica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — PREMIUM VARIABLES
+   ═══════════════════════════════════════════ */
+:root {
+  --bg: #f8f9fb; --s: #ffffff; --s2: #f1f3f8; --sh: #eef0f5; --b: #e2e5ed; --bl: #f0f2f7;
+  --t: #0f172a; --ts: #64748b; --tm: #94a3b8; --tw: #cbd5e1;
+  --a: #6366f1; --al: #eef2ff; --ad: #4f46e5; --a2: #818cf8;
+  --ok: #10b981; --okl: #d1fae5; --okd: #059669;
+  --w: #f59e0b; --wl: #fef3c7; --wd: #d97706;
+  --err: #ef4444; --errl: #fee2e2; --errd: #dc2626;
+  --p: #8b5cf6; --pl: #ede9fe; --pd: #7c3aed;
+  --i: #06b6d4; --il: #cffafe; --id: #0891b2;
+  --r: #f43f5e; --rl: #ffe4e6; --rd: #e11d48;
+  --glow: rgba(99,102,241,.12);
+  --glass: rgba(255,255,255,.72); --glass-b: rgba(255,255,255,.5);
+  --radius: 16px; --radius-sm: 10px; --radius-xs: 7px;
+  --shadow: 0 1px 3px rgba(15,23,42,.04), 0 4px 14px rgba(15,23,42,.06);
+  --shadow-lg: 0 4px 25px rgba(15,23,42,.08), 0 12px 40px rgba(15,23,42,.04);
+  --shadow-glow: 0 0 20px var(--glow), 0 4px 14px rgba(15,23,42,.06);
+  --transition: .2s cubic-bezier(.4,0,.2,1);
+  --transition-spring: .4s cubic-bezier(.34,1.56,.64,1);
+}
+[data-theme="dark"] {
+  --bg: #0b0f1a; --s: #151b2e; --s2: #1a2240; --sh: #1e2545; --b: #2a3155; --bl: #171e35;
+  --t: #f1f5f9; --ts: #94a3b8; --tm: #64748b; --tw: #334155;
+  --al: rgba(99,102,241,.15); --okl: rgba(16,185,129,.12); --wl: rgba(245,158,11,.12);
+  --errl: rgba(239,68,68,.12); --pl: rgba(139,92,246,.12); --il: rgba(6,182,212,.12); --rl: rgba(244,63,94,.12);
+  --glow: rgba(99,102,241,.2);
+  --glass: rgba(21,27,46,.8); --glass-b: rgba(21,27,46,.6);
+  --shadow: 0 1px 3px rgba(0,0,0,.2), 0 4px 14px rgba(0,0,0,.15);
+  --shadow-lg: 0 4px 25px rgba(0,0,0,.25);
+  --shadow-glow: 0 0 25px var(--glow);
+}
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--t);display:flex;height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit;outline:none}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b);border-radius:3px}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR — GLASSMORPHISM
+   ═══════════════════════════════════════════ */
+.sb{width:240px;background:var(--s);border-right:1px solid var(--b);padding:20px 14px;display:flex;flex-direction:column;gap:2px;flex-shrink:0;overflow-y:auto;transition:var(--transition)}
+.sb-brand{padding:4px 12px 18px;border-bottom:1px solid var(--bl);margin-bottom:10px}
+.sb-brand h1{font-size:20px;font-weight:900;letter-spacing:-.6px;background:linear-gradient(135deg,var(--a),var(--p),var(--r));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:gradShift 5s ease infinite}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.sb-brand p{font-size:11px;color:var(--tm);margin-top:3px;letter-spacing:.2px}
+.nb{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);color:var(--ts);font-size:13px;font-weight:500;width:100%;text-align:left;transition:var(--transition);position:relative;overflow:hidden}
+.nb:hover{background:var(--sh);color:var(--t)}
+.nb.on{background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;font-weight:600;box-shadow:0 2px 12px rgba(99,102,241,.3)}
+.nb.on::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);pointer-events:none}
+.nb svg{width:18px;height:18px;flex-shrink:0}
+.nb .badge-dot{width:7px;height:7px;border-radius:50%;background:var(--r);margin-left:auto;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+.sb-ft{margin-top:auto;padding:16px 12px;border-top:1px solid var(--bl)}
+.sb-ft .xp-bar{height:6px;background:var(--bl);border-radius:3px;overflow:hidden;margin:8px 0 6px}
+.sb-ft .xp-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--a),var(--p));transition:width .6s ease}
+.sb-ft .row{display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-bottom:3px}
+.sb-ft .k{color:var(--tm)}.sb-ft .v{font-weight:700;color:var(--t)}
+.sb-tools{display:flex;gap:5px;margin-top:10px}
+.sb-tools button{flex:1;padding:7px;border-radius:var(--radius-xs);background:var(--sh);color:var(--ts);font-size:11px;font-weight:600;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:4px}
+.sb-tools button:hover{background:var(--b);color:var(--t)}
+
+/* ═══════════════════════════════════════════
+   MAIN CONTENT
+   ═══════════════════════════════════════════ */
+.mn{flex:1;overflow-y:auto;padding:28px 32px;scroll-behavior:smooth}
+.sec{display:none;flex-direction:column;gap:20px;max-width:960px;animation:fadeIn .3s ease}
+.sec.on{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════════════════
+   CARDS — GLASSMORPHISM STYLE
+   ═══════════════════════════════════════════ */
+.c{background:var(--s);border-radius:var(--radius);border:1px solid var(--b);padding:24px;transition:var(--transition);position:relative;overflow:hidden}
+.c:hover{box-shadow:var(--shadow);border-color:var(--tw)}
+.c.glow:hover{box-shadow:var(--shadow-glow)}
+.c.glass{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════ */
+.bp{background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;border-radius:var(--radius-sm);padding:10px 20px;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:8px;transition:var(--transition);box-shadow:0 2px 8px rgba(99,102,241,.25);position:relative;overflow:hidden}
+.bp:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(99,102,241,.35)}
+.bp:active{transform:translateY(0);box-shadow:0 1px 4px rgba(99,102,241,.2)}
+.bp::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);pointer-events:none}
+.bs{background:var(--s);color:var(--ts);border:1px solid var(--b);border-radius:var(--radius-sm);padding:10px 20px;font-weight:500;font-size:13px;display:inline-flex;align-items:center;gap:8px;transition:var(--transition)}
+.bs:hover{background:var(--sh);color:var(--t);border-color:var(--tw)}
+.bi{color:var(--tm);padding:7px;border-radius:var(--radius-xs);transition:var(--transition)}
+.bi:hover{background:var(--sh);color:var(--t)}
+.bdanger{background:var(--errl);color:var(--err);border-radius:var(--radius-sm);padding:10px 20px;font-weight:600;font-size:13px;transition:var(--transition)}
+.bdanger:hover{background:var(--err);color:#fff}
+
+/* ═══════════════════════════════════════════
+   INPUTS
+   ═══════════════════════════════════════════ */
+.inp{width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--b);font-size:13px;color:var(--t);background:var(--bg);transition:var(--transition)}
+.inp:focus{border-color:var(--a);box-shadow:0 0 0 3px var(--al)}
+.inp::placeholder{color:var(--tm)}
+textarea.inp{resize:vertical;min-height:80px}
+.lbl{font-size:11px;font-weight:700;color:var(--ts);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px}
+
+/* ═══════════════════════════════════════════
+   GRIDS
+   ═══════════════════════════════════════════ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* ═══════════════════════════════════════════
+   STAT CARDS
+   ═══════════════════════════════════════════ */
+.sc{display:flex;flex-direction:column;gap:10px;padding:20px}
+.sc .top{display:flex;align-items:center;justify-content:space-between}
+.sc .top span{font-size:12px;color:var(--ts);font-weight:500}
+.sc .ib{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:17px}
+.sc .val{font-size:24px;font-weight:900;letter-spacing:-.5px}
+.sc .sub{font-size:11px;color:var(--tm)}
+.sc .trend{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+
+/* ═══════════════════════════════════════════
+   BADGES & TAGS
+   ═══════════════════════════════════════════ */
+.badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;letter-spacing:.3px}
+.tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--radius-xs);display:inline-block}
+
+/* ═══════════════════════════════════════════
+   TASK ITEMS
+   ═══════════════════════════════════════════ */
+.ti{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);background:var(--bg);border:1px solid transparent}
+.ti:hover{background:var(--sh);border-color:var(--b)}
+.ti.done{background:var(--okl);border-color:rgba(16,185,129,.15);opacity:.6}
+.ti .info{flex:1;min-width:0}.ti .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti.done .nm{text-decoration:line-through}
+.ti .ds{font-size:11px;color:var(--ts);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ti .tg{font-size:10px;color:var(--tm);white-space:nowrap;font-weight:600}
+
+/* ═══════════════════════════════════════════
+   TIMER
+   ═══════════════════════════════════════════ */
+.tmr-circle{position:relative;width:240px;height:240px;margin:20px auto}
+.tmr-time{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.tmr-time .dig{font-size:52px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-3px;background:linear-gradient(180deg,var(--t),var(--ts));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tmr-time .sub{font-size:12px;color:var(--tm);margin-top:4px}
+
+/* ═══════════════════════════════════════════
+   FLASHCARD
+   ═══════════════════════════════════════════ */
+.fc{min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px;text-align:center;cursor:pointer;user-select:none;transition:var(--transition-spring);border:2px solid var(--b)}
+.fc:hover{transform:scale(1.005);box-shadow:var(--shadow-lg)}
+.fc .q{font-size:20px;font-weight:700;line-height:1.5}
+.fc .a{font-size:17px;color:var(--ok);font-weight:600;margin-top:14px;line-height:1.5;animation:fadeIn .3s}
+.fc .hint{font-size:12px;color:var(--tm);margin-top:18px}
+
+/* ═══════════════════════════════════════════
+   FEYNMAN CHAT
+   ═══════════════════════════════════════════ */
+.chat-area{max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px 0}
+.msg{max-width:78%;padding:13px 18px;border-radius:18px;font-size:13px;line-height:1.65;animation:msgIn .3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,var(--a),var(--ad));color:#fff;border-bottom-right-radius:5px}
+.msg.ai{align-self:flex-start;background:var(--sh);color:var(--t);border-bottom-left-radius:5px}
+.chat-input{display:flex;gap:8px;margin-top:12px}
+.chat-input input{flex:1}
+
+/* ═══════════════════════════════════════════
+   BREATHING
+   ═══════════════════════════════════════════ */
+.breath-circle{width:170px;height:170px;border-radius:50%;background:linear-gradient(135deg,var(--al),var(--pl));display:flex;align-items:center;justify-content:center;margin:20px auto;font-size:15px;font-weight:700;color:var(--a);transition:transform 4s cubic-bezier(.4,0,.2,1);box-shadow:0 0 40px var(--glow)}
+.breath-circle.inhale{transform:scale(1.45)}
+.breath-circle.exhale{transform:scale(1)}
+
+/* ═══════════════════════════════════════════
+   PROGRESS BARS
+   ═══════════════════════════════════════════ */
+.pb{height:6px;background:var(--bl);border-radius:3px;overflow:hidden}
+.pb .fill{height:100%;border-radius:3px;transition:width .6s ease}
+.pb-lg{height:10px}
+
+/* ═══════════════════════════════════════════
+   HEATMAP
+   ═══════════════════════════════════════════ */
+.heatmap{display:flex;gap:3px;flex-wrap:wrap}
+.hm-cell{width:13px;height:13px;border-radius:3px;background:var(--bl);transition:var(--transition)}
+.hm-cell:hover{transform:scale(1.3);box-shadow:var(--shadow)}
+.hm-cell[data-lvl="1"]{background:var(--al)}
+.hm-cell[data-lvl="2"]{background:var(--a2)}
+.hm-cell[data-lvl="3"]{background:var(--a)}
+.hm-cell[data-lvl="4"]{background:var(--ad)}
+
+/* ═══════════════════════════════════════════
+   ACHIEVEMENTS
+   ═══════════════════════════════════════════ */
+.ach{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--radius-sm);background:var(--bg);border:1px solid var(--bl);transition:var(--transition)}
+.ach.unlocked{background:linear-gradient(135deg,var(--wl),var(--pl));border-color:rgba(245,158,11,.2)}
+.ach .ach-ico{width:42px;height:42px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--s);box-shadow:var(--shadow)}
+.ach.locked .ach-ico{filter:grayscale(1);opacity:.4}
+.ach .ach-info{flex:1}.ach .ach-name{font-size:13px;font-weight:700}.ach .ach-desc{font-size:11px;color:var(--ts);margin-top:2px}
+.ach.locked .ach-name,.ach.locked .ach-desc{opacity:.5}
+
+/* ═══════════════════════════════════════════
+   SOUND MIXER
+   ═══════════════════════════════════════════ */
+.snd-ch{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);background:var(--bg)}
+.snd-ch .snd-ico{width:36px;height:36px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--al)}
+.snd-ch .snd-name{font-size:12px;font-weight:600;min-width:60px}
+.snd-ch input[type="range"]{flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--bl);outline:none}
+.snd-ch input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--a);cursor:pointer;box-shadow:0 1px 4px rgba(99,102,241,.4)}
+
+/* ═══════════════════════════════════════════
+   MODE CARDS
+   ═══════════════════════════════════════════ */
+.mc{text-align:left;padding:18px;cursor:pointer;border:2px solid var(--b);transition:var(--transition);border-radius:var(--radius)}
+.mc:hover{border-color:var(--tw);box-shadow:var(--shadow)}
+.mc.on{border-color:var(--a);background:var(--al);box-shadow:var(--shadow-glow)}
+.mc .mn-name{font-size:14px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.mc.on .mn-name{color:var(--a)}
+.mc .mn-desc{font-size:11px;color:var(--ts);line-height:1.5}
+
+/* ═══════════════════════════════════════════
+   CHAOS MODE
+   ═══════════════════════════════════════════ */
+.chaos-problem{background:var(--bg);border:2px solid var(--b);border-radius:var(--radius);padding:28px;text-align:center;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:var(--transition)}
+.chaos-problem:hover{box-shadow:var(--shadow)}
+
+/* ═══════════════════════════════════════════
+   SPECIAL CARDS
+   ═══════════════════════════════════════════ */
+.zeig{background:linear-gradient(135deg,var(--wl),var(--rl));border:none;position:relative}
+.zeig::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--w);border-radius:var(--radius) 0 0 var(--radius)}
+.grad{background:linear-gradient(135deg,var(--al),var(--pl));border:none}
+.grad2{background:linear-gradient(135deg,var(--okl),var(--il));border:none}
+.empty{text-align:center;padding:48px;color:var(--tm)}
+.empty p{font-size:13px;margin-top:8px;line-height:1.5}
+
+/* LEVEL-UP ANIMATION */
+@keyframes levelUp{0%{transform:scale(0);opacity:0}50%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
+.level-up-anim{animation:levelUp .5s var(--transition-spring)}
+
+/* SECTION HEADERS */
+.sec-hdr{margin-bottom:6px}
+.sec-hdr h2{font-size:20px;font-weight:900;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+.sec-hdr p{font-size:12px;color:var(--ts);margin-top:4px;line-height:1.5}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media(max-width:768px){
+  body{flex-direction:column}
+  .sb{width:100%;flex-direction:row;padding:8px 10px;overflow-x:auto;gap:3px;border-right:none;border-bottom:1px solid var(--b)}
+  .sb-brand,.sb-ft{display:none}
+  .nb{white-space:nowrap;padding:8px 12px;font-size:11px;border-radius:20px}
+  .nb span:not(.badge-dot){display:none}
+  .nb svg{width:16px;height:16px}
+  .mn{padding:16px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .tmr-circle{width:200px;height:200px}
+  .tmr-time .dig{font-size:44px}
+}
+@media(max-width:480px){
+  .mn{padding:12px}
+  .c{padding:18px;border-radius:var(--radius-sm)}
+}
+
+/* ═══════════════════════════════════════════
+   NOTIFICATION TOAST
+   ═══════════════════════════════════════════ */
+.toast{position:fixed;top:24px;right:24px;background:var(--s);border:1px solid var(--b);border-radius:var(--radius);padding:16px 22px;box-shadow:var(--shadow-lg);z-index:9999;display:flex;align-items:center;gap:12px;animation:toastIn .4s var(--transition-spring);max-width:360px}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.toast.out{animation:toastOut .3s ease forwards}
+@keyframes toastOut{to{opacity:0;transform:translateX(40px)}}
+.toast .t-ico{font-size:22px}
+.toast .t-body{flex:1}.toast .t-title{font-size:13px;font-weight:700}.toast .t-desc{font-size:11px;color:var(--ts);margin-top:2px}
+
+/* XP POPUP */
+.xp-pop{position:fixed;pointer-events:none;font-size:18px;font-weight:900;color:var(--a);z-index:9998;animation:xpFloat 1.2s ease forwards}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(1.3)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sb" id="sidebar">
+  <div class="sb-brand"><h1>StudyFlow Pro</h1><p>Ciència del rendiment acadèmic</p></div>
+  <button class="nb on" data-tab="dashboard" onclick="go('dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span>
+  </button>
+  <button class="nb" data-tab="timer" onclick="go('timer')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Timer</span>
+  </button>
+  <button class="nb" data-tab="cards" onclick="go('cards')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span>Flashcards</span>
+  </button>
+  <button class="nb" data-tab="feynman" onclick="go('feynman')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Tutor IA</span>
+  </button>
+  <button class="nb" data-tab="chaos" onclick="go('chaos')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Mode Caos</span>
+  </button>
+  <button class="nb" data-tab="languages" onclick="go('languages')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>Idiomes</span>
+  </button>
+  <button class="nb" data-tab="sounds" onclick="go('sounds')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>Sons</span>
+  </button>
+  <button class="nb" data-tab="recovery" onclick="go('recovery')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span>Recuperació</span>
+  </button>
+  <button class="nb" data-tab="exams" onclick="go('exams')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Exàmens</span>
+  </button>
+  <button class="nb" data-tab="stats" onclick="go('stats')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Estadístiques</span>
+  </button>
+  <button class="nb" data-tab="techniques" onclick="go('techniques')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Tècniques</span>
+  </button>
+  <div class="sb-ft">
+    <div class="row"><span class="k">Nivell</span><span class="v" id="sb-lvl">1</span></div>
+    <div class="xp-bar"><div class="xp-fill" id="sb-xp" style="width:0%"></div></div>
+    <div class="row"><span class="k" id="sb-xp-text">0 / 100 XP</span><span class="v" id="sb-streak">🔥 1d</span></div>
+    <div class="sb-tools">
+      <button onclick="toggleDark()" id="dark-btn">🌙</button>
+      <button onclick="exportData()">💾</button>
+      <button onclick="$('import-file').click()">📂</button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="mn">
+  <div class="sec on" id="sec-dashboard"></div>
+  <div class="sec" id="sec-timer"></div>
+  <div class="sec" id="sec-cards"></div>
+  <div class="sec" id="sec-feynman"></div>
+  <div class="sec" id="sec-chaos"></div>
+  <div class="sec" id="sec-languages"></div>
+  <div class="sec" id="sec-sounds"></div>
+  <div class="sec" id="sec-recovery"></div>
+  <div class="sec" id="sec-exams"></div>
+  <div class="sec" id="sec-stats"></div>
+  <div class="sec" id="sec-techniques"></div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE & PERSISTENCE
+// ═══════════════════════════════════════════
+const KEY="sfpro";
+const defaults={
+  todaySess:0,totalMin:0,streak:1,lastDate:null,pomCount:0,
+  weekly:[{d:"Dl",m:0},{d:"Dt",m:0},{d:"Dc",m:0},{d:"Dj",m:0},{d:"Dv",m:0},{d:"Ds",m:0},{d:"Dg",m:0}],
+  exams:[],decks:[],doneTasks:[],chaosProblems:[],zNote:"",
+  feynmanHistory:[],memStrength:0,quizTotal:0,quizCorrect:0,cardsToday:0,
+  // GAMIFICATION
+  xp:0,level:1,totalXp:0,achievements:[],
+  // HEATMAP (last 90 days: {date:minutes})
+  heatmap:{},
+  // LANGUAGES
+  langDecks:[], // [{id,name,lang,cards:[{id,word,translation,example,hits,interval,nextReview}]}]
+  // SOUND MIXER prefs
+  soundPrefs:{rain:0,cafe:0,fire:0,forest:0,waves:0,brown:0},
+  // DAILY LOG for stats
+  dailyLog:[], // [{date,minutes,cards,correct,sessions}]
+};
+let S;
+try{const r=localStorage.getItem(KEY);S=r?{...defaults,...JSON.parse(r)}:{...defaults}}catch(e){S={...defaults}}
+// Ensure all keys exist
+Object.keys(defaults).forEach(k=>{if(S[k]===undefined)S[k]=defaults[k]});
+
+const today=()=>new Date().toISOString().split("T")[0];
+if(S.lastDate&&S.lastDate!==today()){
+  const d=Math.floor((new Date(today())-new Date(S.lastDate))/864e5);
+  if(d===1&&S.todaySess>0)S.streak++;else if(d>1)S.streak=1;
+  S.todaySess=0;S.cardsToday=0;
+  const dow=new Date().getDay();
+  if(dow===1&&d>=1)S.weekly=defaults.weekly.map(w=>({...w}));
+}
+function save(){
+  S.lastDate=today();
+  // Update heatmap
+  S.heatmap[today()]=(S.heatmap[today()]||0);
+  // Clean old heatmap entries (keep 120 days)
+  const cutoff=new Date();cutoff.setDate(cutoff.getDate()-120);
+  const cs=cutoff.toISOString().split("T")[0];
+  Object.keys(S.heatmap).forEach(k=>{if(k<cs)delete S.heatmap[k]});
+  localStorage.setItem(KEY,JSON.stringify(S));
+}
+
+// ═══════════════════════════════════════════
+// GAMIFICATION ENGINE
+// ═══════════════════════════════════════════
+const XP_TABLE=[0,100,220,360,520,700,900,1120,1360,1620,1900,2200,2520,2860,3220,3600,4000,4420,4860,5320,5800,6300,6820,7360,7920,8500,9100,9720,10360,11020,11700,12400,13120,13860,14620,15400,16200,17020,17860,18720,19600,20500,21420,22360,23320,24300,25300,26320,27360,28420,30000];
+
+function addXP(amount,reason){
+  S.xp+=amount;S.totalXp+=amount;
+  // Level up check
+  while(S.level<50&&S.totalXp>=XP_TABLE[S.level]){
+    S.level++;
+    showToast(`🎉 Nivell ${S.level}!`,`Has pujat de nivell! Continua així.`,"level");
+  }
+  save();
+  // Show XP popup
+  showXPPopup(`+${amount} XP`);
+  // Check achievements
+  checkAchievements();
+  renderSidebar();
+}
+
+const ACHIEVEMENTS=[
+  {id:"first_session",name:"Primer Pas",desc:"Completa la primera sessió de focus",ico:"🌱",check:()=>S.todaySess>=1},
+  {id:"streak_3",name:"Constant",desc:"Aconsegueix una ratxa de 3 dies",ico:"🔥",check:()=>S.streak>=3},
+  {id:"streak_7",name:"Imparable",desc:"Ratxa de 7 dies seguits",ico:"⚡",check:()=>S.streak>=7},
+  {id:"streak_30",name:"Llegenda",desc:"Ratxa de 30 dies!",ico:"👑",check:()=>S.streak>=30},
+  {id:"cards_50",name:"Explorador",desc:"Revisa 50 flashcards",ico:"📇",check:()=>S.quizTotal>=50},
+  {id:"cards_500",name:"Erudit",desc:"Revisa 500 flashcards",ico:"🧠",check:()=>S.quizTotal>=500},
+  {id:"mem_80",name:"Memòria d'Acer",desc:"Arriba al 80% de força de memòria",ico:"💎",check:()=>S.memStrength>=80},
+  {id:"hours_10",name:"Dedicat",desc:"Acumula 10 hores d'estudi",ico:"⏰",check:()=>S.totalMin>=600},
+  {id:"hours_50",name:"Mestre",desc:"Acumula 50 hores d'estudi",ico:"🏆",check:()=>S.totalMin>=3000},
+  {id:"hours_100",name:"Acadèmic d'Elit",desc:"100 hores d'estudi total",ico:"🎓",check:()=>S.totalMin>=6000},
+  {id:"chaos_10",name:"Gladiador",desc:"Completa 10 rondes de Mode Caos",ico:"⚔️",check:()=>(S.chaosProblems.length>=3&&S.quizTotal>=10)},
+  {id:"level_10",name:"Veterà",desc:"Arriba al nivell 10",ico:"⭐",check:()=>S.level>=10},
+  {id:"level_25",name:"Expert",desc:"Arriba al nivell 25",ico:"💫",check:()=>S.level>=25},
+  {id:"level_50",name:"Gran Mestre",desc:"Arriba al nivell 50",ico:"🌟",check:()=>S.level>=50},
+  {id:"deep_work",name:"Deep Worker",desc:"Completa una sessió de 90+ min",ico:"🔮",check:()=>S.pomCount>0},
+  {id:"pom_10",name:"Pomodoro Master",desc:"Completa 10 pomodoros",ico:"🍅",check:()=>S.pomCount>=10},
+];
+
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    if(!S.achievements.includes(a.id)&&a.check()){
+      S.achievements.push(a.id);
+      showToast(`${a.ico} ${a.name}`,a.desc,"achievement");
+      addXP(50,"Assoliment desbloquejat");
+    }
+  });
+  save();
+}
+
+// ═══════════════════════════════════════════
+// TOASTS & POPUPS
+// ═══════════════════════════════════════════
+function showToast(title,desc,type){
+  const ico=type==="level"?"🎉":type==="achievement"?"🏅":"ℹ️";
+  const el=document.createElement("div");el.className="toast";
+  el.innerHTML=`<div class="t-ico">${ico}</div><div class="t-body"><div class="t-title">${title}</div><div class="t-desc">${desc}</div></div>`;
+  document.getElementById("toast-container").appendChild(el);
+  setTimeout(()=>{el.classList.add("out");setTimeout(()=>el.remove(),300)},3500);
+}
+function showXPPopup(text){
+  const el=document.createElement("div");el.className="xp-pop";el.textContent=text;
+  el.style.left=Math.random()*60+20+"%";el.style.top=Math.random()*30+10+"%";
+  document.body.appendChild(el);setTimeout(()=>el.remove(),1200);
+}
+
+// ═══════════════════════════════════════════
+// DARK MODE & EXPORT/IMPORT
+// ═══════════════════════════════════════════
+function toggleDark(){
+  const isDark=document.documentElement.getAttribute("data-theme")==="dark";
+  document.documentElement.setAttribute("data-theme",isDark?"light":"dark");
+  localStorage.setItem("sfpro-dark",isDark?"light":"dark");
+  $("dark-btn").textContent=isDark?"🌙":"☀️";
+}
+(function(){const t=localStorage.getItem("sfpro-dark");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");setTimeout(()=>{const b=$("dark-btn");if(b)b.textContent="☀️"},50)}})();
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`studyflow-backup-${today()}.json`;a.click();
+}
+function importData(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=function(e){
+    try{S={...defaults,...JSON.parse(e.target.result)};save();render();showToast("✅ Importat","Dades carregades correctament");}catch(err){showToast("❌ Error","Fitxer no vàlid")}
+  };r.readAsText(f);ev.target.value="";
+}
+
+// ═══════════════════════════════════════════
+// NOTIFICATION SOUND
+// ═══════════════════════════════════════════
+function playSound(type){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const freqs=type==="done"?[523.25,659.25,783.99]:[392,330,262];
+    freqs.forEach((freq,i)=>{
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type="sine";osc.frequency.value=freq;
+      gain.gain.setValueAtTime(0.25,ctx.currentTime+i*0.15);
+      gain.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+i*0.15+0.35);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+i*0.15);osc.stop(ctx.currentTime+i*0.15+0.35);
+    });
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+let tab="dashboard";
+function go(t){
+  tab=t;
+  document.querySelectorAll(".nb").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));
+  document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===`sec-${t}`));
+  render();
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function fmtTime(s){return`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`}
+function fmtDate(d){const dt=new Date(d+"T12:00:00"),ds=["Dg","Dl","Dt","Dc","Dj","Dv","Ds"],ms=["gen","feb","mar","abr","mai","jun","jul","ago","set","oct","nov","des"];return`${ds[dt.getDay()]} ${dt.getDate()} ${ms[dt.getMonth()]}`}
+function daysUntil(d){const n=new Date();n.setHours(0,0,0,0);const t=new Date(d+"T12:00:00");t.setHours(0,0,0,0);return Math.ceil((t-n)/864e5)}
+function uid(){return Date.now()+Math.random().toString(36).substr(2,5)}
+function $(id){return document.getElementById(id)}
+function html(id,h){const el=$(id);if(el)el.innerHTML=h}
+function xpForLevel(l){return l<50?(XP_TABLE[l]||30000)-(XP_TABLE[l-1]||0):1000}
+function xpInLevel(){const prev=XP_TABLE[S.level-1]||0;const next=XP_TABLE[S.level]||prev+1000;return{cur:S.totalXp-prev,need:next-prev}}
+
+// ═══════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════
+const MODES=[
+  {id:"pom",nm:"Pomodoro",w:25*60,r:5*60,lr:15*60,ico:"⏱️",ds:"25/5 min",ideal:"Flashcards, repàs, vocabulari"},
+  {id:"d52",nm:"Ultradian",w:52*60,r:17*60,ico:"🧠",ds:"52/17 min",ideal:"Estudi mixt, lectura activa"},
+  {id:"d90",nm:"Deep Work",w:90*60,r:27*60,ico:"⚡",ds:"90/27 min",ideal:"Mates, física, programació"},
+  // {id:"d120",nm:"Lock-in Total",w:120*60,r:36*60,ico:"🔥",ds:"120/36 min",ideal:"Immersió total, projectes"},
+];
+let tmMode=0,tmLeft=MODES[0].w,tmRun=false,tmRest=false,tmInt=null;
+function tmStart(){
+  if(tmRun)return;tmRun=true;
+  tmInt=setInterval(()=>{
+    tmLeft--;
+    if(tmLeft<=0){
+      clearInterval(tmInt);tmRun=false;playSound("done");
+      if(!tmRest){
+        const mins=Math.round(MODES[tmMode].w/60);
+        S.totalMin+=mins;S.todaySess++;S.pomCount++;
+        S.heatmap[today()]=(S.heatmap[today()]||0)+mins;
+        const di=new Date().getDay(),mi=di===0?6:di-1;
+        S.weekly[mi].m+=mins;
+        // Daily log
+        let dl=S.dailyLog.find(d=>d.date===today());
+        if(!dl){dl={date:today(),minutes:0,cards:0,correct:0,sessions:0};S.dailyLog.push(dl)}
+        dl.minutes+=mins;dl.sessions++;
+        save();
+        addXP(mins*2,"Sessió completada");
+        tmRest=true;
+        tmLeft=MODES[tmMode].id==="pom"&&S.pomCount%4===0?(MODES[tmMode].lr||MODES[tmMode].r):MODES[tmMode].r;
+      }else{tmRest=false;tmLeft=MODES[tmMode].w}
+      renderTimer();
+    }
+    updateTimerDisplay();
+  },1000);renderTimer();
+}
+function tmPause(){tmRun=false;clearInterval(tmInt);renderTimer()}
+function tmReset(){tmRun=false;tmRest=false;clearInterval(tmInt);tmLeft=MODES[tmMode].w;renderTimer()}
+function tmSetMode(i){tmMode=i;tmRun=false;tmRest=false;clearInterval(tmInt);tmLeft=MODES[i].w;renderTimer()}
+function updateTimerDisplay(){
+  const d=$("tm-dig");if(d)d.textContent=fmtTime(tmLeft);
+  const m=MODES[tmMode],tot=tmRest?m.r:m.w,pct=((tot-tmLeft)/tot)*100;
+  const c=$("tm-circ");if(c){const r=106,cr=2*Math.PI*r;c.style.strokeDashoffset=`${cr*(1-pct/100)}`}
+}
+
+// ═══════════════════════════════════════════
+// FLASHCARDS — Regla del 3 + SRS
+// ═══════════════════════════════════════════
+let curDeck=null,curCard=null,showAns=false;
+function addDeck(name){if(!name)return;S.decks.push({id:uid(),name,cards:[]});save();renderCards()}
+function addCard(deckId,q,a,subject){
+  const dk=S.decks.find(d=>d.id===deckId);if(!dk||!q||!a)return;
+  dk.cards.push({id:uid(),q,a,subject:subject||"General",hits:0,sessionHits:0,nextReview:today(),strength:0,interval:1,lastSeen:null});
+  save();renderCards();
+}
+function deleteDeck(id){S.decks=S.decks.filter(d=>d.id!==id);if(curDeck===id)curDeck=null;save();renderCards()}
+function deleteCard(deckId,cardId){const dk=S.decks.find(d=>d.id===deckId);if(dk)dk.cards=dk.cards.filter(c=>c.id!==cardId);save();renderCards()}
+function getDueCards(deckId){const dk=S.decks.find(d=>d.id===deckId);if(!dk)return[];return dk.cards.filter(c=>!c.nextReview||c.nextReview<=today())}
+function startReview(deckId){
+  curDeck=deckId;const due=getDueCards(deckId);
+  if(due.length===0){curCard=null;renderCards();return}
+  due.forEach(c=>c.sessionHits=0);curCard=due[0];showAns=false;renderCards();
+}
+function revealAnswer(){showAns=true;renderCards()}
+function gradeCard(correct){
+  if(!curCard||!curDeck)return;
+  const dk=S.decks.find(d=>d.id===curDeck),card=dk.cards.find(c=>c.id===curCard.id);if(!card)return;
+  S.quizTotal++;
+  if(correct){
+    S.quizCorrect++;card.sessionHits=(card.sessionHits||0)+1;card.hits++;
+    if(card.sessionHits>=3){
+      card.strength=Math.min(100,card.strength+15);
+      card.interval=Math.min(90,Math.round(card.interval*2.2));
+      const next=new Date();next.setDate(next.getDate()+card.interval);
+      card.nextReview=next.toISOString().split("T")[0];card.lastSeen=today();
+    }
+    addXP(5,"Flashcard correcta");
+  }else{card.sessionHits=0;card.strength=Math.max(0,card.strength-10);card.interval=1;card.nextReview=today()}
+  S.cardsToday++;S.memStrength=S.quizTotal>0?Math.round((S.quizCorrect/S.quizTotal)*100):0;
+  // Daily log
+  let dl=S.dailyLog.find(d=>d.date===today());
+  if(!dl){dl={date:today(),minutes:0,cards:0,correct:0,sessions:0};S.dailyLog.push(dl)}
+  dl.cards++;if(correct)dl.correct++;
+  save();
+  const due=getDueCards(curDeck).filter(c=>c.sessionHits<3);
+  if(due.length>0){due.sort((a,b)=>(a.sessionHits||0)-(b.sessionHits||0));curCard=due[0];showAns=false}
+  else{curCard=null;curDeck=null;showToast("🎉 Sessió completa!","Tots els conceptes revisats")}
+  renderCards();
+}
+
+// ═══════════════════════════════════════════
+// FEYNMAN TUTOR — MILLORAT
+// ═══════════════════════════════════════════
+let feynTopic="",feynMessages=[],feynLevel=0;
+const JARGON_PATTERNS=["paradigma","axiomàtic","epistemològic","ontològic","heurístic","sinàptic","neurocognitiu","metacogni","algorítmic","exponencial","logarítmic","derivada parcial","integral definida","isomorfisme","homeomorfisme","estequiometria","termodinàmic","entropia","catalitzador","polímers","electròfil","nucleòfil","cinètic","estocàstic","asimptòtic","convergent","divergent","vectorial","escalar","tensorial","ortogonal","hermitià","hamiltonià"];
+
+function startFeynman(topic){
+  if(!topic.trim())return;
+  feynTopic=topic;feynLevel=0;
+  feynMessages=[{role:"ai",text:`D'acord! Seré un nen de 5 anys molt curiós 🧒\n\nExplica'm: <strong>"${topic}"</strong>\n\nQuè és això? Necessito que ho expliquis tan fàcil que ho entengui qualsevol persona del carrer. Res de paraules complicades!`}];
+  renderFeynman();addXP(5,"Feynman iniciat");
+}
+function sendFeynman(userText){
+  if(!userText.trim())return;
+  feynMessages.push({role:"user",text:userText});
+  const lower=userText.toLowerCase();
+  const usesJargon=JARGON_PATTERNS.some(j=>lower.includes(j));
+  const tooShort=userText.split(/\s+/).length<12;
+  const hasAnalogy=lower.includes("com si")||lower.includes("imagina")||lower.includes("per exemple")||lower.includes("és com")||lower.includes("seria com");
+  const hasSteps=lower.includes("primer")||lower.includes("després")||lower.includes("finalment")||lower.includes("pas ");
+  const hasWhy=lower.includes("perquè")||lower.includes("per què")||lower.includes("la raó")||lower.includes("causa");
+  let aiResp="";let xpGain=0;
+
+  if(usesJargon){
+    const jFound=JARGON_PATTERNS.find(j=>lower.includes(j));
+    aiResp=`⚠️ <strong>ALERTA: Il·lusió de competència detectada!</strong>\n\nHas usat "<em>${jFound}</em>" — això és jerga tècnica. Usar paraules difícils no és el mateix que entendre-les.\n\n🎯 <strong>Repte:</strong> Explica el MATEIX concepte però imagina que ho expliques a la teva àvia. Usa una analogia de la vida quotidiana.\n\n<em>Tip: Les millors explicacions usen exemples com "és com quan..."</em>`;
+    feynLevel=Math.max(0,feynLevel-1);
+  }else if(tooShort){
+    aiResp=`Mmm, necessito més! 🤔\n\n<strong>La teva explicació és massa curta.</strong> Un concepte complex necessita:\n\n• <strong>Context:</strong> Per què existeix això?\n• <strong>Mecanisme:</strong> Com funciona pas a pas?\n• <strong>Exemple:</strong> On ho veiem a la vida real?\n\nProva de nou amb més detall!`;
+  }else if(!hasAnalogy&&feynLevel<2){
+    const prompts=[
+      `Entenc una mica... però no del tot 🤔\n\nPots posar-me un <strong>EXEMPLE</strong> o una <strong>ANALOGIA</strong>? Algo com "és com quan...".\n\nLes analogies connecten la info nova amb coses que ja saps. Són la clau del Feynman.`,
+      `Bé, bé... però em costaria explicar-ho jo a un amic 🤔\n\nNecessito que m'ho facis <strong>visual</strong>. Imagina que ho has de dibuixar en una servilleta — com seria?\n\nUsa comparacions: "funciona igual que..."`,
+    ];
+    aiResp=prompts[Math.floor(Math.random()*prompts.length)];feynLevel++;xpGain=3;
+  }else if(!hasWhy&&Math.random()<0.45){
+    const whys=[
+      `Interessant! Però... <strong>¿PER QUÈ</strong> passa això? Quina és la causa de fons? 🔍`,
+      `I si fos al revés, què passaria? <strong>¿Per què NO funciona d'una altra manera?</strong> 🔄`,
+      `Molt bé! Ara la pregunta difícil: <strong>¿en què es DIFERENCIA d'un concepte similar?</strong> Quina és la distinció clau? ⚖️`,
+      `M'encanta! Ara: <strong>¿quan NO funciona</strong> o quina és l'excepció? Tot té límits... 🎯`,
+      `D'acord! Però... <strong>¿com connectes això amb ${feynTopic.split(" ")[0]}?</strong> Fes el pont! 🌉`,
+    ];
+    aiResp=whys[Math.floor(Math.random()*whys.length)];feynLevel++;xpGain=5;
+  }else{
+    const bonus=hasAnalogy&&hasSteps?"Has usat analogia I estructura pas a pas — IMPECABLE.":hasAnalogy?"L'analogia ha estat clau — facilita la comprensió.":"Explicació clara i directa.";
+    const praises=[
+      `🎉 <strong>EXCEL·LENT!</strong> Ara sí que ho entenc!\n\n${bonus}\n\n✅ <strong>Feynman aprovat!</strong> Nivell de comprensió: <strong style="color:var(--ok)">ALT</strong>\n\nAquest concepte és teu. Vols provar amb un altre?`,
+      `🌟 <strong>PERFECTE!</strong> L'has explicat genial.\n\nAixò és exactament el que Feynman demanava: si no ho pots explicar simple, no ho entens. Tu SÍ ho entens!\n\n✅ <strong>Tema dominat!</strong> +15 XP`,
+      `🚀 <strong>IMPRESSIONANT!</strong>\n\n${bonus}\n\nNivell de comprensió: <strong style="color:var(--ok)">MESTRE</strong>\n\n✅ Concepte consolidat! Ara pots ensenyar-ho a qualsevol.`,
+    ];
+    aiResp=praises[Math.floor(Math.random()*praises.length)];feynLevel=3;xpGain=15;
+  }
+
+  feynMessages.push({role:"ai",text:aiResp});
+  if(xpGain>0)addXP(xpGain,"Feynman progress");
+  renderFeynman();
+}
+
+// ═══════════════════════════════════════════
+// CHAOS MODE
+// ═══════════════════════════════════════════
+let chaosActive=false,chaosCur=null,chaosShowSol=false,chaosScore={correct:0,total:0};
+function addChaosProblem(topic,text,solution,difficulty){
+  S.chaosProblems.push({id:uid(),topic,text,solution,difficulty:difficulty||"mitjà"});save();renderChaos();
+}
+function startChaos(){
+  if(S.chaosProblems.length<3){showToast("⚠️ Mínim 3 problemes","Necessites problemes de temes DIFERENTS");return}
+  chaosActive=true;chaosScore={correct:0,total:0};chaosShowSol=false;nextChaosProblem();
+}
+function nextChaosProblem(){
+  let pool=[...S.chaosProblems];
+  if(chaosCur)pool=pool.filter(p=>p.topic!==chaosCur.topic);
+  if(pool.length===0)pool=[...S.chaosProblems];
+  chaosCur=pool[Math.floor(Math.random()*pool.length)];chaosShowSol=false;renderChaos();
+}
+function chaosReveal(){chaosShowSol=true;renderChaos()}
+function chaosGrade(ok){
+  chaosScore.total++;if(ok)chaosScore.correct++;
+  S.quizTotal++;if(ok){S.quizCorrect++;addXP(10,"Chaos correcte")}
+  S.memStrength=S.quizTotal>0?Math.round((S.quizCorrect/S.quizTotal)*100):0;
+  save();nextChaosProblem();
+}
+function endChaos(){chaosActive=false;chaosCur=null;renderChaos()}
+
+// ═══════════════════════════════════════════
+// LANGUAGES
+// ═══════════════════════════════════════════
+let curLangDeck=null,curLangCard=null,showLangAns=false;
+function addLangDeck(name,lang){
+  if(!name||!lang)return;
+  S.langDecks.push({id:uid(),name,lang,cards:[]});save();renderLanguages();
+}
+function addLangCard(deckId,word,translation,example){
+  const dk=S.langDecks.find(d=>d.id===deckId);if(!dk||!word||!translation)return;
+  dk.cards.push({id:uid(),word,translation,example:example||"",hits:0,sessionHits:0,nextReview:today(),interval:1,strength:0});
+  save();renderLanguages();
+}
+function startLangReview(deckId){
+  curLangDeck=deckId;
+  const dk=S.langDecks.find(d=>d.id===deckId);if(!dk)return;
+  const due=dk.cards.filter(c=>!c.nextReview||c.nextReview<=today());
+  if(due.length===0){curLangCard=null;showToast("✅ Tot al dia!","No hi ha paraules pendents");renderLanguages();return}
+  due.forEach(c=>c.sessionHits=0);curLangCard=due[0];showLangAns=false;renderLanguages();
+}
+function gradeLangCard(correct){
+  if(!curLangCard||!curLangDeck)return;
+  const dk=S.langDecks.find(d=>d.id===curLangDeck),card=dk.cards.find(c=>c.id===curLangCard.id);
+  if(!card)return;
+  if(correct){
+    card.sessionHits++;card.hits++;card.strength=Math.min(100,card.strength+12);
+    if(card.sessionHits>=3){card.interval=Math.min(60,Math.round(card.interval*2));const n=new Date();n.setDate(n.getDate()+card.interval);card.nextReview=n.toISOString().split("T")[0]}
+    addXP(3,"Paraula correcta");
+  }else{card.sessionHits=0;card.strength=Math.max(0,card.strength-8);card.interval=1;card.nextReview=today()}
+  S.cardsToday++;save();
+  const due=dk.cards.filter(c=>(!c.nextReview||c.nextReview<=today())&&c.sessionHits<3);
+  if(due.length>0){due.sort((a,b)=>(a.sessionHits||0)-(b.sessionHits||0));curLangCard=due[0];showLangAns=false}
+  else{curLangCard=null;curLangDeck=null;showToast("🎉 Sessió d'idiomes completa!","")}
+  renderLanguages();
+}
+
+// ═══════════════════════════════════════════
+// SOUND MIXER (Web Audio API)
+// ═══════════════════════════════════════════
+let audioCtx=null,soundNodes={};
+const SOUNDS={
+  rain:{name:"Pluja",ico:"🌧️",type:"rain"},
+  cafe:{name:"Cafeteria",ico:"☕",type:"cafe"},
+  fire:{name:"Foc",ico:"🔥",type:"fire"},
+  forest:{name:"Bosc",ico:"🌲",type:"forest"},
+  waves:{name:"Ones",ico:"🌊",type:"waves"},
+  brown:{name:"Soroll marró",ico:"🟤",type:"brown"},
+};
+
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function createNoise(type){
+  initAudio();
+  const bufferSize=2*audioCtx.sampleRate;
+  const buffer=audioCtx.createBuffer(1,bufferSize,audioCtx.sampleRate);
+  const data=buffer.getChannelData(0);
+  if(type==="brown"){let last=0;for(let i=0;i<bufferSize;i++){const w=Math.random()*2-1;last=(last+0.02*w)/1.02;data[i]=last*3.5}}
+  else if(type==="rain"){for(let i=0;i<bufferSize;i++){data[i]=(Math.random()*2-1)*0.5;if(Math.random()<0.001)data[i]*=4}}
+  else if(type==="fire"){let last=0;for(let i=0;i<bufferSize;i++){const w=Math.random()*2-1;last=(last+0.04*w)/1.04;data[i]=last*2;if(Math.random()<0.005)data[i]*=3}}
+  else if(type==="cafe"){for(let i=0;i<bufferSize;i++){data[i]=(Math.random()*2-1)*0.3;if(Math.random()<0.002)data[i]*=5}}
+  else if(type==="waves"){for(let i=0;i<bufferSize;i++){const t=i/audioCtx.sampleRate;data[i]=Math.sin(t*0.1)*0.3*(Math.random()*2-1)+(Math.random()*2-1)*0.1}}
+  else if(type==="forest"){for(let i=0;i<bufferSize;i++){data[i]=(Math.random()*2-1)*0.15;if(Math.random()<0.0005)data[i]=Math.sin(i/100)*0.8}}
+  const src=audioCtx.createBufferSource();src.buffer=buffer;src.loop=true;
+  const gain=audioCtx.createGain();gain.gain.value=0;
+  src.connect(gain);gain.connect(audioCtx.destination);src.start();
+  return{src,gain};
+}
+function setSoundVolume(type,vol){
+  S.soundPrefs[type]=vol;save();
+  if(vol>0){
+    if(!soundNodes[type])soundNodes[type]=createNoise(type);
+    soundNodes[type].gain.gain.linearRampToValueAtTime(vol/100,audioCtx.currentTime+0.1);
+  }else if(soundNodes[type]){
+    soundNodes[type].gain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+0.1);
+  }
+}
+
+// ═══════════════════════════════════════════
+// RECOVERY — NSDR + Breathing
+// ═══════════════════════════════════════════
+let breathActive=false,breathPhase="inhale",breathTimer=null,breathCount=0;
+const STRETCHES=[
+  {name:"Rotació de coll",desc:"Gira el cap lentament en cercles: 5 vegades a cada costat.",dur:30,ico:"🔄"},
+  {name:"Estirament de braços",desc:"Entrellaça els dits i estira cap amunt 15s. Repeteix 3 cops.",dur:45,ico:"🙆"},
+  {name:"Torsió espinal",desc:"Assegut, gira el tors esquerra 15s, dreta 15s. Repeteix 2 cops.",dur:60,ico:"🔀"},
+  {name:"Flexió endavant",desc:"De peu, inclina't endavant deixant caure els braços. 20 segons.",dur:25,ico:"🙇"},
+  {name:"Estirament cervical",desc:"Inclina el cap cap a un costat 15s, després l'altre. Repeteix.",dur:30,ico:"😌"},
+];
+function startBreathing(){breathActive=true;breathCount=0;breathPhase="inhale";renderRecovery();breathCycle()}
+function breathCycle(){
+  if(!breathActive)return;
+  breathPhase="inhale";renderBreathUI();
+  breathTimer=setTimeout(()=>{breathPhase="hold";renderBreathUI();
+    breathTimer=setTimeout(()=>{breathPhase="exhale";renderBreathUI();
+      breathTimer=setTimeout(()=>{breathCount++;if(breathCount>=8){breathActive=false;addXP(10,"Respiració completa");renderRecovery();return}breathCycle()},6000)
+    },4000)},4000);
+}
+function stopBreathing(){breathActive=false;clearTimeout(breathTimer);renderRecovery()}
+function renderBreathUI(){
+  const el=$("breath-orb");if(!el)return;
+  const labels={inhale:"Inspira...",hold:"Aguanta...",exhale:"Expira..."};
+  el.textContent=labels[breathPhase];
+  el.className="breath-circle "+(breathPhase==="inhale"?"inhale":"exhale");
+  const cnt=$("breath-cnt");if(cnt)cnt.textContent=`${breathCount+1}/8`;
+}
+
+// ═══════════════════════════════════════════
+// EXAMS
+// ═══════════════════════════════════════════
+function addExam(name,subject,date,diff){
+  if(!name||!date)return;S.exams.push({id:uid(),name,subject,date,difficulty:diff||"mitjà"});
+  S.exams.sort((a,b)=>a.date.localeCompare(b.date));save();renderExams();
+}
+function removeExam(id){S.exams=S.exams.filter(e=>e.id!==id);save();renderExams()}
+function genStudyTasks(){
+  const tasks=[],td=today();
+  S.exams.forEach(ex=>{
+    if(daysUntil(ex.date)<0)return;
+    const iv=ex.difficulty==="difícil"?[0,1,2,4,7,14]:ex.difficulty==="mitjà"?[0,1,3,7,14]:[0,2,5,12];
+    iv.forEach(i=>{
+      const sd=new Date(ex.date+"T12:00:00");sd.setDate(sd.getDate()-i);
+      const ss=sd.toISOString().split("T")[0];
+      if(ss>=td){
+        const session=i===0?"Repàs final + simulacre":i<=2?"Recuperació activa intensiva (Regla del 3)":i<=7?"Pràctica intercalada + Feynman":"Primera passada + Interrogació elaborativa";
+        tasks.push({id:`${ex.id}-${i}`,examName:ex.name,subject:ex.subject,date:ss,session,daysBefore:i});
+      }
+    });
+  });return tasks.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function toggleTask(id){const i=S.doneTasks.indexOf(id);i>=0?S.doneTasks.splice(i,1):S.doneTasks.push(id);if(i<0)addXP(8,"Tasca completada");save();render()}
+
+// ZEIGARNIK
+function saveZeig(text){S.zNote=text;save()}
+
+// ═══════════════════════════════════════════
+// RENDER — SIDEBAR
+// ═══════════════════════════════════════════
+function renderSidebar(){
+  $("sb-lvl").textContent=S.level;
+  const{cur,need}=xpInLevel();
+  $("sb-xp").style.width=`${Math.min(100,(cur/need)*100)}%`;
+  $("sb-xp-text").textContent=`${cur} / ${need} XP`;
+  $("sb-streak").textContent=`🔥 ${S.streak}d`;
+}
+
+// ═══════════════════════════════════════════
+// RENDER — DASHBOARD
+// ═══════════════════════════════════════════
+function renderDashboard(){
+  const tasks=genStudyTasks(),todayT=tasks.filter(t=>t.date===today()),upcoming=S.exams.filter(e=>daysUntil(e.date)>=0).slice(0,4);
+  const doneToday=todayT.filter(t=>S.doneTasks.includes(t.id)).length;
+  const maxW=Math.max(...S.weekly.map(w=>w.m),30);
+  const dayI=new Date().getDay(),tI=dayI===0?6:dayI-1;
+  const{cur,need}=xpInLevel();
+  const tips=["El pseudo-treball és l'enemic. 90 min de Deep Work > 4h amb mòbil.","Cada interrupció = 25 min per recuperar. Mòbil en mode avió.","Rellegir i subratllar = impacte NUL. Usa recuperació activa SEMPRE.","1h × 5 dies DUPLICA la retenció vs. 5h en 1 dia.","7-9h de son: OBLIGATORI. El hipocampo grava la info durant el son.","La Tècnica Feynman duplica el rendiment. Si no ho pots explicar, no ho entens.","La Regla del 3: un sol encert NO és suficient. Necessites 3 recuperacions.","El Mode Caos és incòmode, però pulveritza la pràctica per blocs.","NSDR de 10 min: +65% dopamina, renta cortisol, reinicia l'atenció.","L'estrès agut (simulacres) MILLORA la consolidació. El crònic la DESTRUEIX."];
+
+  // Generate heatmap (last 90 days)
+  let hmHtml="";const now=new Date();
+  for(let i=89;i>=0;i--){
+    const d=new Date(now);d.setDate(d.getDate()-i);
+    const ds=d.toISOString().split("T")[0];
+    const mins=S.heatmap[ds]||0;
+    const lvl=mins===0?0:mins<30?1:mins<60?2:mins<120?3:4;
+    hmHtml+=`<div class="hm-cell" data-lvl="${lvl}" title="${fmtDate(ds)}: ${mins}min"></div>`;
+  }
+
+  html("sec-dashboard",`
+    <!-- LEVEL BAR -->
+    <div class="c grad" style="display:flex;align-items:center;gap:16px;padding:18px 24px">
+      <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--p));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;box-shadow:0 4px 15px rgba(99,102,241,.35)">${S.level}</div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:800">Nivell ${S.level}</span>
+          <span style="font-size:12px;color:var(--ts)">${cur}/${need} XP</span>
+        </div>
+        <div class="pb pb-lg"><div class="fill" style="width:${(cur/need)*100}%;background:linear-gradient(90deg,var(--a),var(--p))"></div></div>
+      </div>
+      <div style="text-align:center;padding-left:12px;border-left:1px solid rgba(99,102,241,.2)">
+        <div style="font-size:18px;font-weight:900">${S.totalXp}</div>
+        <div style="font-size:10px;color:var(--ts)">XP Total</div>
+      </div>
+    </div>
+
+    <div class="g4">
+      ${[{l:"Sessions avui",v:S.todaySess,c:"var(--a)",bg:"var(--al)",ico:"🎯",sub:`${S.totalMin}min total`},
+        {l:"Força memòria",v:S.memStrength+"%",c:"var(--p)",bg:"var(--pl)",ico:"🧠",sub:`${S.quizCorrect}/${S.quizTotal} correctes`},
+        {l:"Ratxa",v:S.streak+"d",c:"var(--w)",bg:"var(--wl)",ico:"🔥",sub:S.streak>=7?"Imparable!":"Continua així"},
+        {l:"Cards avui",v:S.cardsToday,c:"var(--ok)",bg:"var(--okl)",ico:"📇",sub:`${S.decks.reduce((s,d)=>s+d.cards.length,0)} totals`}
+      ].map(s=>`<div class="c sc glow"><div class="top"><span>${s.l}</span><div class="ib" style="background:${s.bg};font-size:17px">${s.ico}</div></div><div class="val" style="color:${s.c}">${s.v}</div><div class="sub">${s.sub}</div></div>`).join("")}
+    </div>
+
+    <div class="g2">
+      <!-- Today's plan -->
+      <div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h3 style="font-size:15px;font-weight:800">📋 Pla d'avui</h3>
+          <span class="badge" style="background:var(--al);color:var(--a)">${doneToday}/${todayT.length}</span>
+        </div>
+        ${todayT.length===0?'<div class="empty" style="padding:24px"><p>Cap tasca avui — afegeix exàmens!</p></div>':
+          todayT.map(t=>`<div class="ti ${S.doneTasks.includes(t.id)?'done':''}" onclick="toggleTask('${t.id}')">
+            <span style="font-size:15px">${S.doneTasks.includes(t.id)?'✅':'⭕'}</span>
+            <div class="info"><div class="nm">${t.examName}</div><div class="ds">${t.session}</div></div>
+            <span class="tg">${t.daysBefore===0?"AVUI":t.daysBefore+"d"}</span>
+          </div>`).join("")}
+      </div>
+      <!-- Upcoming exams -->
+      <div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h3 style="font-size:15px;font-weight:800">📅 Pròxims exàmens</h3>
+          <button class="bs" style="padding:5px 12px;font-size:11px" onclick="go('exams')">+ Afegir</button>
+        </div>
+        ${upcoming.length===0?'<div class="empty" style="padding:24px"><p>Cap examen programat</p></div>':
+          upcoming.map(e=>{const d=daysUntil(e.date),uc=d<=2?"var(--err)":d<=7?"var(--w)":"var(--ok)";
+          return`<div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:var(--radius-sm);background:var(--bg);margin-bottom:6px">
+            <div style="width:8px;height:8px;border-radius:50%;background:${uc}"></div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">${e.name}</div><div style="font-size:11px;color:var(--ts)">${e.subject} · ${fmtDate(e.date)}</div></div>
+            <span class="badge" style="color:${uc};background:${uc}15">${d===0?"AVUI":d===1?"DEMÀ":d+"d"}</span>
+          </div>`}).join("")}
+      </div>
+    </div>
+
+    <!-- HEATMAP -->
+    <div class="c">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h3 style="font-size:15px;font-weight:800">📊 Mapa d'activitat (90 dies)</h3>
+        <div style="display:flex;gap:4px;align-items:center;font-size:10px;color:var(--tm)">
+          Menys <div class="hm-cell" style="width:10px;height:10px"></div><div class="hm-cell" data-lvl="1" style="width:10px;height:10px"></div><div class="hm-cell" data-lvl="2" style="width:10px;height:10px"></div><div class="hm-cell" data-lvl="3" style="width:10px;height:10px"></div><div class="hm-cell" data-lvl="4" style="width:10px;height:10px"></div> Més
+        </div>
+      </div>
+      <div class="heatmap">${hmHtml}</div>
+    </div>
+
+    <div class="g2">
+      <!-- Weekly chart -->
+      <div class="c">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">📈 Activitat setmanal</h3>
+        <div style="display:flex;align-items:flex-end;gap:10px;height:120px;padding:0 8px">
+          ${S.weekly.map((d,i)=>{const h=d.m>0?Math.max((d.m/maxW)*100,5):3;
+          return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+            <span style="font-size:10px;font-weight:700;color:var(--a)">${d.m>0?d.m+"m":""}</span>
+            <div style="width:100%;max-width:38px;height:${h}px;border-radius:6px;background:${i===tI?"linear-gradient(180deg,var(--a),var(--ad))":d.m>0?"var(--al)":"var(--bl)"};transition:height .5s ease;box-shadow:${i===tI?"0 2px 8px rgba(99,102,241,.3)":"none"}"></div>
+            <span style="font-size:10px;color:${i===tI?"var(--a)":"var(--tm)"};font-weight:${i===tI?700:400}">${d.d}</span>
+          </div>`}).join("")}
+        </div>
+      </div>
+      <!-- Memory strength -->
+      <div class="c">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">🧠 Retenció real</h3>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--ts)">Força de memòria</span><span style="font-weight:700">${S.memStrength}%</span></div>
+            <div class="pb"><div class="fill" style="width:${S.memStrength}%;background:${S.memStrength>=70?"var(--ok)":S.memStrength>=40?"var(--w)":"var(--err)"}"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="color:var(--ts)">Precisió quiz</span><span style="font-weight:700">${S.quizTotal>0?Math.round(S.quizCorrect/S.quizTotal*100):0}%</span></div>
+            <div class="pb"><div class="fill" style="width:${S.quizTotal>0?(S.quizCorrect/S.quizTotal*100):0}%;background:linear-gradient(90deg,var(--a),var(--p))"></div></div></div>
+          <div style="font-size:11px;color:var(--ts)">${S.quizTotal} preguntes · ${S.quizCorrect} correctes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACHIEVEMENTS PREVIEW -->
+    <div class="c">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h3 style="font-size:15px;font-weight:800">🏅 Assoliments (${S.achievements.length}/${ACHIEVEMENTS.length})</h3>
+        <button class="bs" style="padding:5px 12px;font-size:11px" onclick="go('stats')">Veure tots</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:8px">
+        ${ACHIEVEMENTS.map(a=>{const unlocked=S.achievements.includes(a.id);
+        return`<div title="${a.name}: ${a.desc}" style="width:44px;height:44px;border-radius:var(--radius-sm);background:${unlocked?"linear-gradient(135deg,var(--wl),var(--pl))":"var(--bl)"};display:flex;align-items:center;justify-content:center;font-size:20px;${unlocked?"":"filter:grayscale(1);opacity:.3"};transition:var(--transition);cursor:default">${a.ico}</div>`}).join("")}
+      </div>
+    </div>
+
+    <!-- Zeigarnik -->
+    <div class="c zeig">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-left:10px">
+        <span style="font-size:17px">🧩</span>
+        <div><h4 style="font-size:14px;font-weight:700">Efecte Zeigarnik — On em vaig quedar?</h4>
+        <p style="font-size:11px;color:var(--ts)">El cervell manté les tasques incompletes actives al subconscient.</p></div>
+      </div>
+      <textarea class="inp" placeholder="ex: Estava amb l'exercici 5 de derivades, em faltava la regla de la cadena..." onchange="saveZeig(this.value)" style="padding-left:18px">${S.zNote||""}</textarea>
+    </div>
+
+    <!-- Daily tip -->
+    <div class="c grad2" style="display:flex;gap:14px;align-items:flex-start">
+      <div style="width:40px;height:40px;border-radius:var(--radius-sm);background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">💡</div>
+      <div><h4 style="font-size:14px;font-weight:700;margin-bottom:5px">Consell científic del dia</h4>
+      <p style="font-size:12px;color:var(--ts);line-height:1.65">${tips[new Date().getDate()%tips.length]}</p></div>
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — TIMER (same as before but prettier)
+// ═══════════════════════════════════════════
+function renderTimer(){
+  const m=MODES[tmMode],tot=tmRest?m.r:m.w,pct=((tot-tmLeft)/tot)*100,r=106,cr=2*Math.PI*r;
+  html("sec-timer",`
+    <div class="g3">
+      ${MODES.map((md,i)=>`<div class="c mc ${i===tmMode?'on':''}" onclick="tmSetMode(${i})">
+        <div class="mn-name">${md.ico} ${md.nm}</div>
+        <div class="mn-desc">${md.ds} — ${md.ideal}</div>
+      </div>`).join("")}
+    </div>
+    <div class="c glow" style="text-align:center;padding:44px 24px">
+      <span class="badge" style="font-size:12px;padding:6px 18px;border-radius:20px;background:${tmRest?"var(--okl)":"var(--al)"};color:${tmRest?"var(--ok)":"var(--a)"};letter-spacing:1px">
+        ${tmRest?"☕ DESCANS":"🎯 FOCUS"}
+      </span>
+      <div class="tmr-circle">
+        <svg width="240" height="240" viewBox="0 0 240 240" style="transform:rotate(-90deg)">
+          <circle cx="120" cy="120" r="${r}" fill="none" stroke="var(--bl)" stroke-width="8"/>
+          <circle id="tm-circ" cx="120" cy="120" r="${r}" fill="none" stroke="${tmRest?"var(--ok)":"url(#tmGrad)"}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${cr}" stroke-dashoffset="${cr*(1-pct/100)}" style="transition:stroke-dashoffset .5s"/>
+          <defs><linearGradient id="tmGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:var(--a)"/><stop offset="100%" style="stop-color:var(--p)"/></linearGradient></defs>
+        </svg>
+        <div class="tmr-time"><div class="dig" id="tm-dig">${fmtTime(tmLeft)}</div><div class="sub">${tmRest?"Descansa — res de pantalles":"Sessió "+(S.todaySess+1)+" · Mòbil FORA"}</div></div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:12px">
+        <button class="bs" style="border-radius:50%;width:48px;height:48px;padding:0;justify-content:center" onclick="tmReset()">↺</button>
+        <button class="bp" style="border-radius:16px;width:68px;height:68px;padding:0;justify-content:center;font-size:26px;${tmRun?"background:linear-gradient(135deg,var(--err),var(--errd))":""}" onclick="${tmRun?"tmPause()":"tmStart()"}">
+          ${tmRun?"⏸":"▶"}
+        </button>
+        <div style="width:48px"></div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:32px;margin-top:32px">
+        ${[{v:S.todaySess,l:"sessions"},{v:S.totalMin+"m",l:"total"},{v:S.pomCount,l:"pomodoros"}].map(x=>`<div style="text-align:center"><div style="font-size:22px;font-weight:900">${x.v}</div><div style="font-size:11px;color:var(--tm)">${x.l}</div></div>`).join('<div style="width:1px;background:var(--b)"></div>')}
+      </div>
+    </div>
+    <div class="c" style="display:flex;gap:12px;align-items:flex-start;background:var(--bg);border-color:var(--bl)">
+      <span style="font-size:17px;margin-top:2px">${tmRest?"🌿":"🔒"}</span>
+      <div><h4 style="font-size:13px;font-weight:700;margin-bottom:5px">${tmRest?"Durant el descans":"Durant el focus"}</h4>
+      <p style="font-size:12px;color:var(--ts);line-height:1.6">${tmRest?
+        "NO miris el mòbil. Camina, mira per la finestra, o fes NSDR. El descans ha de ser MODALMENT diferent del treball.":
+        "Mòbil en mode avió i FORA de la vista. Cada minut de Deep Work reforça físicament els circuits neuronals."}</p></div>
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — CARDS (same logic, premium style)
+// ═══════════════════════════════════════════
+function renderCards(){
+  const decks=S.decks;
+  if(curDeck&&curCard){
+    const dk=decks.find(d=>d.id===curDeck),due=getDueCards(curDeck),remaining=due.filter(c=>c.sessionHits<3).length;
+    html("sec-cards",`
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><h2 style="font-size:18px;font-weight:900">${dk?dk.name:""}</h2><p style="font-size:12px;color:var(--ts)">Regla del 3 — 3 encerts per consolidar</p></div>
+        <button class="bs" onclick="curDeck=null;curCard=null;renderCards()">✕ Sortir</button>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span class="badge" style="background:var(--al);color:var(--a)">Pendents: ${remaining}</span>
+        <span class="badge" style="background:var(--okl);color:var(--ok)">Sessió: ${curCard.sessionHits||0}/3</span>
+        <span class="badge" style="background:var(--pl);color:var(--p)">Força: ${curCard.strength}%</span>
+      </div>
+      <div style="display:flex;gap:6px">${[0,1,2].map(i=>`<div style="flex:1;height:7px;border-radius:4px;background:${(curCard.sessionHits||0)>i?"linear-gradient(90deg,var(--ok),var(--okd))":"var(--bl)"};transition:.3s"></div>`).join("")}</div>
+      <div class="c fc glow" onclick="${showAns?"":"revealAnswer()"}">
+        <div style="font-size:11px;color:var(--tm);margin-bottom:12px">${curCard.subject||"General"}</div>
+        <div class="q">${curCard.q}</div>
+        ${showAns?`<div class="a">✅ ${curCard.a}</div>`:'<div class="hint">Toca per veure la resposta</div>'}
+      </div>
+      ${showAns?`<div style="display:flex;gap:14px"><button class="bdanger" style="flex:1;justify-content:center;padding:15px;display:flex;align-items:center;gap:6px" onclick="gradeCard(false)">❌ No ho sabia</button><button class="bp" style="flex:1;justify-content:center;padding:15px;background:linear-gradient(135deg,var(--ok),var(--okd))" onclick="gradeCard(true)">✅ Ho sabia!</button></div>`:""}
+    `);return;
+  }
+  html("sec-cards",`
+    <div class="sec-hdr"><h2>📇 Flashcards — Reaprenentatge Successiu</h2><p>Regla del 3 + Repetició Espaïada automàtica (SRS)</p></div>
+    <div class="c" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px"><label class="lbl">Nou deck</label><input class="inp" id="new-deck-name" placeholder="ex: Química Orgànica T3"></div>
+      <button class="bp" onclick="addDeck($('new-deck-name').value);$('new-deck-name').value=''">+ Crear deck</button>
+    </div>
+    ${decks.length===0?'<div class="c empty" style="padding:56px"><p style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:8px">Cap deck creat</p><p>Crea un deck per començar amb el sistema de Reaprenentatge Successiu</p></div>':""}
+    ${decks.map(dk=>{
+      const due=getDueCards(dk.id),avgStr=dk.cards.length>0?Math.round(dk.cards.reduce((s,c)=>s+c.strength,0)/dk.cards.length):0;
+      return`<div class="c glow">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div><h3 style="font-size:15px;font-weight:800">${dk.name}</h3><span style="font-size:11px;color:var(--ts)">${dk.cards.length} cards · ${due.length} pendents · ${avgStr}%</span></div>
+          <div style="display:flex;gap:6px">${due.length>0?`<button class="bp" onclick="startReview('${dk.id}')">▶ Estudiar (${due.length})</button>`:'<span class="badge" style="background:var(--okl);color:var(--ok)">Tot al dia ✓</span>'}<button class="bi" onclick="deleteDeck('${dk.id}')">🗑</button></div>
+        </div>
+        <div class="pb" style="margin-bottom:14px"><div class="fill" style="width:${avgStr}%;background:linear-gradient(90deg,var(--ok),var(--okd))"></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <input class="inp" id="cq-${dk.id}" placeholder="Pregunta" style="flex:2;min-width:180px">
+          <input class="inp" id="ca-${dk.id}" placeholder="Resposta" style="flex:2;min-width:180px">
+          <input class="inp" id="cs-${dk.id}" placeholder="Tema" style="flex:1;min-width:80px">
+          <button class="bp" onclick="addCard('${dk.id}',$('cq-${dk.id}').value,$('ca-${dk.id}').value,$('cs-${dk.id}').value);$('cq-${dk.id}').value='';$('ca-${dk.id}').value='';$('cs-${dk.id}').value=''">+</button>
+        </div>
+        ${dk.cards.length>0?`<div style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:4px">${dk.cards.slice(0,20).map(c=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-xs);background:var(--bg);font-size:12px">
+          <div style="width:7px;height:7px;border-radius:50%;background:${c.strength>=70?"var(--ok)":c.strength>=30?"var(--w)":"var(--err)"}"></div>
+          <span style="flex:1;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.q}</span>
+          <span style="color:var(--ts);font-size:10px">${c.sessionHits||0}/3</span>
+          <span class="tag" style="background:${c.strength>=70?"var(--okl)":"var(--bg)"};color:${c.strength>=70?"var(--ok)":"var(--tm)"}">${c.strength}%</span>
+          <button class="bi" style="font-size:10px;padding:3px" onclick="deleteCard('${dk.id}','${c.id}')">✕</button>
+        </div>`).join("")}</div>`:""}
+      </div>`}).join("")}
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — FEYNMAN
+// ═══════════════════════════════════════════
+function renderFeynman(){
+  html("sec-feynman",`
+    <div class="sec-hdr"><h2>🧒 Tutor IA — Destructor d'Il·lusions</h2><p>Tècnica Feynman potenciada. Explica conceptes sense jerga i l'IA detecta comprensió falsa.</p></div>
+    ${!feynTopic?`
+      <div class="c glow" style="text-align:center;padding:48px">
+        <div style="font-size:52px;margin-bottom:18px">🧠</div>
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:10px">Quin concepte vols dominar?</h3>
+        <p style="font-size:13px;color:var(--ts);margin-bottom:22px;max-width:480px;margin-left:auto;margin-right:auto">Escriu un tema i hauràs d'explicar-lo sense jerga. L'IA detecta il·lusions de competència i et fa preguntes socràtiques.</p>
+        <div style="display:flex;gap:8px;max-width:480px;margin:0 auto">
+          <input class="inp" id="feyn-topic" placeholder="ex: Mitosi, Derivades, La Revolució Francesa..." style="font-size:14px">
+          <button class="bp" onclick="startFeynman($('feyn-topic').value)">Començar</button>
+        </div>
+      </div>
+    `:`
+      <div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <h3 style="font-size:15px;font-weight:800">📝 ${feynTopic}</h3>
+            <span class="badge" style="background:${feynLevel>=3?"var(--okl)":feynLevel>=1?"var(--wl)":"var(--errl)"};color:${feynLevel>=3?"var(--ok)":feynLevel>=1?"var(--w)":"var(--err)"}">Comprensió: ${feynLevel>=3?"ALTA":feynLevel>=1?"MITJA":"BAIXA"}</span>
+          </div>
+          <button class="bs" style="padding:5px 12px;font-size:11px" onclick="feynTopic='';feynMessages=[];feynLevel=0;renderFeynman()">Nou tema</button>
+        </div>
+        <div class="chat-area" id="feyn-chat">${feynMessages.map(m=>`<div class="msg ${m.role==="user"?"user":"ai"}">${m.text.replace(/\n/g,"<br>")}</div>`).join("")}</div>
+        <div class="chat-input">
+          <input class="inp" id="feyn-input" placeholder="Explica amb les teves paraules..." onkeydown="if(event.key==='Enter'){sendFeynman(this.value);this.value=''}">
+          <button class="bp" onclick="sendFeynman($('feyn-input').value);$('feyn-input').value=''">Enviar</button>
+        </div>
+      </div>
+    `}
+  `);
+  setTimeout(()=>{const ch=$("feyn-chat");if(ch)ch.scrollTop=ch.scrollHeight},50);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — CHAOS
+// ═══════════════════════════════════════════
+function renderChaos(){
+  const topics=[...new Set(S.chaosProblems.map(p=>p.topic))];
+  const tc={"Mates":"var(--a)","Física":"var(--p)","Química":"var(--ok)","Programació":"var(--i)","Biologia":"var(--r)","Història":"var(--w)"};
+  html("sec-chaos",`
+    <div class="sec-hdr"><h2>⚡ Mode Caos — Pràctica Intercalada</h2><p>Barreja problemes de temes diferents. Entrena discriminació inductiva.</p></div>
+    ${chaosActive?`
+      <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+        <div style="display:flex;gap:8px">
+          <span class="badge" style="background:var(--okl);color:var(--ok)">✅ ${chaosScore.correct}</span>
+          <span class="badge" style="background:var(--errl);color:var(--err)">❌ ${chaosScore.total-chaosScore.correct}</span>
+          <span class="badge" style="background:var(--al);color:var(--a)">${chaosScore.total>0?Math.round(chaosScore.correct/chaosScore.total*100):0}%</span>
+        </div>
+        <button class="bs" style="padding:5px 12px;font-size:11px" onclick="endChaos()">Acabar</button>
+      </div>
+      ${chaosCur?`
+        <div class="chaos-problem">
+          <span class="badge" style="background:${tc[chaosCur.topic]||"var(--a)"}15;color:${tc[chaosCur.topic]||"var(--a)"};margin-bottom:14px">${chaosCur.topic} · ${chaosCur.difficulty}</span>
+          <div class="problem-text" style="font-size:17px;font-weight:600;line-height:1.6">${chaosCur.text}</div>
+          ${chaosShowSol?`<div style="margin-top:18px;padding:16px;background:var(--okl);border-radius:var(--radius-sm);width:100%;text-align:left">
+            <div style="font-size:11px;font-weight:700;color:var(--ok);margin-bottom:5px">SOLUCIÓ</div>
+            <div style="font-size:14px;line-height:1.6">${chaosCur.solution}</div></div>`:""}
+        </div>
+        ${!chaosShowSol?`<button class="bp" style="width:100%;justify-content:center;padding:15px" onclick="chaosReveal()">👁 Veure solució</button>`:`
+          <div style="display:flex;gap:14px"><button class="bdanger" style="flex:1;justify-content:center;padding:15px;display:flex;align-items:center;gap:6px" onclick="chaosGrade(false)">❌ No l'he tret</button><button class="bp" style="flex:1;justify-content:center;padding:15px;background:linear-gradient(135deg,var(--ok),var(--okd))" onclick="chaosGrade(true)">✅ Correcte!</button></div>`}
+      `:""}
+    `:`
+      <div class="c">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">Afegir problemes</h3>
+        <div class="g2" style="margin-bottom:10px">
+          <div><label class="lbl">Tema</label><input class="inp" id="ch-topic" placeholder="ex: Derivades"></div>
+          <div><label class="lbl">Dificultat</label><select class="inp" id="ch-diff"><option value="fàcil">Fàcil</option><option value="mitjà" selected>Mitjà</option><option value="difícil">Difícil</option></select></div>
+        </div>
+        <div style="margin-bottom:10px"><label class="lbl">Enunciat</label><textarea class="inp" id="ch-text" placeholder="Escriu l'enunciat..."></textarea></div>
+        <div style="margin-bottom:10px"><label class="lbl">Solució</label><textarea class="inp" id="ch-sol" placeholder="Escriu la solució..."></textarea></div>
+        <button class="bp" onclick="addChaosProblem($('ch-topic').value,$('ch-text').value,$('ch-sol').value,$('ch-diff').value);$('ch-topic').value='';$('ch-text').value='';$('ch-sol').value=''">+ Afegir</button>
+      </div>
+      ${S.chaosProblems.length>0?`<div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div><h3 style="font-size:15px;font-weight:800">Banc de problemes</h3><span style="font-size:11px;color:var(--ts)">${S.chaosProblems.length} problemes · ${topics.length} temes</span></div>
+          <button class="bp" onclick="startChaos()">⚡ Mode Caos</button>
+        </div>
+        <div style="max-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:4px">${S.chaosProblems.map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-xs);background:var(--bg);font-size:12px">
+          <span class="tag" style="background:${tc[p.topic]||"var(--a)"}15;color:${tc[p.topic]||"var(--a)"}">${p.topic}</span>
+          <span style="flex:1;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.text}</span>
+          <button class="bi" style="font-size:10px;padding:3px" onclick="S.chaosProblems=S.chaosProblems.filter(x=>x.id!=='${p.id}');save();renderChaos()">✕</button>
+        </div>`).join("")}</div>
+      </div>`:""}`}
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — LANGUAGES
+// ═══════════════════════════════════════════
+function renderLanguages(){
+  if(curLangDeck&&curLangCard){
+    const dk=S.langDecks.find(d=>d.id===curLangDeck);
+    html("sec-languages",`
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><h2 style="font-size:18px;font-weight:900">${dk?dk.name:""}</h2><p style="font-size:12px;color:var(--ts)">${dk?dk.lang:""} — Regla del 3</p></div>
+        <button class="bs" onclick="curLangDeck=null;curLangCard=null;renderLanguages()">✕ Sortir</button>
+      </div>
+      <div style="display:flex;gap:6px">${[0,1,2].map(i=>`<div style="flex:1;height:7px;border-radius:4px;background:${(curLangCard.sessionHits||0)>i?"linear-gradient(90deg,var(--i),var(--id))":"var(--bl)"};transition:.3s"></div>`).join("")}</div>
+      <div class="c fc glow" onclick="${showLangAns?"":"showLangAns=true;renderLanguages()"}">
+        <div style="font-size:11px;color:var(--tm);margin-bottom:10px">Tradueix:</div>
+        <div class="q">${curLangCard.word}</div>
+        ${showLangAns?`<div class="a">✅ ${curLangCard.translation}</div>${curLangCard.example?`<div style="font-size:12px;color:var(--ts);margin-top:10px;font-style:italic">"${curLangCard.example}"</div>`:""}`:'<div class="hint">Toca per veure la traducció</div>'}
+      </div>
+      ${showLangAns?`<div style="display:flex;gap:14px"><button class="bdanger" style="flex:1;justify-content:center;padding:15px;display:flex;align-items:center;gap:6px" onclick="gradeLangCard(false)">❌ No ho sabia</button><button class="bp" style="flex:1;justify-content:center;padding:15px;background:linear-gradient(135deg,var(--i),var(--id))" onclick="gradeLangCard(true)">✅ Ho sabia!</button></div>`:""}
+    `);return;
+  }
+  html("sec-languages",`
+    <div class="sec-hdr"><h2>🌍 Idiomes — Vocabulari + SRS</h2><p>Aprèn paraules noves amb el sistema de repetició espaïada</p></div>
+    <div class="c" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap">
+      <div style="flex:1;min-width:150px"><label class="lbl">Nom del deck</label><input class="inp" id="lang-deck-name" placeholder="ex: Anglès B2"></div>
+      <div style="flex:1;min-width:120px"><label class="lbl">Idioma</label><input class="inp" id="lang-deck-lang" placeholder="ex: Anglès"></div>
+      <button class="bp" onclick="addLangDeck($('lang-deck-name').value,$('lang-deck-lang').value);$('lang-deck-name').value='';$('lang-deck-lang').value=''">+ Crear</button>
+    </div>
+    ${S.langDecks.length===0?'<div class="c empty" style="padding:48px"><p style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:8px">Cap deck d\'idiomes</p><p>Crea un deck per aprendre vocabulari amb repetició espaïada</p></div>':""}
+    ${S.langDecks.map(dk=>{
+      const due=dk.cards.filter(c=>!c.nextReview||c.nextReview<=today());
+      const avgStr=dk.cards.length>0?Math.round(dk.cards.reduce((s,c)=>s+c.strength,0)/dk.cards.length):0;
+      return`<div class="c glow">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div><h3 style="font-size:15px;font-weight:800">${dk.name}</h3><span style="font-size:11px;color:var(--ts)">${dk.lang} · ${dk.cards.length} paraules · ${due.length} pendents</span></div>
+          <div style="display:flex;gap:6px">${due.length>0?`<button class="bp" style="background:linear-gradient(135deg,var(--i),var(--id))" onclick="startLangReview('${dk.id}')">▶ Estudiar (${due.length})</button>`:'<span class="badge" style="background:var(--okl);color:var(--ok)">Tot al dia ✓</span>'}<button class="bi" onclick="S.langDecks=S.langDecks.filter(d=>d.id!=='${dk.id}');save();renderLanguages()">🗑</button></div>
+        </div>
+        <div class="pb" style="margin-bottom:14px"><div class="fill" style="width:${avgStr}%;background:linear-gradient(90deg,var(--i),var(--id))"></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <input class="inp" id="lw-${dk.id}" placeholder="Paraula" style="flex:1;min-width:120px">
+          <input class="inp" id="lt-${dk.id}" placeholder="Traducció" style="flex:1;min-width:120px">
+          <input class="inp" id="le-${dk.id}" placeholder="Exemple (opcional)" style="flex:1;min-width:150px">
+          <button class="bp" style="background:linear-gradient(135deg,var(--i),var(--id))" onclick="addLangCard('${dk.id}',$('lw-${dk.id}').value,$('lt-${dk.id}').value,$('le-${dk.id}').value);$('lw-${dk.id}').value='';$('lt-${dk.id}').value='';$('le-${dk.id}').value=''">+</button>
+        </div>
+        ${dk.cards.length>0?`<div style="max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px">${dk.cards.slice(0,20).map(c=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius-xs);background:var(--bg);font-size:12px">
+          <div style="width:7px;height:7px;border-radius:50%;background:${c.strength>=70?"var(--ok)":c.strength>=30?"var(--w)":"var(--err)"}"></div>
+          <span style="font-weight:600">${c.word}</span><span style="color:var(--tm)">→</span><span style="color:var(--ts)">${c.translation}</span>
+          <span style="margin-left:auto" class="tag" style="background:var(--bg)">${c.strength}%</span>
+        </div>`).join("")}</div>`:""}
+      </div>`}).join("")}
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — SOUNDS
+// ═══════════════════════════════════════════
+function renderSounds(){
+  html("sec-sounds",`
+    <div class="sec-hdr"><h2>🎵 Mixer de Sons Ambientals</h2><p>Crea el teu paisatge sonor perfecte per concentrar-te</p></div>
+    <div class="c glow">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${Object.entries(SOUNDS).map(([key,snd])=>`
+          <div class="snd-ch">
+            <div class="snd-ico">${snd.ico}</div>
+            <span class="snd-name">${snd.name}</span>
+            <input type="range" min="0" max="100" value="${S.soundPrefs[key]||0}" oninput="setSoundVolume('${key}',+this.value)">
+            <span style="font-size:11px;color:var(--tm);width:30px;text-align:right">${S.soundPrefs[key]||0}%</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+    <div class="c" style="background:var(--bg);border-color:var(--bl)">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:17px;margin-top:2px">🔬</span>
+        <div><h4 style="font-size:13px;font-weight:700;margin-bottom:5px">Per què funciona?</h4>
+        <p style="font-size:12px;color:var(--ts);line-height:1.6">El soroll ambient constant (especialment soroll marró i pluja) actua com a "màscara acústica": neutralitza els sons imprevisibles de l'entorn que fragmenten la concentració. El nivell ideal és prou alt per cobrir distraccions però prou baix per no molestar.</p></div>
+      </div>
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — RECOVERY
+// ═══════════════════════════════════════════
+function renderRecovery(){
+  const stretch=STRETCHES[Math.floor(Math.random()*STRETCHES.length)];
+  html("sec-recovery",`
+    <div class="sec-hdr"><h2>🌙 Estació de Recuperació</h2><p>NSDR, respiració i estiraments. Descans REAL per al cervell.</p></div>
+    <div class="g2">
+      <div class="c glow" style="text-align:center">
+        <div style="font-size:36px;margin-bottom:12px">🧘</div>
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px">NSDR</h3>
+        <p style="font-size:12px;color:var(--ts);line-height:1.5;margin-bottom:18px">10-20 min. +65% dopamina, renta cortisol.</p>
+        <div style="background:var(--al);border-radius:var(--radius-sm);padding:16px;text-align:left">
+          ${["Estira't, tanca els ulls","3-5 respiracions lentes","Escaneja cos de cap a peus","Mantén consciència 10-20 min","Obre els ulls lentament"].map((s,i)=>
+            `<div style="display:flex;gap:8px;margin-bottom:5px;font-size:12px"><span style="color:var(--a);font-weight:700">${i+1}.</span><span>${s}</span></div>`).join("")}
+        </div>
+      </div>
+      <div class="c glow" style="text-align:center">
+        <div style="font-size:36px;margin-bottom:12px">🌬️</div>
+        <h3 style="font-size:16px;font-weight:800;margin-bottom:8px">Respiració 4-4-6</h3>
+        <p style="font-size:12px;color:var(--ts);line-height:1.5;margin-bottom:18px">Redueix cortisol, activa el parasimpàtic.</p>
+        ${breathActive?`
+          <div class="breath-circle ${breathPhase==="inhale"?"inhale":"exhale"}" id="breath-orb">${breathPhase==="inhale"?"Inspira...":breathPhase==="hold"?"Aguanta...":"Expira..."}</div>
+          <div id="breath-cnt" style="font-size:13px;color:var(--ts);margin:10px 0">${breathCount+1}/8</div>
+          <button class="bs" onclick="stopBreathing()">⏹ Parar</button>
+        `:`
+          <div class="breath-circle">Prem per començar</div>
+          <button class="bp" style="margin-top:16px" onclick="startBreathing()">▶ 8 cicles</button>
+        `}
+      </div>
+    </div>
+    <div class="c">
+      <div style="display:flex;gap:16px;align-items:center">
+        <div style="width:60px;height:60px;border-radius:50%;background:var(--il);display:flex;align-items:center;justify-content:center;font-size:28px">${stretch.ico}</div>
+        <div style="flex:1"><h3 style="font-size:15px;font-weight:800;margin-bottom:5px">${stretch.name}</h3><p style="font-size:13px;color:var(--ts);line-height:1.5">${stretch.desc}</p><span class="badge" style="background:var(--okl);color:var(--ok);margin-top:6px">~${stretch.dur}s</span></div>
+      </div>
+    </div>
+    <div class="c" style="background:var(--errl);border-color:rgba(239,68,68,.15)">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:18px;margin-top:2px">⛔</span>
+        <div><h4 style="font-size:14px;font-weight:700;color:var(--err);margin-bottom:5px">PROHIBIT durant el descans</h4>
+        <p style="font-size:13px;line-height:1.6">Mòbil, xarxes socials, YouTube. El descans ha de ser MODALMENT diferent: caminar, respirar, estirar.</p></div>
+      </div>
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — EXAMS
+// ═══════════════════════════════════════════
+function renderExams(){
+  const tasks=genStudyTasks();
+  html("sec-exams",`
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="sec-hdr"><h2>📅 Exàmens i Pla d'Estudi</h2><p>SRS automàtic basat en la dificultat</p></div>
+      <button class="bp" onclick="$('exam-form').style.display=$('exam-form').style.display==='none'?'block':'none'">+ Nou examen</button>
+    </div>
+    <div id="exam-form" class="c" style="display:none;border:2px solid var(--al)">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:14px">Afegir examen</h3>
+      <div class="g2" style="margin-bottom:10px">
+        <div><label class="lbl">Nom</label><input class="inp" id="ex-nm" placeholder="Examen de Mates T5"></div>
+        <div><label class="lbl">Assignatura</label><input class="inp" id="ex-sub" placeholder="Matemàtiques"></div>
+        <div><label class="lbl">Data</label><input type="date" class="inp" id="ex-dt"></div>
+        <div><label class="lbl">Dificultat</label><select class="inp" id="ex-df"><option value="fàcil">Fàcil</option><option value="mitjà" selected>Mitjà</option><option value="difícil">Difícil</option></select></div>
+      </div>
+      <button class="bp" onclick="addExam($('ex-nm').value,$('ex-sub').value,$('ex-dt').value,$('ex-df').value);$('exam-form').style.display='none'">✓ Afegir</button>
+    </div>
+    ${S.exams.length>0?`<div class="c">${S.exams.map(e=>{const d=daysUntil(e.date),past=d<0,uc=d<=2?"var(--err)":d<=7?"var(--w)":"var(--ok)",bg=d<=2?"var(--errl)":d<=7?"var(--wl)":"var(--okl)";
+    return`<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);background:var(--bg);margin-bottom:6px;${past?"opacity:.5":""}">
+      <div style="width:42px;height:42px;border-radius:var(--radius-sm);background:${bg};color:${uc};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">${past?"✓":d}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:700">${e.name}</div><div style="font-size:11px;color:var(--ts)">${e.subject} · ${fmtDate(e.date)}</div></div>
+      <button class="bi" onclick="removeExam('${e.id}')">🗑</button>
+    </div>`}).join("")}</div>`:""}
+    ${tasks.length>0?`<div class="c">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h3 style="font-size:15px;font-weight:800">📋 Pla d'estudi SRS</h3><span style="font-size:11px;color:var(--tm)">${tasks.length} sessions</span>
+      </div>
+      <div style="max-height:350px;overflow-y:auto;display:flex;flex-direction:column;gap:5px">
+        ${tasks.slice(0,40).map(t=>{const isTd=t.date===today();
+        return`<div class="ti ${S.doneTasks.includes(t.id)?'done':''}" style="${isTd?'background:var(--al);border-color:rgba(99,102,241,.15)':''}" onclick="toggleTask('${t.id}')">
+          <span style="font-size:14px">${S.doneTasks.includes(t.id)?'✅':'⭕'}</span>
+          <div class="info"><span class="nm">${t.examName}</span> <span class="ds">— ${t.session}</span></div>
+          <span class="tg" style="${isTd?'color:var(--a);font-weight:700':''}">${isTd?"AVUI":fmtDate(t.date)}</span>
+        </div>`}).join("")}
+      </div>
+    </div>`:""}
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — STATS
+// ═══════════════════════════════════════════
+function renderStats(){
+  const last7=S.dailyLog.filter(d=>{const diff=(new Date(today())-new Date(d.date))/864e5;return diff<7});
+  const totalMins7=last7.reduce((s,d)=>s+d.minutes,0);
+  const totalCards7=last7.reduce((s,d)=>s+d.cards,0);
+  const totalCorrect7=last7.reduce((s,d)=>s+d.correct,0);
+  const avgMin7=last7.length>0?Math.round(totalMins7/7):0;
+
+  html("sec-stats",`
+    <div class="sec-hdr"><h2>📊 Estadístiques Avançades</h2><p>Dades reals del teu rendiment acadèmic</p></div>
+
+    <div class="g4">
+      ${[{l:"Últims 7 dies",v:totalMins7+"m",sub:"temps total",c:"var(--a)"},
+        {l:"Mitjana diària",v:avgMin7+"m",sub:"objectiu: 120m",c:"var(--p)"},
+        {l:"Cards 7d",v:totalCards7,sub:`${totalCorrect7} correctes`,c:"var(--i)"},
+        {l:"Precisió 7d",v:totalCards7>0?Math.round(totalCorrect7/totalCards7*100)+"%":"--",sub:"objectiu: 85%",c:"var(--ok)"}
+      ].map(s=>`<div class="c sc"><div class="top"><span>${s.l}</span></div><div class="val" style="color:${s.c}">${s.v}</div><div class="sub">${s.sub}</div></div>`).join("")}
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div class="c">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">🏅 Assoliments (${S.achievements.length}/${ACHIEVEMENTS.length})</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        ${ACHIEVEMENTS.map(a=>{const u=S.achievements.includes(a.id);
+        return`<div class="ach ${u?"unlocked":"locked"}">
+          <div class="ach-ico">${a.ico}</div>
+          <div class="ach-info"><div class="ach-name">${u?a.name:"???"}</div><div class="ach-desc">${a.desc}</div></div>
+          ${u?'<span class="badge" style="background:var(--okl);color:var(--ok)">✓</span>':""}
+        </div>`}).join("")}
+      </div>
+    </div>
+
+    <!-- GLOBAL STATS -->
+    <div class="c">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">📈 Estadístiques globals</h3>
+      <div class="g2">
+        ${[{l:"Total hores",v:(S.totalMin/60).toFixed(1)+"h"},{l:"Total sessions",v:S.pomCount},{l:"Ratxa màxima",v:S.streak+"d"},{l:"XP Total",v:S.totalXp},
+          {l:"Total flashcards",v:S.quizTotal},{l:"Precisió global",v:S.quizTotal>0?Math.round(S.quizCorrect/S.quizTotal*100)+"%":"--"},
+          {l:"Decks creats",v:S.decks.length+S.langDecks.length},{l:"Nivell",v:S.level}
+        ].map(s=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bl)"><span style="color:var(--ts);font-size:13px">${s.l}</span><span style="font-weight:700;font-size:13px">${s.v}</span></div>`).join("")}
+      </div>
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════
+// RENDER — TECHNIQUES (same as before)
+// ═══════════════════════════════════════════
+function renderTechniques(){
+  const techs=[
+    {nm:"Recuperació Activa",ico:"🧠",rat:"Alta",bg:"var(--al)",col:"var(--a)",sum:"3 recuperacions correctes per sessió.",steps:["Llegeix 15-20 min","Tanca apunts","Escriu TOT el que recordis","Compara i marca errors","Repeteix fins 3 encerts","Programa repàs SRS"]},
+    {nm:"Repetició Espaïada",ico:"🔄",rat:"Alta",bg:"var(--pl)",col:"var(--p)",sum:"Intervals creixents: 1h × 5 dies > 5h × 1 dia.",steps:["Dia 0: Estudi + 3 recuperacions","Dia 2: Primer repàs","Dia 7: Segon repàs","Dia 21: Tercer repàs","Dia 45+: Manteniment","Usa Flashcards de l'app"]},
+    {nm:"Tècnica Feynman",ico:"💡",rat:"Alta",bg:"var(--wl)",col:"var(--w)",sum:"+34% rendiment analític.",steps:["Escriu el concepte","Explica amb paraules simples","Identifica buits","Omple buits","Simplifica amb analogies","Repeteix fins fluïdesa"]},
+    {nm:"Pràctica Intercalada",ico:"⚡",rat:"Mod-Alta",bg:"var(--okl)",col:"var(--ok)",sum:"Barreja problemes. Mode Caos.",steps:["Selecciona 3-4 temes","Barreja en ordre aleatori","NO miris apunts","Identifica errors","Augmenta similitud","Ideal per STEM"]},
+    {nm:"NSDR",ico:"🌙",rat:"Recuperació",bg:"var(--il)",col:"var(--i)",sum:"+65% dopamina.",steps:["Estira't, tanca ulls","Respiracions diafragmàtiques","Escaneja cos","Consciència 10-20 min","Ones theta","Obre ulls lentament"]}
+  ];
+  html("sec-techniques",`
+    <div class="sec-hdr"><h2>📚 Tècniques Científiques</h2><p>Basades en Dunlosky et al. (2013)</p></div>
+    <div class="c" style="background:var(--errl);border-color:rgba(239,68,68,.15)">
+      <div style="display:flex;gap:12px"><span style="font-size:18px">⛔</span>
+      <div><h4 style="font-size:14px;font-weight:700;color:var(--err)">NO funcionen: Rellegir, Subratllar, Resums passius</h4>
+      <p style="font-size:12px;line-height:1.6">Impacte NUL demostrat. El cervell confon familiaritat visual amb aprenentatge.</p></div></div>
+    </div>
+    ${techs.map(t=>`<div class="c glow" style="padding:0;overflow:hidden;cursor:pointer" onclick="this.querySelector('.tbody').style.display=this.querySelector('.tbody').style.display==='block'?'none':'block'">
+      <div style="display:flex;align-items:center;gap:12px;padding:18px 20px">
+        <div style="width:42px;height:42px;border-radius:var(--radius-sm);background:${t.bg};display:flex;align-items:center;justify-content:center;font-size:21px">${t.ico}</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px">${t.nm} <span class="badge" style="background:${t.rat==="Alta"?"var(--okl)":"var(--wl)"};color:${t.rat==="Alta"?"var(--ok)":"var(--w)"}">${t.rat}</span></div>
+        <div style="font-size:12px;color:var(--ts);margin-top:2px">${t.sum}</div></div>
+        <span style="color:var(--tm);transition:var(--transition)">›</span>
+      </div>
+      <div class="tbody" style="display:none;padding:0 20px 18px;border-top:1px solid var(--bl)">
+        <div style="padding-top:14px">${t.steps.map((s,i)=>`<div style="display:flex;gap:10px;margin-bottom:7px"><div style="width:24px;height:24px;border-radius:7px;background:${t.bg};color:${t.col};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div><span style="font-size:12px;line-height:1.5;padding-top:3px">${s}</span></div>`).join("")}</div>
+      </div>
+    </div>`).join("")}
+  `);
+}
+
+// ═══════════════════════════════════════════
+// MAIN RENDER
+// ═══════════════════════════════════════════
+function render(){
+  renderSidebar();
+  const renderers={dashboard:renderDashboard,timer:renderTimer,cards:renderCards,feynman:renderFeynman,chaos:renderChaos,languages:renderLanguages,sounds:renderSounds,recovery:renderRecovery,exams:renderExams,stats:renderStats,techniques:renderTechniques};
+  if(renderers[tab])renderers[tab]();
+}
+render();
+// Check achievements on load
+setTimeout(checkAchievements,500);
+</script>
+</body>
+</html>

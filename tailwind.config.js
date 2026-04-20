@@ -1,0 +1,53 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  darkMode: ['selector', '[data-theme="dark"]'],
+  theme: {
+    extend: {
+      colors: {
+        // Bind Tailwind to Pro CSS variables so utilities respect theme switches.
+        'sf-bg': 'var(--bg)',
+        'sf-s': 'var(--s)',
+        'sf-s2': 'var(--s2)',
+        'sf-sh': 'var(--sh)',
+        'sf-b': 'var(--b)',
+        'sf-bl': 'var(--bl)',
+        'sf-t': 'var(--t)',
+        'sf-ts': 'var(--ts)',
+        'sf-tm': 'var(--tm)',
+        'sf-tw': 'var(--tw)',
+        'sf-a': 'var(--a)',
+        'sf-al': 'var(--al)',
+        'sf-ad': 'var(--ad)',
+        'sf-a2': 'var(--a2)',
+        'sf-ok': 'var(--ok)',
+        'sf-okl': 'var(--okl)',
+        'sf-okd': 'var(--okd)',
+        'sf-w': 'var(--w)',
+        'sf-wl': 'var(--wl)',
+        'sf-wd': 'var(--wd)',
+        'sf-err': 'var(--err)',
+        'sf-errl': 'var(--errl)',
+        'sf-errd': 'var(--errd)',
+        'sf-p': 'var(--p)',
+        'sf-pl': 'var(--pl)',
+        'sf-pd': 'var(--pd)',
+        'sf-i': 'var(--i)',
+        'sf-il': 'var(--il)',
+        'sf-id': 'var(--id)',
+        'sf-r': 'var(--r)',
+        'sf-rl': 'var(--rl)',
+        'sf-rd': 'var(--rd)',
+      },
+      borderRadius: {
+        'sf': 'var(--radius)',
+        'sf-sm': 'var(--radius-sm)',
+        'sf-xs': 'var(--radius-xs)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+};

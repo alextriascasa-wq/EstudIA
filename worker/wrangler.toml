@@ -1,0 +1,9 @@
+name = "estudia-ai"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+
+# Rate Limiting (we'll implement in-memory simple limit for now since KV costs money or needs setup, or we can use a free KV namespace)
+# To use KV:
+# kv_namespaces = [
+#   { binding = "RATE_LIMITS", id = "xxx" }
+# ]

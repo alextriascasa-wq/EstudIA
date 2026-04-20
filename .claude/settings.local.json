@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(winget list *)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Read(//d C:/Users/alext/Documents/Claude/Projects/**)",
+      "Bash(npm install *)"
+    ]
+  }
+}

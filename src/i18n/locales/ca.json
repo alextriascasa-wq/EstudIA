@@ -1,0 +1,232 @@
+{
+  "brand": {
+    "name": "EstudIA",
+    "tagline": "Ciència del rendiment acadèmic"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "timer": "Timer",
+    "cards": "Flashcards",
+    "feynman": "Tutor IA",
+    "chaos": "Mode Caos",
+    "languages": "Idiomes",
+    "sounds": "Sons",
+    "recovery": "Recuperació",
+    "exams": "Exàmens",
+    "stats": "Estadístiques",
+    "social": "Social",
+    "techniques": "Tècniques"
+  },
+  "sidebar": {
+    "level": "Nivell",
+    "xpOf": "{{cur}} / {{need}} XP",
+    "streak": "🔥 {{days}}d",
+    "themeToggle": "Canvia tema",
+    "export": "Exporta dades",
+    "import": "Importa dades",
+    "language": "Idioma",
+    "install": "Instal·la EstudIA",
+    "installIOS": "Instal·la a l'iPhone",
+    "installIOSSteps": "Toca Compartir (⬆) → Afegir a pantalla d'inici"
+  },
+  "common": {
+    "add": "Afegir",
+    "create": "Crear",
+    "delete": "Esborrar",
+    "save": "Guardar",
+    "cancel": "Cancel·lar",
+    "start": "Començar",
+    "stop": "Parar",
+    "exit": "Sortir",
+    "seeAll": "Veure tots",
+    "today": "AVUI",
+    "tomorrow": "DEMÀ",
+    "import": "Importat",
+    "invalidFile": "Fitxer no vàlid",
+    "importSuccess": "Dades carregades correctament"
+  },
+  "dashboard": {
+    "todayPlan": "📋 Pla d'avui",
+    "upcomingExams": "📅 Pròxims exàmens",
+    "noTasks": "Cap tasca avui — afegeix exàmens!",
+    "noExams": "Cap examen programat",
+    "heatmap": "📊 Mapa d'activitat (90 dies)",
+    "heatmapLess": "Menys",
+    "heatmapMore": "Més",
+    "weekly": "📈 Activitat setmanal",
+    "retention": "🧠 Retenció real",
+    "memStrength": "Força de memòria",
+    "quizAccuracy": "Precisió quiz",
+    "achievements": "🏅 Assoliments ({{unlocked}}/{{total}})",
+    "zeigTitle": "Efecte Zeigarnik — On em vaig quedar?",
+    "zeigDesc": "El cervell manté les tasques incompletes actives al subconscient.",
+    "zeigPlaceholder": "ex: Estava amb l'exercici 5 de derivades, em faltava la regla de la cadena...",
+    "tipTitle": "Consell científic del dia",
+    "xpTotal": "XP Total",
+    "quizSummary": "{{total}} preguntes · {{correct}} correctes",
+    "addShort": "+ Afegir",
+    "stats": {
+      "sessions": "Sessions avui",
+      "sessionsSub": "{{min}}min total",
+      "memStrength": "Força memòria",
+      "memStrengthSub": "{{correct}}/{{total}} correctes",
+      "streak": "Ratxa",
+      "streakGood": "Imparable!",
+      "streakBad": "Continua així",
+      "cards": "Cards avui",
+      "cardsSub": "{{total}} totals"
+    }
+  },
+  "timer": {
+    "focus": "🎯 FOCUS",
+    "rest": "☕ DESCANS",
+    "focusSub": "Sessió {{sess}} · Mòbil FORA",
+    "restSub": "Descansa — res de pantalles",
+    "stats": {
+      "sessions": "sessions",
+      "total": "total",
+      "pomodoros": "pomodoros"
+    },
+    "duringFocus": "Durant el focus",
+    "duringRest": "Durant el descans",
+    "duringFocusDesc": "Mòbil en mode avió i FORA de la vista. Cada minut de Deep Work reforça físicament els circuits neuronals.",
+    "duringRestDesc": "NO miris el mòbil. Camina, mira per la finestra, o fes NSDR. El descans ha de ser MODALMENT diferent del treball.",
+    "modes": {
+      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repàs, vocabulari" },
+      "d52": { "nm": "Ultradian", "ideal": "Estudi mixt, lectura activa" },
+      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programació" }
+    },
+    "notifOn": "Notificacions activades",
+    "notifOff": "Activa notificacions",
+    "notifFocusDone": "Sessió de {{mode}} completada! Hora de descansar.",
+    "notifRestDone": "Descans acabat! Torna al focus."
+  },
+  "stats": {
+    "last7d": "Últims 7 dies",
+    "totalTime": "temps total",
+    "avgDaily": "Mitjana diària",
+    "target120": "objectiu: 120m",
+    "cards7d": "Cards 7d",
+    "correctSub": "{{n}} correctes",
+    "accuracy7d": "Precisió 7d",
+    "target85": "objectiu: 85%",
+    "globalTitle": "📈 Estadístiques globals",
+    "achTitle": "🏅 Assoliments ({{unlocked}}/{{total}})",
+    "locked": "???",
+    "globals": {
+      "totalHours": "Total hores",
+      "totalSessions": "Total sessions",
+      "maxStreak": "Ratxa màxima",
+      "xpTotal": "XP Total",
+      "totalFlashcards": "Total flashcards",
+      "globalAccuracy": "Precisió global",
+      "decks": "Decks creats",
+      "level": "Nivell"
+    },
+    "ach": {
+      "first_session": { "name": "Primer Pas", "desc": "Completa la primera sessió de focus" },
+      "streak_3": { "name": "Constant", "desc": "Aconsegueix una ratxa de 3 dies" },
+      "streak_7": { "name": "Imparable", "desc": "Ratxa de 7 dies seguits" },
+      "streak_30": { "name": "Llegenda", "desc": "Ratxa de 30 dies!" },
+      "cards_50": { "name": "Explorador", "desc": "Revisa 50 flashcards" },
+      "cards_500": { "name": "Erudit", "desc": "Revisa 500 flashcards" },
+      "mem_80": { "name": "Memòria d'Acer", "desc": "Arriba al 80% de força de memòria" },
+      "hours_10": { "name": "Dedicat", "desc": "Acumula 10 hores d'estudi" },
+      "hours_50": { "name": "Mestre", "desc": "Acumula 50 hores d'estudi" },
+      "hours_100": { "name": "Acadèmic d'Elit", "desc": "100 hores d'estudi total" },
+      "chaos_10": { "name": "Gladiador", "desc": "Completa 10 rondes de Mode Caos" },
+      "level_10": { "name": "Veterà", "desc": "Arriba al nivell 10" },
+      "level_25": { "name": "Expert", "desc": "Arriba al nivell 25" },
+      "level_50": { "name": "Gran Mestre", "desc": "Arriba al nivell 50" },
+      "deep_work": { "name": "Deep Worker", "desc": "Completa una sessió de 90+ min" },
+      "pom_10": { "name": "Pomodoro Master", "desc": "Completa 10 pomodoros" }
+    }
+  },
+  "cards": {
+    "newDeck": "Nou deck",
+    "newDeckPh": "ex: Química Orgànica T3",
+    "createDeck": "+ Crear deck",
+    "emptyTitle": "Cap deck creat",
+    "emptyDesc": "Crea un deck per començar amb el sistema de Reaprenentatge Successiu",
+    "deckSummary": "{{cards}} cards · {{due}} pendents · {{avg}}%",
+    "study": "▶ Estudiar ({{n}})",
+    "allClear": "Tot al dia ✓",
+    "phQuestion": "Pregunta",
+    "phAnswer": "Resposta",
+    "phSubject": "Tema",
+    "defaultSubject": "General",
+    "rule3": "Regla del 3 — 3 encerts per consolidar",
+    "exit": "✕ Sortir",
+    "pending": "Pendents: {{n}}",
+    "session": "Sessió: {{n}}/3",
+    "strength": "Força: {{n}}%",
+    "tapReveal": "Toca per veure la resposta",
+    "gradeBad": "❌ No ho sabia",
+    "gradeGood": "✅ Ho sabia!",
+    "sessionDone": "🎉 Sessió completa!",
+    "sessionDoneDesc": "Tots els conceptes revisats"
+  },
+  "exams": {
+    "newExam": "+ Nou examen",
+    "addTitle": "Afegir examen",
+    "name": "Nom",
+    "namePh": "Examen de Mates T5",
+    "subject": "Assignatura",
+    "subjectPh": "Matemàtiques",
+    "date": "Data",
+    "difficulty": "Dificultat",
+    "diffEasy": "Fàcil",
+    "diffMed": "Mitjà",
+    "diffHard": "Difícil",
+    "submit": "✓ Afegir",
+    "plan": "📋 Pla d'estudi SRS",
+    "sessions": "{{n}} sessions"
+  },
+  "recovery": {
+    "nsdr": {
+      "title": "NSDR",
+      "desc": "10-20 min. +65% dopamina, renta cortisol.",
+      "steps": [
+        "Estira't, tanca els ulls",
+        "3-5 respiracions lentes",
+        "Escaneja cos de cap a peus",
+        "Mantén consciència 10-20 min",
+        "Obre els ulls lentament"
+      ]
+    },
+    "breath": {
+      "title": "Respiració 4-4-6",
+      "desc": "Redueix cortisol, activa el parasimpàtic.",
+      "inhale": "Inspira...",
+      "hold": "Aguanta...",
+      "exhale": "Expira...",
+      "press": "Prem per començar",
+      "cycles": "▶ 8 cicles",
+      "stop": "⏹ Parar",
+      "progress": "{{n}}/8"
+    },
+    "forbidden": {
+      "title": "PROHIBIT durant el descans",
+      "desc": "Mòbil, xarxes socials, YouTube. El descans ha de ser MODALMENT diferent: caminar, respirar, estirar."
+    },
+    "stretches": {
+      "neck": { "name": "Rotació de coll", "desc": "Gira el cap lentament en cercles: 5 vegades a cada costat." },
+      "arms": { "name": "Estirament de braços", "desc": "Entrellaça els dits i estira cap amunt 15s. Repeteix 3 cops." },
+      "twist": { "name": "Torsió espinal", "desc": "Assegut, gira el tors esquerra 15s, dreta 15s. Repeteix 2 cops." },
+      "forward": { "name": "Flexió endavant", "desc": "De peu, inclina't endavant deixant caure els braços. 20 segons." },
+      "cervical": { "name": "Estirament cervical", "desc": "Inclina el cap cap a un costat 15s, després l'altre. Repeteix." }
+    }
+  },
+  "headers": {
+    "timer": { "title": "⏱ Temporitzador Científic", "desc": "Deep Work, Pomodoro i Ultradian" },
+    "cards": { "title": "📇 Flashcards — Reaprenentatge Successiu", "desc": "Regla del 3 + Repetició Espaïada automàtica (SRS)" },
+    "feynman": { "title": "🧒 Tutor IA — Destructor d'Il·lusions", "desc": "Tècnica Feynman potenciada. Explica conceptes sense jerga i l'IA detecta comprensió falsa." },
+    "chaos": { "title": "⚡ Mode Caos — Pràctica Intercalada", "desc": "Barreja problemes de temes diferents. Entrena discriminació inductiva." },
+    "languages": { "title": "🌍 Idiomes — Vocabulari + SRS", "desc": "Aprèn paraules noves amb el sistema de repetició espaïada" },
+    "sounds": { "title": "🎵 Mixer de Sons Ambientals", "desc": "Crea el teu paisatge sonor perfecte per concentrar-te" },
+    "recovery": { "title": "🌙 Estació de Recuperació", "desc": "NSDR, respiració i estiraments. Descans REAL per al cervell." },
+    "exams": { "title": "📅 Exàmens i Pla d'Estudi", "desc": "SRS automàtic basat en la dificultat" },
+    "stats": { "title": "📊 Estadístiques Avançades", "desc": "Dades reals del teu rendiment acadèmic" },
+    "techniques": { "title": "📚 Tècniques Científiques", "desc": "Basades en Dunlosky et al. (2013)" }
+  }
+}

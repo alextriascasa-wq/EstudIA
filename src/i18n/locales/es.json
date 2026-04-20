@@ -1,0 +1,232 @@
+{
+  "brand": {
+    "name": "EstudIA",
+    "tagline": "Ciencia del rendimiento académico"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "timer": "Timer",
+    "cards": "Flashcards",
+    "feynman": "Tutor IA",
+    "chaos": "Modo Caos",
+    "languages": "Idiomas",
+    "sounds": "Sonidos",
+    "recovery": "Recuperación",
+    "exams": "Exámenes",
+    "stats": "Estadísticas",
+    "social": "Social",
+    "techniques": "Técnicas"
+  },
+  "sidebar": {
+    "level": "Nivel",
+    "xpOf": "{{cur}} / {{need}} XP",
+    "streak": "🔥 {{days}}d",
+    "themeToggle": "Cambiar tema",
+    "export": "Exportar datos",
+    "import": "Importar datos",
+    "language": "Idioma",
+    "install": "Instalar EstudIA",
+    "installIOS": "Instalar en iPhone",
+    "installIOSSteps": "Toca Compartir (⬆) → Añadir a pantalla de inicio"
+  },
+  "common": {
+    "add": "Añadir",
+    "create": "Crear",
+    "delete": "Borrar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "start": "Empezar",
+    "stop": "Parar",
+    "exit": "Salir",
+    "seeAll": "Ver todos",
+    "today": "HOY",
+    "tomorrow": "MAÑANA",
+    "import": "Importado",
+    "invalidFile": "Fichero no válido",
+    "importSuccess": "Datos cargados correctamente"
+  },
+  "dashboard": {
+    "todayPlan": "📋 Plan de hoy",
+    "upcomingExams": "📅 Próximos exámenes",
+    "noTasks": "Ninguna tarea hoy — ¡añade exámenes!",
+    "noExams": "Ningún examen programado",
+    "heatmap": "📊 Mapa de actividad (90 días)",
+    "heatmapLess": "Menos",
+    "heatmapMore": "Más",
+    "weekly": "📈 Actividad semanal",
+    "retention": "🧠 Retención real",
+    "memStrength": "Fuerza de memoria",
+    "quizAccuracy": "Precisión quiz",
+    "achievements": "🏅 Logros ({{unlocked}}/{{total}})",
+    "zeigTitle": "Efecto Zeigarnik — ¿Dónde me quedé?",
+    "zeigDesc": "El cerebro mantiene activas en el subconsciente las tareas incompletas.",
+    "zeigPlaceholder": "ej: Estaba con el ejercicio 5 de derivadas, me faltaba la regla de la cadena...",
+    "tipTitle": "Consejo científico del día",
+    "xpTotal": "XP Total",
+    "quizSummary": "{{total}} preguntas · {{correct}} correctas",
+    "addShort": "+ Añadir",
+    "stats": {
+      "sessions": "Sesiones hoy",
+      "sessionsSub": "{{min}}min total",
+      "memStrength": "Fuerza memoria",
+      "memStrengthSub": "{{correct}}/{{total}} correctas",
+      "streak": "Racha",
+      "streakGood": "¡Imparable!",
+      "streakBad": "Sigue así",
+      "cards": "Cards hoy",
+      "cardsSub": "{{total}} totales"
+    }
+  },
+  "timer": {
+    "focus": "🎯 FOCUS",
+    "rest": "☕ DESCANSO",
+    "focusSub": "Sesión {{sess}} · Móvil FUERA",
+    "restSub": "Descansa — nada de pantallas",
+    "stats": {
+      "sessions": "sesiones",
+      "total": "total",
+      "pomodoros": "pomodoros"
+    },
+    "duringFocus": "Durante el focus",
+    "duringRest": "Durante el descanso",
+    "duringFocusDesc": "Móvil en modo avión y FUERA de la vista. Cada minuto de Deep Work refuerza físicamente los circuitos neuronales.",
+    "duringRestDesc": "NO mires el móvil. Camina, mira por la ventana o haz NSDR. El descanso debe ser MODALMENTE distinto del trabajo.",
+    "modes": {
+      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repaso, vocabulario" },
+      "d52": { "nm": "Ultradiano", "ideal": "Estudio mixto, lectura activa" },
+      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programación" }
+    },
+    "notifOn": "Notificaciones activadas",
+    "notifOff": "Activar notificaciones",
+    "notifFocusDone": "Sesión de {{mode}} completada. ¡Hora de descansar!",
+    "notifRestDone": "Descanso terminado. ¡Vuelve al focus!"
+  },
+  "stats": {
+    "last7d": "Últimos 7 días",
+    "totalTime": "tiempo total",
+    "avgDaily": "Media diaria",
+    "target120": "objetivo: 120m",
+    "cards7d": "Cards 7d",
+    "correctSub": "{{n}} correctas",
+    "accuracy7d": "Precisión 7d",
+    "target85": "objetivo: 85%",
+    "globalTitle": "📈 Estadísticas globales",
+    "achTitle": "🏅 Logros ({{unlocked}}/{{total}})",
+    "locked": "???",
+    "globals": {
+      "totalHours": "Total horas",
+      "totalSessions": "Total sesiones",
+      "maxStreak": "Racha máxima",
+      "xpTotal": "XP Total",
+      "totalFlashcards": "Total flashcards",
+      "globalAccuracy": "Precisión global",
+      "decks": "Decks creados",
+      "level": "Nivel"
+    },
+    "ach": {
+      "first_session": { "name": "Primer Paso", "desc": "Completa la primera sesión de focus" },
+      "streak_3": { "name": "Constante", "desc": "Consigue una racha de 3 días" },
+      "streak_7": { "name": "Imparable", "desc": "Racha de 7 días seguidos" },
+      "streak_30": { "name": "Leyenda", "desc": "¡Racha de 30 días!" },
+      "cards_50": { "name": "Explorador", "desc": "Revisa 50 flashcards" },
+      "cards_500": { "name": "Erudito", "desc": "Revisa 500 flashcards" },
+      "mem_80": { "name": "Memoria de Acero", "desc": "Llega al 80% de fuerza de memoria" },
+      "hours_10": { "name": "Dedicado", "desc": "Acumula 10 horas de estudio" },
+      "hours_50": { "name": "Maestro", "desc": "Acumula 50 horas de estudio" },
+      "hours_100": { "name": "Académico de Élite", "desc": "100 horas de estudio total" },
+      "chaos_10": { "name": "Gladiador", "desc": "Completa 10 rondas de Modo Caos" },
+      "level_10": { "name": "Veterano", "desc": "Llega al nivel 10" },
+      "level_25": { "name": "Experto", "desc": "Llega al nivel 25" },
+      "level_50": { "name": "Gran Maestro", "desc": "Llega al nivel 50" },
+      "deep_work": { "name": "Deep Worker", "desc": "Completa una sesión de 90+ min" },
+      "pom_10": { "name": "Pomodoro Master", "desc": "Completa 10 pomodoros" }
+    }
+  },
+  "cards": {
+    "newDeck": "Nuevo deck",
+    "newDeckPh": "ej: Química Orgánica T3",
+    "createDeck": "+ Crear deck",
+    "emptyTitle": "Ningún deck creado",
+    "emptyDesc": "Crea un deck para empezar con el sistema de Reaprendizaje Sucesivo",
+    "deckSummary": "{{cards}} cards · {{due}} pendientes · {{avg}}%",
+    "study": "▶ Estudiar ({{n}})",
+    "allClear": "Todo al día ✓",
+    "phQuestion": "Pregunta",
+    "phAnswer": "Respuesta",
+    "phSubject": "Tema",
+    "defaultSubject": "General",
+    "rule3": "Regla del 3 — 3 aciertos para consolidar",
+    "exit": "✕ Salir",
+    "pending": "Pendientes: {{n}}",
+    "session": "Sesión: {{n}}/3",
+    "strength": "Fuerza: {{n}}%",
+    "tapReveal": "Toca para ver la respuesta",
+    "gradeBad": "❌ No lo sabía",
+    "gradeGood": "✅ ¡Lo sabía!",
+    "sessionDone": "🎉 ¡Sesión completa!",
+    "sessionDoneDesc": "Todos los conceptos repasados"
+  },
+  "exams": {
+    "newExam": "+ Nuevo examen",
+    "addTitle": "Añadir examen",
+    "name": "Nombre",
+    "namePh": "Examen de Mates T5",
+    "subject": "Asignatura",
+    "subjectPh": "Matemáticas",
+    "date": "Fecha",
+    "difficulty": "Dificultad",
+    "diffEasy": "Fácil",
+    "diffMed": "Medio",
+    "diffHard": "Difícil",
+    "submit": "✓ Añadir",
+    "plan": "📋 Plan de estudio SRS",
+    "sessions": "{{n}} sesiones"
+  },
+  "recovery": {
+    "nsdr": {
+      "title": "NSDR",
+      "desc": "10-20 min. +65% dopamina, limpia cortisol.",
+      "steps": [
+        "Estírate, cierra los ojos",
+        "3-5 respiraciones lentas",
+        "Escanea cuerpo de cabeza a pies",
+        "Mantén consciencia 10-20 min",
+        "Abre los ojos lentamente"
+      ]
+    },
+    "breath": {
+      "title": "Respiración 4-4-6",
+      "desc": "Reduce cortisol, activa el parasimpático.",
+      "inhale": "Inspira...",
+      "hold": "Aguanta...",
+      "exhale": "Expira...",
+      "press": "Pulsa para empezar",
+      "cycles": "▶ 8 ciclos",
+      "stop": "⏹ Parar",
+      "progress": "{{n}}/8"
+    },
+    "forbidden": {
+      "title": "PROHIBIDO durante el descanso",
+      "desc": "Móvil, redes sociales, YouTube. El descanso debe ser MODALMENTE distinto: caminar, respirar, estirar."
+    },
+    "stretches": {
+      "neck": { "name": "Rotación de cuello", "desc": "Gira la cabeza lentamente en círculos: 5 veces a cada lado." },
+      "arms": { "name": "Estiramiento de brazos", "desc": "Entrelaza los dedos y estira hacia arriba 15s. Repite 3 veces." },
+      "twist": { "name": "Torsión espinal", "desc": "Sentado, gira el torso izquierda 15s, derecha 15s. Repite 2 veces." },
+      "forward": { "name": "Flexión adelante", "desc": "De pie, inclínate adelante dejando caer los brazos. 20 segundos." },
+      "cervical": { "name": "Estiramiento cervical", "desc": "Inclina la cabeza a un lado 15s, después al otro. Repite." }
+    }
+  },
+  "headers": {
+    "timer": { "title": "⏱ Temporizador Científico", "desc": "Deep Work, Pomodoro y Ultradiano" },
+    "cards": { "title": "📇 Flashcards — Reaprendizaje Sucesivo", "desc": "Regla del 3 + Repetición Espaciada automática (SRS)" },
+    "feynman": { "title": "🧒 Tutor IA — Destructor de Ilusiones", "desc": "Técnica Feynman potenciada. Explica conceptos sin jerga y la IA detecta comprensión falsa." },
+    "chaos": { "title": "⚡ Modo Caos — Práctica Intercalada", "desc": "Mezcla problemas de temas distintos. Entrena discriminación inductiva." },
+    "languages": { "title": "🌍 Idiomas — Vocabulario + SRS", "desc": "Aprende palabras nuevas con repetición espaciada" },
+    "sounds": { "title": "🎵 Mixer de Sonidos Ambientales", "desc": "Crea tu paisaje sonoro perfecto para concentrarte" },
+    "recovery": { "title": "🌙 Estación de Recuperación", "desc": "NSDR, respiración y estiramientos. Descanso REAL para el cerebro." },
+    "exams": { "title": "📅 Exámenes y Plan de Estudio", "desc": "SRS automático basado en la dificultad" },
+    "stats": { "title": "📊 Estadísticas Avanzadas", "desc": "Datos reales de tu rendimiento académico" },
+    "techniques": { "title": "📚 Técnicas Científicas", "desc": "Basadas en Dunlosky et al. (2013)" }
+  }
+}

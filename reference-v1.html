@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+<title>StudyFlow — El teu assistent d'estudi científic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fafafa;--s:#fff;--sh:#f5f5f5;--b:#e5e5e5;--bl:#f0f0f0;
+  --t:#171717;--ts:#737373;--tm:#a3a3a3;
+  --a:#2563eb;--al:#dbeafe;--ad:#1d4ed8;
+  --ok:#059669;--okl:#d1fae5;--w:#d97706;--wl:#fef3c7;
+  --err:#dc2626;--errl:#fee2e2;--p:#7c3aed;--pl:#ede9fe;
+  --i:#6366f1;--il:#e0e7ff;--r:#e11d48;--rl:#ffe4e6;
+}
+[data-theme="dark"]{
+  --bg:#0a0a0a;--s:#171717;--sh:#262626;--b:#333;--bl:#1e1e1e;
+  --t:#f5f5f5;--ts:#a3a3a3;--tm:#737373;
+  --a:#3b82f6;--al:#1e3a5f;--ad:#60a5fa;
+  --ok:#10b981;--okl:#064e3b;--w:#f59e0b;--wl:#78350f;
+  --err:#ef4444;--errl:#7f1d1d;--p:#8b5cf6;--pl:#3b0764;
+  --i:#818cf8;--il:#312e81;--r:#fb7185;--rl:#881337;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t);display:flex;height:100vh;overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b);border-radius:3px}
+
+/* SIDEBAR */
+.sb{width:220px;background:var(--s);border-right:1px solid var(--b);padding:20px 12px;display:flex;flex-direction:column;gap:3px;flex-shrink:0;overflow-y:auto}
+.sb-brand{padding:0 10px 16px;border-bottom:1px solid var(--bl);margin-bottom:8px}
+.sb-brand h1{font-size:18px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(135deg,var(--a),var(--p));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sb-brand p{font-size:11px;color:var(--tm);margin-top:2px}
+.nb{display:flex;align-items:center;gap:9px;padding:9px 14px;border-radius:9px;border:none;background:transparent;color:var(--ts);font-size:13px;font-weight:500;width:100%;text-align:left;transition:.15s}
+.nb:hover{background:var(--sh)}
+.nb.on{background:var(--a);color:#fff;font-weight:600}
+.nb svg{width:17px;height:17px;flex-shrink:0}
+.sb-ft{margin-top:auto;padding:14px 10px;border-top:1px solid var(--bl);font-size:12px}
+.sb-ft .row{display:flex;justify-content:space-between;margin-bottom:5px}
+.sb-ft .k{color:var(--ts)}.sb-ft .v{font-weight:700}
+
+/* MAIN */
+.mn{flex:1;overflow-y:auto;padding:24px 30px}
+.sec{display:none;flex-direction:column;gap:18px;max-width:920px}
+.sec.on{display:flex}
+
+/* CARDS */
+.c{background:var(--s);border-radius:13px;border:1px solid var(--b);padding:22px;transition:.15s}
+.c:hover{box-shadow:0 2px 12px rgba(0,0,0,.04)}
+
+/* BUTTONS */
+.bp{background:var(--a);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.bp:hover{background:var(--ad)}
+.bs{background:transparent;color:var(--ts);border:1px solid var(--b);border-radius:9px;padding:9px 18px;font-weight:500;font-size:13px;display:inline-flex;align-items:center;gap:7px}
+.bs:hover{background:var(--sh)}
+.bi{background:none;border:none;color:var(--tm);padding:6px;border-radius:7px}
+.bi:hover{background:var(--sh)}
+
+/* INPUTS */
+.inp{width:100%;padding:9px 13px;border-radius:9px;border:1px solid var(--b);font-size:13px;color:var(--t);background:var(--bg);outline:none}
+.inp:focus{border-color:var(--a);box-shadow:0 0 0 3px var(--al)}
+textarea.inp{resize:vertical;min-height:80px}
+.lbl{font-size:11px;font-weight:600;color:var(--ts);display:block;margin-bottom:5px}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
+/* STAT CARD */
+.sc{display:flex;flex-direction:column;gap:8px;padding:16px}
+.sc .top{display:flex;align-items:center;justify-content:space-between}
+.sc .top span{font-size:12px;color:var(--ts);font-weight:500}
+.sc .ib{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.sc .val{font-size:20px;font-weight:800}
+.sc .sub{font-size:11px;color:var(--tm)}
+
+/* BADGES */
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;display:inline-block}
+
+/* TASK ITEMS */
+.ti{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:9px;cursor:pointer;transition:.12s;background:var(--bg);border:1px solid transparent}
+.ti:hover{background:var(--sh)}
+.ti.done{background:var(--okl);border-color:rgba(5,150,105,.2);opacity:.65}
+.ti .info{flex:1}.ti .nm{font-size:13px;font-weight:600}
+.ti.done .nm{text-decoration:line-through}
+.ti .ds{font-size:11px;color:var(--ts);margin-top:1px}
+.ti .tg{font-size:10px;color:var(--tm);white-space:nowrap}
+
+/* TIMER */
+.tmr-circle{position:relative;width:220px;height:220px;margin:25px auto}
+.tmr-time{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.tmr-time .dig{font-size:48px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-2px}
+.tmr-time .sub{font-size:12px;color:var(--tm);margin-top:3px}
+
+/* FLASHCARD */
+.fc{min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;cursor:pointer;user-select:none;transition:.3s}
+.fc .q{font-size:18px;font-weight:700;line-height:1.5}
+.fc .a{font-size:16px;color:var(--ok);font-weight:600;margin-top:12px;line-height:1.5}
+.fc .hint{font-size:12px;color:var(--tm);margin-top:16px}
+
+/* FEYNMAN CHAT */
+.chat-area{max-height:350px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:10px 0}
+.msg{max-width:80%;padding:12px 16px;border-radius:14px;font-size:13px;line-height:1.6}
+.msg.user{align-self:flex-end;background:var(--a);color:#fff;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--sh);color:var(--t);border-bottom-left-radius:4px}
+.chat-input{display:flex;gap:8px;margin-top:10px}
+.chat-input input{flex:1}
+
+/* BREATHING */
+.breath-circle{width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,var(--al),var(--il));display:flex;align-items:center;justify-content:center;margin:20px auto;font-size:16px;font-weight:700;color:var(--a);transition:transform 4s ease-in-out}
+.breath-circle.inhale{transform:scale(1.4)}
+.breath-circle.exhale{transform:scale(1)}
+
+/* MODE CARDS */
+.mc{text-align:left;padding:16px;cursor:pointer;border:2px solid var(--b);transition:.2s}
+.mc.on{border-color:var(--a);background:var(--al)}
+.mc .mn-name{font-size:14px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.mc.on .mn-name{color:var(--a)}
+.mc .mn-desc{font-size:11px;color:var(--ts)}
+
+/* PROGRESS BARS */
+.pb{height:6px;background:var(--bl);border-radius:3px;overflow:hidden}
+.pb .fill{height:100%;border-radius:3px;transition:width .5s ease}
+
+/* ZEIGARNIK NOTE */
+.zeig{background:linear-gradient(135deg,var(--wl),var(--rl));border:none;position:relative}
+.zeig::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--w);border-radius:13px 0 0 13px}
+
+/* GRADIENT */
+.grad{background:linear-gradient(135deg,var(--al),var(--pl));border:none}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px;color:var(--tm)}
+.empty svg{margin-bottom:10px;opacity:.3}
+.empty p{font-size:13px;margin-top:6px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  body{flex-direction:column}
+  .sb{width:100%;flex-direction:row;padding:10px;overflow-x:auto;gap:4px;border-right:none;border-bottom:1px solid var(--b)}
+  .sb-brand,.sb-ft{display:none}
+  .nb{white-space:nowrap;padding:8px 12px;font-size:12px}
+  .mn{padding:14px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+}
+
+/* TAB HEADERS */
+.sec-hdr{margin-bottom:4px}
+.sec-hdr h2{font-size:18px;font-weight:900}
+.sec-hdr p{font-size:12px;color:var(--ts);margin-top:3px}
+
+/* STRETCH ANIMATION */
+.stretch-fig{width:120px;height:120px;border-radius:50%;background:var(--il);display:flex;align-items:center;justify-content:center;margin:10px auto;font-size:40px}
+@keyframes breathAnim{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+.breathing{animation:breathAnim 8s ease-in-out infinite}
+
+/* CHAOS MODE */
+.chaos-problem{background:var(--bg);border:2px solid var(--b);border-radius:12px;padding:24px;text-align:center;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.chaos-problem .topic-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:12px}
+.chaos-problem .problem-text{font-size:16px;font-weight:600;line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sb" id="sidebar">
+  <div class="sb-brand"><h1>StudyFlow</h1><p>Ciència del rendiment acadèmic</p></div>
+  <button class="nb on" data-tab="dashboard" onclick="go('dashboard')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard
+  </button>
+  <button class="nb" data-tab="timer" onclick="go('timer')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Timer
+  </button>
+  <button class="nb" data-tab="cards" onclick="go('cards')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>Flashcards
+  </button>
+  <button class="nb" data-tab="feynman" onclick="go('feynman')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Tutor Feynman
+  </button>
+  <button class="nb" data-tab="chaos" onclick="go('chaos')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Mode Caos
+  </button>
+  <button class="nb" data-tab="recovery" onclick="go('recovery')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Recuperació
+  </button>
+  <button class="nb" data-tab="exams" onclick="go('exams')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Exàmens
+  </button>
+  <button class="nb" data-tab="techniques" onclick="go('techniques')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Tècniques
+  </button>
+  <div class="sb-ft">
+    <div class="row"><span class="k">Sessions avui</span><span class="v" id="sb-sess">0</span></div>
+    <div class="row"><span class="k">Força memòria</span><span class="v" id="sb-str">0%</span></div>
+    <div class="row"><span class="k">Ratxa</span><span class="v" id="sb-streak">1d</span></div>
+    <div style="display:flex;gap:6px;margin-top:10px">
+      <button class="bs" style="flex:1;padding:6px;font-size:11px;justify-content:center" onclick="toggleDark()" id="dark-btn">🌙 Fosc</button>
+      <button class="bs" style="flex:1;padding:6px;font-size:11px;justify-content:center" onclick="exportData()">💾</button>
+      <button class="bs" style="flex:1;padding:6px;font-size:11px;justify-content:center" onclick="$('import-file').click()">📂</button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="mn">
+  <div class="sec on" id="sec-dashboard"></div>
+  <div class="sec" id="sec-timer"></div>
+  <div class="sec" id="sec-cards"></div>
+  <div class="sec" id="sec-feynman"></div>
+  <div class="sec" id="sec-chaos"></div>
+  <div class="sec" id="sec-recovery"></div>
+  <div class="sec" id="sec-exams"></div>
+  <div class="sec" id="sec-techniques"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE & PERSISTENCE
+// ═══════════════════════════════════════════
+const KEY="sf2";
+const defaults={
+  // Stats
+  todaySess:0, totalMin:0, streak:1, lastDate:null, pomCount:0,
+  weekly:[{d:"Dl",m:0},{d:"Dt",m:0},{d:"Dc",m:0},{d:"Dj",m:0},{d:"Dv",m:0},{d:"Ds",m:0},{d:"Dg",m:0}],
+  // Exams
+  exams:[],
+  // Flashcards (each: {id,q,a,subject,hits:0,nextReview:date,strength:0,interval:1})
+  decks:[], // [{id,name,cards:[]}]
+  // Completed tasks
+  doneTasks:[],
+  // Chaos mode problems
+  chaosProblems:[], // [{id,topic,text,solution,difficulty}]
+  // Zeigarnik notes
+  zNote:"",
+  // Feynman chat history
+  feynmanHistory:[],
+  // Memory strength (0-100 based on quiz performance)
+  memStrength:0,
+  // Quiz stats
+  quizTotal:0, quizCorrect:0,
+  // Cards reviewed today
+  cardsToday:0,
+};
+let S;
+try{const r=localStorage.getItem(KEY);S=r?{...defaults,...JSON.parse(r)}:{...defaults}}catch(e){S={...defaults}}
+const today=()=>new Date().toISOString().split("T")[0];
+if(S.lastDate&&S.lastDate!==today()){
+  const d=Math.floor((new Date(today())-new Date(S.lastDate))/864e5);
+  if(d===1&&S.todaySess>0)S.streak++;else if(d>1)S.streak=1;
+  S.todaySess=0;S.cardsToday=0;
+  // Reset weekly on Monday
+  const dow=new Date().getDay();
+  if(dow===1&&d>=1)S.weekly=[{d:"Dl",m:0},{d:"Dt",m:0},{d:"Dc",m:0},{d:"Dj",m:0},{d:"Dv",m:0},{d:"Ds",m:0},{d:"Dg",m:0}];
+}
+function save(){S.lastDate=today();localStorage.setItem(KEY,JSON.stringify(S))}
+
+// ═══════════════════════════════════════════
+// DARK MODE
+// ═══════════════════════════════════════════
+function toggleDark(){
+  const isDark=document.documentElement.getAttribute("data-theme")==="dark";
+  document.documentElement.setAttribute("data-theme",isDark?"":"dark");
+  localStorage.setItem("sf2-dark",isDark?"":"dark");
+  const btn=$("dark-btn");if(btn)btn.textContent=isDark?"🌙 Fosc":"☀️ Clar";
+}
+(function(){const t=localStorage.getItem("sf2-dark");if(t==="dark"){document.documentElement.setAttribute("data-theme","dark");setTimeout(()=>{const b=$("dark-btn");if(b)b.textContent="☀️ Clar"},50)}})();
+
+// ═══════════════════════════════════════════
+// NOTIFICATION SOUND (Web Audio API)
+// ═══════════════════════════════════════════
+function playNotifSound(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [523.25,659.25,783.99].forEach((freq,i)=>{
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type="sine";osc.frequency.value=freq;
+      gain.gain.setValueAtTime(0.3,ctx.currentTime+i*0.15);
+      gain.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+i*0.15+0.3);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+i*0.15);osc.stop(ctx.currentTime+i*0.15+0.3);
+    });
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════
+// EXPORT / IMPORT
+// ═══════════════════════════════════════════
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`studyflow-backup-${today()}.json`;a.click();URL.revokeObjectURL(a.href);
+}
+function importData(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=function(e){
+    try{
+      const d=JSON.parse(e.target.result);
+      S={...defaults,...d};save();render();
+      alert("✅ Dades importades correctament!");
+    }catch(err){alert("❌ Error al llegir el fitxer")}
+  };r.readAsText(f);ev.target.value="";
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+let tab="dashboard";
+function go(t){
+  tab=t;
+  document.querySelectorAll(".nb").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));
+  document.querySelectorAll(".sec").forEach(s=>s.classList.toggle("on",s.id===`sec-${t}`));
+  render();
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function fmtTime(s){return`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`}
+function fmtDate(d){const dt=new Date(d+"T12:00:00"),ds=["Dg","Dl","Dt","Dc","Dj","Dv","Ds"],ms=["gen","feb","mar","abr","mai","jun","jul","ago","set","oct","nov","des"];return`${ds[dt.getDay()]} ${dt.getDate()} ${ms[dt.getMonth()]}`}
+function daysUntil(d){const n=new Date();n.setHours(0,0,0,0);const t=new Date(d+"T12:00:00");t.setHours(0,0,0,0);return Math.ceil((t-n)/864e5)}
+function uid(){return Date.now()+Math.random().toString(36).substr(2,5)}
+function $(id){return document.getElementById(id)}
+function html(id,h){const el=$(id);if(el)el.innerHTML=h}
+
+// ═══════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════
+const MODES=[
+  {id:"pom",nm:"Pomodoro",w:25*60,r:5*60,lr:15*60,ico:"⏱",ds:"25/5 min",ideal:"Flashcards, repàs, organització"},
+  {id:"d90",nm:"Deep Work 90",w:90*60,r:27*60,ico:"⚡",ds:"90/27 min",ideal:"Mates, física, programació"},
+  {id:"d120",nm:"Deep Work 120",w:120*60,r:36*60,ico:"🔥",ds:"120/36 min",ideal:"Immersió total, projectes complexos"},
+];
+let tmMode=0,tmLeft=MODES[0].w,tmRun=false,tmRest=false,tmInt=null;
+function tmStart(){
+  if(tmRun)return;tmRun=true;
+  tmInt=setInterval(()=>{
+    tmLeft--;
+    if(tmLeft<=0){
+      clearInterval(tmInt);tmRun=false;
+      playNotifSound();
+      if(!tmRest){
+        const mins=Math.round(MODES[tmMode].w/60);
+        S.totalMin+=mins;S.todaySess++;S.pomCount++;
+        const di=new Date().getDay(),mi=di===0?6:di-1;
+        S.weekly[mi].m+=mins;save();
+        tmRest=true;
+        tmLeft=MODES[tmMode].id==="pom"&&S.pomCount%4===0?(MODES[tmMode].lr||MODES[tmMode].r):MODES[tmMode].r;
+      }else{tmRest=false;tmLeft=MODES[tmMode].w}
+      renderTimer();
+    }
+    updateTimerDisplay();
+  },1000);
+  renderTimer();
+}
+function tmPause(){tmRun=false;clearInterval(tmInt);renderTimer()}
+function tmReset(){tmRun=false;tmRest=false;clearInterval(tmInt);tmLeft=MODES[tmMode].w;renderTimer()}
+function tmSetMode(i){tmMode=i;tmRun=false;tmRest=false;clearInterval(tmInt);tmLeft=MODES[i].w;renderTimer()}
+function updateTimerDisplay(){
+  const d=$("tm-dig");if(d)d.textContent=fmtTime(tmLeft);
+  const m=MODES[tmMode],tot=tmRest?m.r:m.w,pct=((tot-tmLeft)/tot)*100;
+  const c=$("tm-circ");if(c){const r=100,cr=2*Math.PI*r;c.style.strokeDashoffset=`${cr*(1-pct/100)}`}
+}
+
+// ═══════════════════════════════════════════
+// FLASHCARDS — Regla del 3 + SRS
+// ═══════════════════════════════════════════
+let curDeck=null,curCard=null,showAns=false,sessionHits=0;
+
+function addDeck(name){
+  if(!name)return;
+  S.decks.push({id:uid(),name,cards:[]});save();renderCards();
+}
+function addCard(deckId,q,a,subject){
+  const dk=S.decks.find(d=>d.id===deckId);
+  if(!dk||!q||!a)return;
+  dk.cards.push({id:uid(),q,a,subject:subject||"General",hits:0,sessionHits:0,nextReview:today(),strength:0,interval:1,lastSeen:null});
+  save();renderCards();
+}
+function deleteDeck(id){S.decks=S.decks.filter(d=>d.id!==id);if(curDeck===id)curDeck=null;save();renderCards()}
+function deleteCard(deckId,cardId){
+  const dk=S.decks.find(d=>d.id===deckId);
+  if(dk)dk.cards=dk.cards.filter(c=>c.id!==cardId);
+  save();renderCards();
+}
+
+function getDueCards(deckId){
+  const dk=S.decks.find(d=>d.id===deckId);
+  if(!dk)return[];
+  return dk.cards.filter(c=>!c.nextReview||c.nextReview<=today());
+}
+
+function startReview(deckId){
+  curDeck=deckId;
+  const due=getDueCards(deckId);
+  if(due.length===0){curCard=null;renderCards();return}
+  // Reset session hits for this session
+  due.forEach(c=>c.sessionHits=0);
+  curCard=due[0];showAns=false;sessionHits=0;
+  renderCards();
+}
+
+function revealAnswer(){showAns=true;renderCards()}
+
+function gradeCard(correct){
+  if(!curCard||!curDeck)return;
+  const dk=S.decks.find(d=>d.id===curDeck);
+  const card=dk.cards.find(c=>c.id===curCard.id);
+  if(!card)return;
+
+  S.quizTotal++;
+  if(correct){
+    S.quizCorrect++;
+    card.sessionHits=(card.sessionHits||0)+1;
+    card.hits++;
+
+    // REGLA DEL 3: necessita 3 encerts en la mateixa sessió
+    if(card.sessionHits>=3){
+      // Enviar a SRS — incrementar interval
+      card.strength=Math.min(100,card.strength+15);
+      card.interval=Math.min(90,Math.round(card.interval*2.2));
+      const next=new Date();next.setDate(next.getDate()+card.interval);
+      card.nextReview=next.toISOString().split("T")[0];
+      card.lastSeen=today();
+    }
+  }else{
+    // Reset session hits — ha de tornar a aconseguir 3
+    card.sessionHits=0;
+    card.strength=Math.max(0,card.strength-10);
+    card.interval=1;
+    card.nextReview=today();
+  }
+
+  S.cardsToday++;
+  // Update global memory strength
+  S.memStrength=S.quizTotal>0?Math.round((S.quizCorrect/S.quizTotal)*100):0;
+  save();
+
+  // Next card
+  const due=getDueCards(curDeck).filter(c=>c.sessionHits<3);
+  if(due.length>0){
+    // Prioritze cards with fewer session hits
+    due.sort((a,b)=>(a.sessionHits||0)-(b.sessionHits||0));
+    curCard=due[0];showAns=false;
+  }else{
+    curCard=null;curDeck=null; // Session complete!
+  }
+  renderCards();
+}
+
+// ═══════════════════════════════════════════
+// FEYNMAN TUTOR
+// ═══════════════════════════════════════════
+let feynTopic="",feynMessages=[];
+const JARGON_PATTERNS=["paradigma","axiomàtic","epistemològic","ontològic","heurístic","sinàptic","neurocognitiu","metacogni","algorítmic","exponencial","logarítmic","derivada parcial","integral definida","isomorfisme","homeomorfisme","estequiometria","termodinàmic"];
+
+function startFeynman(topic){
+  feynTopic=topic;
+  feynMessages=[{role:"ai",text:`D'acord, jo seré un nen de 5 anys molt curiós. 🧒\n\nExplica'm: "${topic}"\n\nQuè és això? Fes-ho tan simple que ho pugui entendre qualsevol persona. Res de paraules difícils!`}];
+  renderFeynman();
+}
+
+function sendFeynman(userText){
+  if(!userText.trim())return;
+  feynMessages.push({role:"user",text:userText});
+
+  // Analyze response
+  const lower=userText.toLowerCase();
+  const usesJargon=JARGON_PATTERNS.some(j=>lower.includes(j));
+  const tooShort=userText.split(" ").length<15;
+  const hasAnalogy=lower.includes("com si")||lower.includes("imagina")||lower.includes("per exemple")||lower.includes("és com");
+  const asksWhy=Math.random()<0.4; // 40% chance of "why" follow-up
+
+  let aiResp="";
+
+  if(usesJargon){
+    // DETECCIÓ D'IL·LUSIÓ DE COMPETÈNCIA
+    const jFound=JARGON_PATTERNS.find(j=>lower.includes(j));
+    aiResp=`⚠️ ALERTA: Il·lusió de competència detectada!\n\nHas usat la paraula "${jFound}" — això és jerga tècnica. Si realment ho entens, hauries de poder dir-ho sense paraules difícils.\n\nProva de nou: explica'm el MATEIX però com si jo tingués 5 anys i no sabessis cap paraula complicada. Usa una analogia de la vida real.`;
+  }else if(tooShort){
+    aiResp=`Mmm, em sembla que has dit molt poc! 🤔\n\nNecessito més detalls. Pots explicar-me:\n• Com funciona pas a pas?\n• Per què passa això i no una altra cosa?\n• Dona'm un exemple que pugui veure o tocar.`;
+  }else if(!hasAnalogy&&Math.random()<0.5){
+    aiResp=`Entenc una mica... però em costaria explicar-ho a un amic. 🤔\n\nPots posar-me un EXEMPLE o una ANALOGIA? Algo com "és com quan...".\n\nLes analogies fan que el cervell connecti la info nova amb coses que ja sap.`;
+  }else if(asksWhy){
+    // INTERROGACIÓ ELABORATIVA
+    const whyQuestions=[
+      `Interessant! Però... ¿PER QUÈ passa això? Quina és la raó de fons?`,
+      `Vale, ho entenc! Però... ¿com es relaciona això amb ${feynTopic.split(" ")[0]}? Connecta-ho!`,
+      `I si fos al revés, què passaria? ¿Per què no funciona d'una altra manera?`,
+      `Molt bé! Ara explica'm: ¿en què es DIFERENCIA de [un concepte similar]? Quina és la diferència clau?`,
+      `M'encanta l'explicació! 🎉 Ara la pregunta difícil: ¿podries explicar QUAN NO funciona o quina és l'excepció?`
+    ];
+    aiResp=whyQuestions[Math.floor(Math.random()*whyQuestions.length)];
+  }else{
+    // Good explanation!
+    const praises=[
+      `WOW! Ara sí que ho entenc! 🎉🧠\n\nL'explicació és clara i simple. Nota: la capacitat d'explicar-ho fàcilment demostra que realment ho comprens.\n\n✅ Feynman aprovat! Vols provar amb un altre concepte?`,
+      `Perfecte! 🌟 Ho has explicat genial — sense paraules rares i amb exemples clars.\n\nAquest nivell de comprensió és el que diferencia memoritzar de ENTENDRE. Ara aquest concepte és teu.\n\n✅ Pots continuar amb un tema nou!`,
+      `Increïble! 🚀 La teva explicació ha estat neta, clara i amb analogia.\n\nAixò és exactament el que Feynman demanava: si no ho pots explicar simple, no ho entens. Tu SÍ ho entens!\n\n✅ Tema dominat!`
+    ];
+    aiResp=praises[Math.floor(Math.random()*praises.length)];
+  }
+
+  feynMessages.push({role:"ai",text:aiResp});
+  renderFeynman();
+}
+
+// ═══════════════════════════════════════════
+// CHAOS MODE — Pràctica Intercalada
+// ═══════════════════════════════════════════
+let chaosActive=false,chaosCur=null,chaosShowSol=false,chaosScore={correct:0,total:0};
+
+function addChaosProblem(topic,text,solution,difficulty){
+  S.chaosProblems.push({id:uid(),topic,text,solution,difficulty:difficulty||"mitjà"});
+  save();renderChaos();
+}
+
+function startChaos(){
+  if(S.chaosProblems.length<3){alert("Necessites mínim 3 problemes de temes DIFERENTS per activar el Mode Caos!");return}
+  chaosActive=true;chaosScore={correct:0,total:0};chaosShowSol=false;
+  nextChaosProblem();
+}
+
+function nextChaosProblem(){
+  // Shuffle and pick — never same topic twice in a row
+  let pool=[...S.chaosProblems];
+  if(chaosCur)pool=pool.filter(p=>p.topic!==chaosCur.topic);
+  if(pool.length===0)pool=[...S.chaosProblems];
+  chaosCur=pool[Math.floor(Math.random()*pool.length)];
+  chaosShowSol=false;
+  renderChaos();
+}
+
+function chaosReveal(){chaosShowSol=true;renderChaos()}
+function chaosGrade(ok){
+  chaosScore.total++;if(ok)chaosScore.correct++;
+  S.quizTotal++;if(ok)S.quizCorrect++;
+  S.memStrength=S.quizTotal>0?Math.round((S.quizCorrect/S.quizTotal)*100):0;
+  save();nextChaosProblem();
+}
+function endChaos(){chaosActive=false;chaosCur=null;renderChaos()}
+
+// ═══════════════════════════════════════════
+// RECOVERY — NSDR + Breathing
+// ═══════════════════════════════════════════
+let breathActive=false,breathPhase="inhale",breathTimer=null,breathCount=0;
+const STRETCHES=[
+  {name:"Rotació de coll",desc:"Gira el cap lentament en cercles: 5 vegades a cada costat. Relaxa els trapezis.",dur:30},
+  {name:"Estirament de braços",desc:"Entrellaça els dits i estira els braços cap amunt 15 segons. Baixa i repeteix 3 cops.",dur:45},
+  {name:"Torsió espinal assegut",desc:"Assegut, gira el tors cap a l'esquerra 15s, després cap a la dreta 15s. Repeteix 2 cops.",dur:60},
+  {name:"Estirament de quadríceps",desc:"De peu, agafa el peu dret amb la mà i porta el taló al gluti. 20s cada cama.",dur:40},
+  {name:"Flexió cap endavant",desc:"De peu, inclina't cap endavant deixant caure els braços. Relaxa 20 segons. Puja lentament.",dur:25},
+];
+
+function startBreathing(){
+  breathActive=true;breathCount=0;breathPhase="inhale";
+  renderRecovery();
+  breathCycle();
+}
+function breathCycle(){
+  if(!breathActive)return;
+  breathPhase="inhale";renderBreathUI();
+  breathTimer=setTimeout(()=>{
+    breathPhase="hold";renderBreathUI();
+    breathTimer=setTimeout(()=>{
+      breathPhase="exhale";renderBreathUI();
+      breathTimer=setTimeout(()=>{
+        breathCount++;
+        if(breathCount>=8){breathActive=false;renderRecovery();return}
+        breathCycle();
+      },6000);
+    },4000);
+  },4000);
+}
+function stopBreathing(){breathActive=false;clearTimeout(breathTimer);renderRecovery()}
+function renderBreathUI(){
+  const el=$("breath-orb");
+  if(!el)return;
+  const labels={inhale:"Inspira...",hold:"Aguanta...",exhale:"Expira..."};
+  const classes={inhale:"breathing",hold:"",exhale:""};
+  el.textContent=labels[breathPhase]||"";
+  el.className="breath-circle "+(breathPhase==="inhale"?"inhale":"exhale");
+  const cnt=$("breath-cnt");if(cnt)cnt.textContent=`${breathCount+1}/8`;
+}
+
+// ═══════════════════════════════════════════
+// EXAMS + STUDY PLAN
+// ═══════════════════════════════════════════
+function addExam(name,subject,date,diff){
+  if(!name||!date)return;
+  S.exams.push({id:uid(),name,subject,date,difficulty:diff||"mitjà"});
+  S.exams.sort((a,b)=>a.date.localeCompare(b.date));save();renderExams();
+}
+function removeExam(id){S.exams=S.exams.filter(e=>e.id!==id);save();renderExams()}
+function genStudyTasks(){
+  const tasks=[],td=today();
+  S.exams.forEach(ex=>{
+    if(daysUntil(ex.date)<0)return;
+    const iv=ex.difficulty==="difícil"?[0,1,2,4,7,14]:ex.difficulty==="mitjà"?[0,1,3,7,14]:[0,2,5,12];
+    iv.forEach(i=>{
+      const sd=new Date(ex.date+"T12:00:00");sd.setDate(sd.getDate()-i);
+      const ss=sd.toISOString().split("T")[0];
+      if(ss>=td){
+        const session=i===0?"Repàs final + simulacre":i<=2?"Recuperació activa intensiva (Regla del 3)":i<=7?"Pràctica intercalada + Feynman":"Primera passada + Interrogació elaborativa";
+        tasks.push({id:`${ex.id}-${i}`,examName:ex.name,subject:ex.subject,date:ss,session,daysBefore:i});
+      }
+    });
+  });
+  return tasks.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function toggleTask(id){
+  const i=S.doneTasks.indexOf(id);
+  i>=0?S.doneTasks.splice(i,1):S.doneTasks.push(id);
+  save();render();
+}
+
+// ═══════════════════════════════════════════
+// ZEIGARNIK
+// ═══════════════════════════════════════════
+function saveZeig(text){S.zNote=text;save()}
+
+// ═══════════════════════════════════════════
+// RENDER FUNCTIONS
+// ═══════════════════════════════════════════
+function renderSidebar(){
+  $("sb-sess").textContent=S.todaySess;
+  $("sb-str").textContent=S.memStrength+"%";
+  $("sb-streak").textContent=S.streak+(S.streak===1?"d":"d");
+}
+
+function renderDashboard(){
+  const tasks=genStudyTasks(),todayT=tasks.filter(t=>t.date===today()),upcoming=S.exams.filter(e=>daysUntil(e.date)>=0).slice(0,5);
+  const doneToday=todayT.filter(t=>S.doneTasks.includes(t.id)).length;
+  const maxW=Math.max(...S.weekly.map(w=>w.m),30);
+  const dayI=new Date().getDay(),tI=dayI===0?6:dayI-1;
+  const tips=["El pseudo-treball és el pitjor enemic. 90 min de Deep Work > 4h amb mòbil.","Cada interrupció: 25 min per recuperar concentració. Mòbil en mode avió.","Rellegir i subratllar = impacte NUL. Usa recuperació activa sempre.","1h × 5 dies DUPLICA la retenció vs. 5h en 1 dia. Mai facis cramming.","7-9h de son: OBLIGATORI. El hipocampo grava la info durant el son profund.","La Tècnica Feynman duplica el rendiment. Si no ho pots explicar simple, no ho entens.","La Regla del 3: un sol encert NO és suficient. Necessites 3 recuperacions correctes.","El Mode Caos (intercalat) és incòmode, però a llarg termini pulveritza la pràctica per blocs.","NSDR de 10 min entre sessions: +65% dopamina, renta cortisol, reinicia l'atenció.","L'estrès agut (simulacres d'examen) MILLORA la consolidació. L'estrès crònic la DESTRUEIX."];
+
+  html("sec-dashboard",`
+    <div class="g4">
+      ${[{l:"Sessions avui",v:S.todaySess,c:"var(--a)",bg:"var(--al)",ico:"🎯"},
+        {l:"Força memòria",v:S.memStrength+"%",c:"var(--p)",bg:"var(--pl)",ico:"🧠"},
+        {l:"Ratxa",v:S.streak+"d",c:"var(--w)",bg:"var(--wl)",ico:"🔥"},
+        {l:"Cards avui",v:S.cardsToday,c:"var(--ok)",bg:"var(--okl)",ico:"📇"}
+      ].map(s=>`<div class="c sc"><div class="top"><span>${s.l}</span><div class="ib" style="background:${s.bg};font-size:16px">${s.ico}</div></div><div class="val">${s.v}</div></div>`).join("")}
+    </div>
+
+    <div class="g2">
+      <div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h3 style="font-size:15px;font-weight:800">📋 Pla d'avui</h3>
+          <span class="badge" style="background:var(--al);color:var(--a)">${doneToday}/${todayT.length}</span>
+        </div>
+        ${todayT.length===0?'<div class="empty"><p>Cap tasca avui. Afegeix exàmens!</p></div>':
+          todayT.map(t=>`<div class="ti ${S.doneTasks.includes(t.id)?'done':''}" onclick="toggleTask('${t.id}')">
+            <span style="font-size:16px">${S.doneTasks.includes(t.id)?'✅':'⭕'}</span>
+            <div class="info"><div class="nm">${t.examName}</div><div class="ds">${t.session}</div></div>
+            <span class="tg">${t.daysBefore===0?"AVUI":t.daysBefore+"d"}</span>
+          </div>`).join("")}
+      </div>
+      <div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <h3 style="font-size:15px;font-weight:800">📅 Pròxims exàmens</h3>
+          <button class="bs" style="padding:5px 10px;font-size:11px" onclick="go('exams')">+ Afegir</button>
+        </div>
+        ${upcoming.length===0?'<div class="empty"><p>Cap examen programat</p></div>':
+          upcoming.map(e=>{const d=daysUntil(e.date),uc=d<=2?"var(--err)":d<=7?"var(--w)":"var(--ok)";
+          return`<div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;background:var(--bg);margin-bottom:5px">
+            <div style="width:7px;height:7px;border-radius:50%;background:${uc}"></div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">${e.name}</div><div style="font-size:11px;color:var(--ts)">${e.subject} · ${fmtDate(e.date)}</div></div>
+            <span class="badge" style="color:${uc};background:${uc}15">${d===0?"AVUI":d===1?"DEMÀ":d+"d"}</span>
+          </div>`}).join("")}
+      </div>
+    </div>
+
+    <!-- Progress real vs temps -->
+    <div class="g2">
+      <div class="c">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">📊 Activitat setmanal</h3>
+        <div style="display:flex;align-items:flex-end;gap:10px;height:120px;padding:0 8px">
+          ${S.weekly.map((d,i)=>{const h=d.m>0?Math.max((d.m/maxW)*100,5):3;
+          return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+            <div style="width:100%;max-width:36px;height:${h}px;border-radius:5px;background:${i===tI?"var(--a)":d.m>0?"var(--al)":"var(--bl)"};transition:height .4s"></div>
+            <span style="font-size:10px;color:${i===tI?"var(--a)":"var(--tm)"};font-weight:${i===tI?700:400}">${d.d}</span>
+          </div>`}).join("")}
+        </div>
+      </div>
+      <div class="c">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">🧠 Retenció real (no pseudo-treball)</h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--ts)">Força de memòria</span><span style="font-weight:700">${S.memStrength}%</span></div>
+            <div class="pb"><div class="fill" style="width:${S.memStrength}%;background:${S.memStrength>=70?"var(--ok)":S.memStrength>=40?"var(--w)":"var(--err)"}"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span style="color:var(--ts)">Precisió en quiz</span><span style="font-weight:700">${S.quizTotal>0?Math.round(S.quizCorrect/S.quizTotal*100):0}%</span></div>
+            <div class="pb"><div class="fill" style="width:${S.quizTotal>0?(S.quizCorrect/S.quizTotal*100):0}%;background:var(--p)"></div></div></div>
+          <div style="font-size:11px;color:var(--ts)">${S.quizTotal} preguntes contestades · ${S.quizCorrect} correctes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zeigarnik -->
+    <div class="c zeig">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-left:8px">
+        <span style="font-size:16px">🧩</span>
+        <div><h4 style="font-size:14px;font-weight:700">Efecte Zeigarnik — On em vaig quedar?</h4>
+        <p style="font-size:11px;color:var(--ts)">Anota el punt exacte on vas parar. El cervell manté les tasques incompletes actives al subconscient.</p></div>
+      </div>
+      <textarea class="inp" placeholder="ex: Estava resolent l'exercici 5 de derivades parcials, em faltava aplicar la regla de la cadena al segon terme..." onchange="saveZeig(this.value)" style="padding-left:16px">${S.zNote||""}</textarea>
+    </div>
+
+    <!-- Daily tip -->
+    <div class="c grad" style="display:flex;gap:14px;align-items:flex-start">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💡</div>
+      <div><h4 style="font-size:14px;font-weight:700;margin-bottom:5px">Consell científic del dia</h4>
+      <p style="font-size:12px;color:var(--ts);line-height:1.6">${tips[new Date().getDate()%tips.length]}</p></div>
+    </div>
+  `);
+}
+
+function renderTimer(){
+  const m=MODES[tmMode],tot=tmRest?m.r:m.w,pct=((tot-tmLeft)/tot)*100,r=100,cr=2*Math.PI*r;
+  html("sec-timer",`
+    <div class="g3">
+      ${MODES.map((md,i)=>`<div class="c mc ${i===tmMode?'on':''}" onclick="tmSetMode(${i})" style="border-radius:13px">
+        <div class="mn-name">${md.ico} ${md.nm}</div>
+        <div class="mn-desc">${md.ds} — ${md.ideal}</div>
+      </div>`).join("")}
+    </div>
+    <div class="c" style="text-align:center;padding:40px 22px">
+      <span class="badge" style="font-size:12px;padding:5px 16px;border-radius:20px;background:${tmRest?"var(--okl)":"var(--al)"};color:${tmRest?"var(--ok)":"var(--a)"};letter-spacing:1px">
+        ${tmRest?"☕ DESCANS":"🎯 FOCUS"}
+      </span>
+      <div class="tmr-circle">
+        <svg width="220" height="220" viewBox="0 0 220 220" style="transform:rotate(-90deg)">
+          <circle cx="110" cy="110" r="${r}" fill="none" stroke="var(--bl)" stroke-width="7"/>
+          <circle id="tm-circ" cx="110" cy="110" r="${r}" fill="none" stroke="${tmRest?"var(--ok)":"var(--a)"}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${cr}" stroke-dashoffset="${cr*(1-pct/100)}" style="transition:stroke-dashoffset .5s"/>
+        </svg>
+        <div class="tmr-time"><div class="dig" id="tm-dig">${fmtTime(tmLeft)}</div><div class="sub">${tmRest?"Res de pantalles! Camina o respira.":"Sessió "+(S.todaySess+1)+" · Mòbil fora"}</div></div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:14px;margin-top:8px">
+        <button class="bs" style="border-radius:50%;width:46px;height:46px;padding:0;justify-content:center" onclick="tmReset()">↺</button>
+        <button class="bp" style="border-radius:14px;width:64px;height:64px;padding:0;justify-content:center;font-size:24px;background:${tmRun?"var(--err)":"var(--a)"};box-shadow:0 4px 20px ${tmRun?"rgba(220,38,38,.25)":"rgba(37,99,235,.25)"}" onclick="${tmRun?"tmPause()":"tmStart()"}">
+          ${tmRun?"⏸":"▶"}
+        </button>
+        <div style="width:46px"></div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:28px;margin-top:28px">
+        <div style="text-align:center"><div style="font-size:20px;font-weight:800">${S.todaySess}</div><div style="font-size:11px;color:var(--tm)">sessions</div></div>
+        <div style="width:1px;background:var(--b)"></div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:800">${S.totalMin}m</div><div style="font-size:11px;color:var(--tm)">total</div></div>
+        <div style="width:1px;background:var(--b)"></div>
+        <div style="text-align:center"><div style="font-size:20px;font-weight:800">${S.pomCount}</div><div style="font-size:11px;color:var(--tm)">pomodoros</div></div>
+      </div>
+    </div>
+    <div class="c" style="background:var(--bg);border-color:var(--bl);display:flex;gap:11px;align-items:flex-start">
+      <span style="font-size:16px;margin-top:2px">${tmRest?"🌿":"🔒"}</span>
+      <div><h4 style="font-size:13px;font-weight:700;margin-bottom:4px">${tmRest?"Durant el descans":"Durant el focus"}</h4>
+      <p style="font-size:12px;color:var(--ts);line-height:1.5">${tmRest?
+        "NO miris el mòbil — inunda el cervell de dopamina artificial. Camina, mira per la finestra, o fes NSDR (secció Recuperació). El descans ha de ser MODALMENT diferent del treball.":
+        "Mòbil en mode avió i FORA de la vista. El cervell construeix mielina quan fas Deep Work: cada minut de focus reforça físicament els circuits neuronals. Una sola mirada al mòbil = 25 min perduts."}</p></div>
+    </div>
+  `);
+}
+
+function renderCards(){
+  const decks=S.decks;
+
+  // If reviewing
+  if(curDeck&&curCard){
+    const dk=decks.find(d=>d.id===curDeck);
+    const due=getDueCards(curDeck);
+    const remaining=due.filter(c=>c.sessionHits<3).length;
+    html("sec-cards",`
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div><h2 style="font-size:18px;font-weight:900">${dk?dk.name:""}</h2>
+        <p style="font-size:12px;color:var(--ts)">Regla del 3: necessites 3 encerts per concepte</p></div>
+        <button class="bs" onclick="curDeck=null;curCard=null;renderCards()">✕ Sortir</button>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:4px">
+        <span class="badge" style="background:var(--al);color:var(--a)">Pendents: ${remaining}</span>
+        <span class="badge" style="background:var(--okl);color:var(--ok)">Encerts sessió: ${curCard.sessionHits||0}/3</span>
+        <span class="badge" style="background:var(--pl);color:var(--p)">Força: ${curCard.strength}%</span>
+      </div>
+      <!-- Progress bars per hits -->
+      <div style="display:flex;gap:6px;margin-bottom:4px">
+        ${[0,1,2].map(i=>`<div style="flex:1;height:6px;border-radius:3px;background:${(curCard.sessionHits||0)>i?"var(--ok)":"var(--bl)"};transition:.3s"></div>`).join("")}
+      </div>
+      <div class="c fc" onclick="${showAns?"":"revealAnswer()"}">
+        <div style="font-size:11px;color:var(--tm);margin-bottom:10px">${curCard.subject||"General"}</div>
+        <div class="q">${curCard.q}</div>
+        ${showAns?`<div class="a">✅ ${curCard.a}</div>`:'<div class="hint">Toca per veure la resposta</div>'}
+      </div>
+      ${showAns?`
+        <div style="display:flex;gap:12px;justify-content:center">
+          <button class="bp" style="background:var(--err);flex:1;justify-content:center;padding:14px" onclick="gradeCard(false)">❌ No ho sabia</button>
+          <button class="bp" style="background:var(--ok);flex:1;justify-content:center;padding:14px" onclick="gradeCard(true)">✅ Ho sabia!</button>
+        </div>
+        <div class="c" style="background:var(--bg);border-color:var(--bl);padding:14px">
+          <p style="font-size:12px;color:var(--ts);line-height:1.5">
+            ${curCard.sessionHits>=2?"🎯 <strong>Un encert més i aquest concepte passa a SRS!</strong> L'interval de repàs s'expandirà automàticament.":
+              curCard.sessionHits===1?"⚡ Bona! Necessites 1 encert més en aquesta sessió.":
+              "📌 Necessites 3 recuperacions correctes DINS AQUESTA SESSIÓ per consolidar-ho. Si falles, es reinicia a 0."}
+          </p>
+        </div>
+      `:""}
+    `);
+    return;
+  }
+
+  // Session complete screen
+  if(curDeck===null&&curCard===null&&S.cardsToday>0&&!decks.length){
+    // Just show normal
+  }
+
+  html("sec-cards",`
+    <div class="sec-hdr" style="display:flex;align-items:center;justify-content:space-between">
+      <div><h2>📇 Flashcards — Reaprenentatge Successiu</h2>
+      <p style="font-size:12px;color:var(--ts)">Algoritme Regla del 3 + Repetició Espaïada automàtica (SRS)</p></div>
+    </div>
+
+    <!-- Add deck -->
+    <div class="c" style="display:flex;gap:10px;align-items:end">
+      <div style="flex:1"><label class="lbl">Nou deck (assignatura/tema)</label>
+      <input class="inp" id="new-deck-name" placeholder="ex: Química Orgànica T3"></div>
+      <button class="bp" onclick="addDeck($('new-deck-name').value);$('new-deck-name').value=''">+ Crear deck</button>
+    </div>
+
+    ${decks.length===0?`
+      <div class="c empty" style="padding:50px">
+        <p style="font-size:16px;font-weight:700;color:var(--t);margin-bottom:8px">Cap deck creat</p>
+        <p>Crea un deck per començar a afegir flashcards amb el sistema de Reaprenentatge Successiu (Regla del 3)</p>
+      </div>
+    `:""}
+
+    ${decks.map(dk=>{
+      const due=getDueCards(dk.id);
+      const mastered=dk.cards.filter(c=>c.strength>=70).length;
+      const avgStr=dk.cards.length>0?Math.round(dk.cards.reduce((s,c)=>s+c.strength,0)/dk.cards.length):0;
+      return`
+      <div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div><h3 style="font-size:15px;font-weight:800">${dk.name}</h3>
+          <span style="font-size:11px;color:var(--ts)">${dk.cards.length} cards · ${due.length} pendents · Força: ${avgStr}%</span></div>
+          <div style="display:flex;gap:6px">
+            ${due.length>0?`<button class="bp" onclick="startReview('${dk.id}')">▶ Estudiar (${due.length})</button>`:'<span class="badge" style="background:var(--okl);color:var(--ok)">Tot al dia! ✓</span>'}
+            <button class="bi" onclick="deleteDeck('${dk.id}')">🗑</button>
+          </div>
+        </div>
+        <div class="pb" style="margin-bottom:12px"><div class="fill" style="width:${avgStr}%;background:var(--ok)"></div></div>
+
+        <!-- Add card form -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <input class="inp" id="cq-${dk.id}" placeholder="Pregunta" style="flex:2;min-width:200px">
+          <input class="inp" id="ca-${dk.id}" placeholder="Resposta" style="flex:2;min-width:200px">
+          <input class="inp" id="cs-${dk.id}" placeholder="Tema (opcional)" style="flex:1;min-width:100px">
+          <button class="bp" style="white-space:nowrap" onclick="addCard('${dk.id}',$('cq-${dk.id}').value,$('ca-${dk.id}').value,$('cs-${dk.id}').value);$('cq-${dk.id}').value='';$('ca-${dk.id}').value='';$('cs-${dk.id}').value=''">+ Card</button>
+        </div>
+
+        ${dk.cards.length>0?`<div style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:4px">
+          ${dk.cards.slice(0,20).map(c=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;background:var(--bg);font-size:12px">
+            <div style="width:6px;height:6px;border-radius:50%;background:${c.strength>=70?"var(--ok)":c.strength>=30?"var(--w)":"var(--err)"}"></div>
+            <span style="flex:1;font-weight:600">${c.q}</span>
+            <span style="color:var(--ts)">${c.sessionHits||0}/3</span>
+            <span class="badge" style="background:${c.strength>=70?"var(--okl)":"var(--bg)"};color:${c.strength>=70?"var(--ok)":"var(--tm)"}">${c.strength}%</span>
+            <button class="bi" style="font-size:10px" onclick="deleteCard('${dk.id}','${c.id}')">✕</button>
+          </div>`).join("")}
+        </div>`:""}
+      </div>`}).join("")}
+
+    <div class="c" style="background:var(--bg);border-color:var(--bl)">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:16px;margin-top:2px">📖</span>
+        <div><h4 style="font-size:13px;font-weight:700;margin-bottom:4px">Com funciona la Regla del 3?</h4>
+        <p style="font-size:12px;color:var(--ts);line-height:1.5">Un sol encert NO és suficient. Has de recuperar correctament cada concepte <strong>3 vegades dins la mateixa sessió</strong>. Si falles, el comptador es reinicia a 0. Quan arribes a 3, el concepte entra a la cua de Repetició Espaïada amb intervals creixents (2d → 5d → 11d → 24d → 53d). Això garanteix retenció permanent.</p></div>
+      </div>
+    </div>
+  `);
+}
+
+function renderFeynman(){
+  html("sec-feynman",`
+    <div class="sec-hdr"><h2>🧒 Tutor Feynman — Destructor d'Il·lusions</h2>
+    <p style="font-size:12px;color:var(--ts)">Explica conceptes com si fossin per un nen de 5 anys. Detecció automàtica de jerga i comprensió falsa.</p></div>
+
+    ${!feynTopic?`
+      <div class="c" style="text-align:center;padding:40px">
+        <div style="font-size:48px;margin-bottom:16px">🧠</div>
+        <h3 style="font-size:17px;font-weight:800;margin-bottom:8px">Quin concepte vols dominar?</h3>
+        <p style="font-size:13px;color:var(--ts);margin-bottom:20px;max-width:500px;margin-left:auto;margin-right:auto">Escriu un tema i hauràs d'explicar-lo sense jerga tècnica. Si uses paraules complicades, l'IA ho detectarà com a "il·lusió de competència".</p>
+        <div style="display:flex;gap:8px;max-width:500px;margin:0 auto">
+          <input class="inp" id="feyn-topic" placeholder="ex: Mitosi, Derivades, La Revolució Francesa...">
+          <button class="bp" onclick="startFeynman($('feyn-topic').value)">Començar</button>
+        </div>
+      </div>
+    `:`
+      <div class="c">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <h3 style="font-size:15px;font-weight:800">📝 Tema: ${feynTopic}</h3>
+          <button class="bs" style="padding:5px 10px;font-size:11px" onclick="feynTopic='';feynMessages=[];renderFeynman()">Nou tema</button>
+        </div>
+        <div class="chat-area" id="feyn-chat">
+          ${feynMessages.map(m=>`<div class="msg ${m.role==="user"?"user":"ai"}">${m.text.replace(/\n/g,"<br>")}</div>`).join("")}
+        </div>
+        <div class="chat-input">
+          <input class="inp" id="feyn-input" placeholder="Explica el concepte amb les teves paraules..." onkeydown="if(event.key==='Enter'){sendFeynman(this.value);this.value=''}">
+          <button class="bp" onclick="sendFeynman($('feyn-input').value);$('feyn-input').value=''">Enviar</button>
+        </div>
+      </div>
+      <div class="c" style="background:var(--bg);border-color:var(--bl)">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:16px">⚡</span>
+          <div><h4 style="font-size:13px;font-weight:700;margin-bottom:4px">Com funciona</h4>
+          <p style="font-size:12px;color:var(--ts);line-height:1.5">L'IA actua com un nen curiós. Si uses jerga tècnica → <strong style="color:var(--err)">alerta d'il·lusió de competència</strong>. Si l'explicació és curta → et demana més detalls. Periòdicament et pregunta "Per què?" (interrogació elaborativa). Quan l'explicació és clara i simple → <strong style="color:var(--ok)">concepte dominat!</strong></p></div>
+        </div>
+      </div>
+    `}
+  `);
+  // Scroll chat to bottom
+  setTimeout(()=>{const ch=$("feyn-chat");if(ch)ch.scrollTop=ch.scrollHeight},50);
+}
+
+function renderChaos(){
+  const topics=[...new Set(S.chaosProblems.map(p=>p.topic))];
+  const topicColors={"Mates":"var(--a)","Física":"var(--p)","Química":"var(--ok)","Programació":"var(--i)","Biologia":"var(--r)"};
+
+  html("sec-chaos",`
+    <div class="sec-hdr"><h2>⚡ Mode Caos — Pràctica Intercalada</h2>
+    <p style="font-size:12px;color:var(--ts)">Barreja problemes de diferents temes. Entrena discriminació inductiva: reconèixer QUAN usar cada estratègia.</p></div>
+
+    ${chaosActive?`
+      <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+        <div style="display:flex;gap:8px">
+          <span class="badge" style="background:var(--okl);color:var(--ok)">✅ ${chaosScore.correct}</span>
+          <span class="badge" style="background:var(--errl);color:var(--err)">❌ ${chaosScore.total-chaosScore.correct}</span>
+          <span class="badge" style="background:var(--al);color:var(--a)">${chaosScore.total>0?Math.round(chaosScore.correct/chaosScore.total*100):0}%</span>
+        </div>
+        <button class="bs" style="padding:5px 10px;font-size:11px" onclick="endChaos()">Acabar</button>
+      </div>
+      ${chaosCur?`
+        <div class="chaos-problem">
+          <span class="topic-badge" style="background:${topicColors[chaosCur.topic]||"var(--a)"}20;color:${topicColors[chaosCur.topic]||"var(--a)"}">${chaosCur.topic} · ${chaosCur.difficulty}</span>
+          <div class="problem-text">${chaosCur.text}</div>
+          ${chaosShowSol?`<div style="margin-top:16px;padding:14px;background:var(--okl);border-radius:10px;width:100%;text-align:left">
+            <div style="font-size:11px;font-weight:700;color:var(--ok);margin-bottom:4px">SOLUCIÓ</div>
+            <div style="font-size:14px;line-height:1.6">${chaosCur.solution}</div>
+          </div>`:""}
+        </div>
+        ${!chaosShowSol?`
+          <div style="display:flex;gap:12px;justify-content:center">
+            <button class="bp" style="flex:1;justify-content:center;padding:14px" onclick="chaosReveal()">👁 Veure solució</button>
+          </div>
+        `:`
+          <div style="display:flex;gap:12px;justify-content:center">
+            <button class="bp" style="background:var(--err);flex:1;justify-content:center;padding:14px" onclick="chaosGrade(false)">❌ No l'he tret</button>
+            <button class="bp" style="background:var(--ok);flex:1;justify-content:center;padding:14px" onclick="chaosGrade(true)">✅ Correcte!</button>
+          </div>
+        `}
+        <div class="c" style="background:var(--bg);border-color:var(--bl);padding:14px">
+          <p style="font-size:12px;color:var(--ts)">⚠️ IMPORTANT: Resol el problema MENTALMENT o en paper ABANS de veure la solució. No miris apunts — la fricció cognitiva és el que entrena el cervell a discriminar patrons.</p>
+        </div>
+      `:""}
+    `:`
+      <!-- Add problems -->
+      <div class="c">
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">Afegir problemes al banc</h3>
+        <div class="g2" style="margin-bottom:10px">
+          <div><label class="lbl">Tema</label><input class="inp" id="ch-topic" placeholder="ex: Derivades, Cinemàtica..."></div>
+          <div><label class="lbl">Dificultat</label><select class="inp" id="ch-diff"><option value="fàcil">Fàcil</option><option value="mitjà" selected>Mitjà</option><option value="difícil">Difícil</option></select></div>
+        </div>
+        <div style="margin-bottom:10px"><label class="lbl">Enunciat del problema</label><textarea class="inp" id="ch-text" placeholder="Escriu l'enunciat del problema..."></textarea></div>
+        <div style="margin-bottom:10px"><label class="lbl">Solució</label><textarea class="inp" id="ch-sol" placeholder="Escriu la solució o el procés de resolució..."></textarea></div>
+        <button class="bp" onclick="addChaosProblem($('ch-topic').value,$('ch-text').value,$('ch-sol').value,$('ch-diff').value);$('ch-topic').value='';$('ch-text').value='';$('ch-sol').value=''">+ Afegir problema</button>
+      </div>
+
+      ${S.chaosProblems.length>0?`
+        <div class="c">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div><h3 style="font-size:15px;font-weight:800">Banc de problemes</h3>
+            <span style="font-size:11px;color:var(--ts)">${S.chaosProblems.length} problemes · ${topics.length} temes</span></div>
+            <button class="bp" onclick="startChaos()">⚡ Activar Mode Caos</button>
+          </div>
+          ${topics.map(t=>`<div style="margin-bottom:8px">
+            <span class="badge" style="background:${topicColors[t]||"var(--a)"}15;color:${topicColors[t]||"var(--a)"};margin-bottom:6px">${t} (${S.chaosProblems.filter(p=>p.topic===t).length})</span>
+          </div>`).join("")}
+          <div style="max-height:250px;overflow-y:auto;display:flex;flex-direction:column;gap:4px">
+            ${S.chaosProblems.map(p=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;background:var(--bg);font-size:12px">
+              <span class="badge" style="background:${topicColors[p.topic]||"var(--a)"}15;color:${topicColors[p.topic]||"var(--a)"}">${p.topic}</span>
+              <span style="flex:1;font-weight:500">${p.text.substring(0,60)}${p.text.length>60?"...":""}</span>
+              <button class="bi" style="font-size:10px" onclick="S.chaosProblems=S.chaosProblems.filter(x=>x.id!=='${p.id}');save();renderChaos()">✕</button>
+            </div>`).join("")}
+          </div>
+        </div>
+      `:""}
+
+      <div class="c" style="background:var(--bg);border-color:var(--bl)">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:16px">🧪</span>
+          <div><h4 style="font-size:13px;font-weight:700;margin-bottom:4px">Per què funciona el Mode Caos?</h4>
+          <p style="font-size:12px;color:var(--ts);line-height:1.5">En un examen real, els problemes NO vénen etiquetats per tema. El Mode Caos entrena la <strong>discriminació inductiva</strong>: no només executar una fórmula, sinó reconèixer QUAN i PER QUÈ usar-la. El rendiment inicial és pitjor, però a llarg termini supera àmpliament la pràctica per blocs. <strong>NO miris apunts durant la pràctica</strong> — externalitzar elimina el benefici.</p></div>
+        </div>
+      </div>
+    `}
+  `);
+}
+
+function renderRecovery(){
+  const stretch=STRETCHES[Math.floor(Math.random()*STRETCHES.length)];
+  html("sec-recovery",`
+    <div class="sec-hdr"><h2>🌙 Estació de Recuperació Fisiològica</h2>
+    <p style="font-size:12px;color:var(--ts)">NSDR, respiració diafragmàtica i estiraments. El descans REAL que el teu cervell necessita entre sessions.</p></div>
+
+    <div class="g2">
+      <!-- NSDR -->
+      <div class="c" style="text-align:center">
+        <div style="font-size:32px;margin-bottom:10px">🧘</div>
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:6px">NSDR — Descans Profund Sense Son</h3>
+        <p style="font-size:12px;color:var(--ts);line-height:1.5;margin-bottom:16px">10-20 min que restauren dopamina (+65%), renten cortisol i reinicien l'atenció executiva. Superior a la migdiada.</p>
+        <div style="background:var(--il);border-radius:12px;padding:18px;text-align:left;margin-bottom:14px">
+          ${["Estira't còmodament, tanca els ulls","3-5 respiracions diafragmàtiques lentes","Escaneja el cos de cap a peus, relaxant cada zona","Mantén consciència sense dormir (10-20 min)","Nota les ones theta que restauren l'atenció","Obre els ulls lentament quan acabis"].map((s,i)=>
+            `<div style="display:flex;gap:8px;margin-bottom:6px;font-size:12px"><span style="color:var(--i);font-weight:700">${i+1}.</span><span>${s}</span></div>`).join("")}
+        </div>
+      </div>
+
+      <!-- Breathing -->
+      <div class="c" style="text-align:center">
+        <div style="font-size:32px;margin-bottom:10px">🌬️</div>
+        <h3 style="font-size:15px;font-weight:800;margin-bottom:6px">Respiració Diafragmàtica 4-4-6</h3>
+        <p style="font-size:12px;color:var(--ts);line-height:1.5;margin-bottom:16px">Modula el sistema nerviós parasimpàtic. Redueix cortisol i millora la variabilitat del ritme cardíac.</p>
+        ${breathActive?`
+          <div class="breath-circle ${breathPhase==="inhale"?"inhale":"exhale"}" id="breath-orb">${breathPhase==="inhale"?"Inspira...":breathPhase==="hold"?"Aguanta...":"Expira..."}</div>
+          <div id="breath-cnt" style="font-size:13px;color:var(--ts);margin:10px 0">${breathCount+1}/8</div>
+          <button class="bs" onclick="stopBreathing()">⏹ Parar</button>
+        `:`
+          <div class="breath-circle">Prem per començar</div>
+          <button class="bp" style="margin-top:14px" onclick="startBreathing()">▶ Iniciar (8 cicles)</button>
+        `}
+      </div>
+    </div>
+
+    <!-- Stretches -->
+    <div class="c">
+      <div style="display:flex;gap:14px;align-items:center">
+        <div class="stretch-fig">🤸</div>
+        <div style="flex:1">
+          <h3 style="font-size:15px;font-weight:800;margin-bottom:6px">Estirament: ${stretch.name}</h3>
+          <p style="font-size:13px;color:var(--ts);line-height:1.5;margin-bottom:8px">${stretch.desc}</p>
+          <span class="badge" style="background:var(--okl);color:var(--ok)">~${stretch.dur}s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Why it matters -->
+    <div class="c" style="background:var(--errl);border-color:rgba(220,38,38,.15)">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:18px;margin-top:2px">⛔</span>
+        <div><h4 style="font-size:14px;font-weight:700;color:var(--err);margin-bottom:4px">PROHIBIT durant el descans</h4>
+        <p style="font-size:13px;line-height:1.6">Mirar el mòbil, xarxes socials, YouTube o qualsevol pantalla. Inunden els circuits estriatals de dopamina artificial i mantenen la cortesa visual en alerta, emulant la càrrega del treball. <strong>El descans ha de ser MODALMENT diferent:</strong> caminar, mirar per la finestra, estirar, respirar.</p></div>
+      </div>
+    </div>
+  `);
+}
+
+function renderExams(){
+  const tasks=genStudyTasks();
+  html("sec-exams",`
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="sec-hdr"><h2>📅 Exàmens i Pla d'Estudi Automàtic</h2>
+      <p style="font-size:12px;color:var(--ts)">Repetició espaïada automàtica basada en el model RAD</p></div>
+      <button class="bp" onclick="$('exam-form').style.display=$('exam-form').style.display==='none'?'block':'none'">+ Nou examen</button>
+    </div>
+    <div id="exam-form" class="c" style="display:none;border:2px solid var(--al)">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:14px">Afegir examen</h3>
+      <div class="g2" style="margin-bottom:10px">
+        <div><label class="lbl">Nom</label><input class="inp" id="ex-nm" placeholder="Examen de Mates T5"></div>
+        <div><label class="lbl">Assignatura</label><input class="inp" id="ex-sub" placeholder="Matemàtiques"></div>
+        <div><label class="lbl">Data</label><input type="date" class="inp" id="ex-dt"></div>
+        <div><label class="lbl">Dificultat</label><select class="inp" id="ex-df"><option value="fàcil">Fàcil</option><option value="mitjà" selected>Mitjà</option><option value="difícil">Difícil</option></select></div>
+      </div>
+      <button class="bp" onclick="addExam($('ex-nm').value,$('ex-sub').value,$('ex-dt').value,$('ex-df').value);$('exam-form').style.display='none'">✓ Afegir</button>
+    </div>
+    ${S.exams.length>0?`<div class="c">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:14px">Exàmens</h3>
+      ${S.exams.map(e=>{const d=daysUntil(e.date),past=d<0,uc=d<=2?"var(--err)":d<=7?"var(--w)":"var(--ok)",bg=d<=2?"var(--errl)":d<=7?"var(--wl)":"var(--okl)";
+      return`<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:var(--bg);margin-bottom:6px;${past?"opacity:.5":""}">
+        <div style="width:40px;height:40px;border-radius:9px;background:${bg};color:${uc};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px">${past?"✓":d}</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:700">${e.name}</div><div style="font-size:11px;color:var(--ts)">${e.subject} · ${fmtDate(e.date)} · ${e.difficulty}</div></div>
+        <button class="bi" onclick="removeExam('${e.id}')">🗑</button>
+      </div>`}).join("")}
+    </div>`:""}
+    ${tasks.length>0?`<div class="c">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h3 style="font-size:15px;font-weight:800">📋 Pla d'estudi (SRS automàtic)</h3>
+        <span style="font-size:11px;color:var(--tm)">${tasks.length} sessions</span>
+      </div>
+      <div style="max-height:400px;overflow-y:auto;display:flex;flex-direction:column;gap:5px">
+        ${tasks.slice(0,40).map(t=>{const isTd=t.date===today();
+        return`<div class="ti ${S.doneTasks.includes(t.id)?'done':''}" style="${isTd?'background:var(--al);border-color:rgba(37,99,235,.15)':''}" onclick="toggleTask('${t.id}')">
+          <span style="font-size:14px">${S.doneTasks.includes(t.id)?'✅':'⭕'}</span>
+          <div class="info"><span class="nm">${t.examName}</span> <span class="ds">— ${t.session}</span></div>
+          <span class="tg" style="${isTd?'color:var(--a);font-weight:700':''}">${isTd?"AVUI":fmtDate(t.date)}</span>
+        </div>`}).join("")}
+      </div>
+    </div>`:""}
+  `);
+}
+
+function renderTechniques(){
+  const techs=[
+    {nm:"Recuperació Activa",ico:"🧠",rat:"Alta",bg:"var(--al)",col:"var(--a)",sum:"Extrau info de la memòria sense ajuda. 3 recuperacions correctes per sessió.",
+    steps:["Llegeix 15-20 min","Tanca apunts","Escriu TOT el que recordis","Compara i marca errors","Repeteix fins 3 encerts consecutius","Programa repàs (2d, 7d, 21d)"]},
+    {nm:"Repetició Espaïada",ico:"🔄",rat:"Alta",bg:"var(--pl)",col:"var(--p)",sum:"Intervals creixents. 1h × 5 dies > 5h × 1 dia.",
+    steps:["Dia 0: Estudi + 3 recuperacions","Dia 2: Primer repàs","Dia 7: Segon repàs","Dia 21: Tercer repàs","Dia 45+: Manteniment","Usa Anki o el sistema de Flashcards"]},
+    {nm:"Tècnica Feynman",ico:"💡",rat:"Alta",bg:"var(--wl)",col:"var(--w)",sum:"+21% metacognició, +34% rendiment analític. Destrueix il·lusions.",
+    steps:["Escriu el concepte","Explica-ho amb paraules simples","Identifica buits de coneixement","Omple buits als apunts","Simplifica amb analogies","Repeteix fins fluïdesa total"]},
+    {nm:"Pràctica Intercalada",ico:"⚡",rat:"Mod-Alta",bg:"var(--okl)",col:"var(--ok)",sum:"Barreja problemes. Entrena discriminació inductiva.",
+    steps:["Selecciona 3-4 temes","Barreja en ordre aleatori","NO miris apunts!","Identifica errors de categorització","Augmenta similitud","Ideal per STEM"]},
+    {nm:"Interrogació Elaborativa",ico:"👁",rat:"Moderada",bg:"var(--rl)",col:"var(--r)",sum:"Per què és cert? Connecta info nova amb xarxes existents.",
+    steps:["Llegeix una afirmació","Pregunta: Per què?","Genera explicació causal","Compara amb conceptes similars","Connecta amb experiències","Combina amb diagrames (Codificació Dual)"]},
+    {nm:"NSDR",ico:"🌙",rat:"Recuperació",bg:"var(--il)",col:"var(--i)",sum:"+65% dopamina, renta cortisol, reinicia atenció executiva.",
+    steps:["Estira't, tanca ulls","3-5 respiracions diafragmàtiques","Escaneja cos de cap a peus","Mantén consciència 10-20 min","Ones theta sense dormir","Obre ulls lentament"]}
+  ];
+  html("sec-techniques",`
+    <div class="sec-hdr"><h2>📚 Tècniques d'Estudi Científiques</h2>
+    <p style="font-size:12px;color:var(--ts)">Basades en Dunlosky et al. (2013) i metaanàlisis replicats</p></div>
+    <div class="c" style="background:var(--errl);border-color:rgba(220,38,38,.15)">
+      <div style="display:flex;gap:12px"><span style="font-size:18px">⛔</span>
+      <div><h4 style="font-size:14px;font-weight:700;color:var(--err)">NO funcionen: Rellegir, Subratllar, Resums passius</h4>
+      <p style="font-size:12px;line-height:1.6">Impacte NUL demostrat. El cervell confon familiaritat visual amb aprenentatge. Si no pots explicar-ho sense apunts, no ho saps.</p></div></div>
+    </div>
+    ${techs.map(t=>`<div class="c" style="padding:0;overflow:hidden;cursor:pointer" onclick="this.querySelector('.tbody').style.display=this.querySelector('.tbody').style.display==='block'?'none':'block'">
+      <div style="display:flex;align-items:center;gap:12px;padding:16px 18px">
+        <div style="width:40px;height:40px;border-radius:10px;background:${t.bg};display:flex;align-items:center;justify-content:center;font-size:20px">${t.ico}</div>
+        <div style="flex:1"><div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px">${t.nm} <span class="badge" style="background:${t.rat==="Alta"?"var(--okl)":"var(--wl)"};color:${t.rat==="Alta"?"var(--ok)":"var(--w)"}">${t.rat}</span></div>
+        <div style="font-size:12px;color:var(--ts);margin-top:2px">${t.sum}</div></div>
+        <span style="color:var(--tm)">›</span>
+      </div>
+      <div class="tbody" style="display:none;padding:0 18px 16px;border-top:1px solid var(--bl)">
+        <div style="padding-top:14px"><h4 style="font-size:13px;font-weight:700;margin-bottom:10px">Pas a pas:</h4>
+        ${t.steps.map((s,i)=>`<div style="display:flex;gap:10px;margin-bottom:6px"><div style="width:22px;height:22px;border-radius:6px;background:${t.bg};color:${t.col};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div><span style="font-size:12px;line-height:1.5;padding-top:2px">${s}</span></div>`).join("")}
+        </div>
+      </div>
+    </div>`).join("")}
+    <div class="c grad">
+      <h3 style="font-size:15px;font-weight:800;margin-bottom:12px">🏆 Protocol Mestre: Ordre recomanat</h3>
+      ${[{p:"Fase I",t:"Entorn: aïlla't, mòbil fora, Deep Work activat",i:"🔒"},
+        {p:"Fase II",t:"Comprensió: Interrogació Elaborativa + Feynman",i:"💡"},
+        {p:"Fase III",t:"Memorització: Recuperació Activa × 3 + SRS",i:"🧠"},
+        {p:"Fase IV",t:"Transferència: Mode Caos intercalat",i:"⚡"},
+        {p:"Fase V",t:"Recuperació: NSDR + 7-9h son + zero pantalles",i:"🌙"}
+      ].map(p=>`<div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:rgba(255,255,255,.6);border-radius:9px;margin-bottom:6px">
+        <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-size:16px">${p.i}</div>
+        <div><span style="font-size:10px;font-weight:700;color:var(--a)">${p.p}</span><div style="font-size:12px;margin-top:1px">${p.t}</div></div>
+      </div>`).join("")}
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════
+// MAIN RENDER
+// ═══════════════════════════════════════════
+function render(){
+  renderSidebar();
+  if(tab==="dashboard")renderDashboard();
+  else if(tab==="timer")renderTimer();
+  else if(tab==="cards")renderCards();
+  else if(tab==="feynman")renderFeynman();
+  else if(tab==="chaos")renderChaos();
+  else if(tab==="recovery")renderRecovery();
+  else if(tab==="exams")renderExams();
+  else if(tab==="techniques")renderTechniques();
+}
+render();
+</script>
+</body>
+</html>
