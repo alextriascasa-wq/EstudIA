@@ -15,7 +15,8 @@
     "exams": "Exàmens",
     "stats": "Estadístiques",
     "social": "Social",
-    "techniques": "Tècniques"
+    "techniques": "Tècniques",
+    "cloud": "Núvol (Sync)"
   },
   "sidebar": {
     "level": "Nivell",
@@ -27,7 +28,8 @@
     "language": "Idioma",
     "install": "Instal·la EstudIA",
     "installIOS": "Instal·la a l'iPhone",
-    "installIOSSteps": "Toca Compartir (⬆) → Afegir a pantalla d'inici"
+    "installIOSSteps": "Toca Compartir (⬆) → Afegir a pantalla d'inici",
+    "moreTools": "Més eines"
   },
   "common": {
     "add": "Afegir",
@@ -46,6 +48,18 @@
     "importSuccess": "Dades carregades correctament"
   },
   "dashboard": {
+    "heroTitle": "Benvingut de nou! 👋",
+    "heroDesc": "Què vols aconseguir avui? Tria una acció per començar.",
+    "actionTimerTitle": "Sessió de Focus",
+    "actionTimerDesc": "Inicia un temporitzador Pomodoro per concentrar-te al màxim i sumar minuts productius.",
+    "actionTimerBtn": "Començar →",
+    "actionCardsTitle": "Alquímia d'Apunts",
+    "actionCardsDesc": "Puja els teus apunts i la IA extraurà targetes de memòria clau automàticament.",
+    "actionCardsBtn": "Generar amb IA →",
+    "actionExamsTitle": "Simulacre d'Examen",
+    "actionExamsDesc": "Enfronta't a preguntes generades per IA i fes que et corregeixi els resultats en temps real.",
+    "actionExamsBtn": "Posar-me a prova →",
+    "streakTitle": "La teva ratxa d'estudi",
     "todayPlan": "📋 Pla d'avui",
     "upcomingExams": "📅 Pròxims exàmens",
     "noTasks": "Cap tasca avui — afegeix exàmens!",
@@ -94,12 +108,16 @@
     "modes": {
       "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repàs, vocabulari" },
       "d52": { "nm": "Ultradian", "ideal": "Estudi mixt, lectura activa" },
-      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programació" }
+      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programació" },
+      "d120": { "nm": "Hyper Focus", "ideal": "Projectes complexos, flux total" }
     },
     "notifOn": "Notificacions activades",
     "notifOff": "Activa notificacions",
     "notifFocusDone": "Sessió de {{mode}} completada! Hora de descansar.",
     "notifRestDone": "Descans acabat! Torna al focus."
+  },
+  "chaos": {
+    "minProblems": "Afegeix almenys 3 problemes de diferents temes per començar."
   },
   "stats": {
     "last7d": "Últims 7 dies",

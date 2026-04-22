@@ -1,0 +1,34 @@
+{
+  "name": "EstudIA",
+  "short_name": "EstudIA",
+  "description": "L'eina d'estudi augmentat amb IA.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0b",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Inicia Temporitzador",
+      "short_name": "Focus",
+      "description": "Inicia una nova sessió de Pomodoro",
+      "url": "/timer",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Nova Extracció IA",
+      "short_name": "IA Targetes",
+      "description": "Puja apunts per generar flashcards",
+      "url": "/cards",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

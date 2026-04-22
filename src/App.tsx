@@ -14,13 +14,26 @@ import { Exams } from '@/features/exams/Exams';
 import { Stats } from '@/features/stats/Stats';
 import { Techniques } from '@/features/techniques/Techniques';
 import { Social } from '@/features/social/Social';
+import { CloudSync } from '@/features/cloud/CloudSync';
 import { OnboardingModal } from '@/components/ui/OnboardingModal';
+import { BottomNav } from '@/components/Layout/BottomNav';
 import { useAppStore } from '@/store/useAppStore';
+import { filterDueFlashcards } from '@/lib/srs';
+import { updateAppBadge } from '@/lib/notifications';
 
 export default function App(): JSX.Element {
   const rolloverIfNeeded = useAppStore((s) => s.rolloverIfNeeded);
   const checkAchievements = useAppStore((s) => s.checkAchievements);
   const save = useAppStore((s) => s.save);
+  const decks = useAppStore((s) => s.decks);
+
+  useEffect(() => {
+    let dueCount = 0;
+    decks.forEach((d) => {
+      dueCount += filterDueFlashcards(d.cards).length;
+    });
+    updateAppBadge(dueCount);
+  }, [decks]);
 
   useEffect(() => {
     rolloverIfNeeded();
@@ -46,11 +59,13 @@ export default function App(): JSX.Element {
           <Route path="/stats" element={<Stats />} />
           <Route path="/social" element={<Social />} />
           <Route path="/techniques" element={<Techniques />} />
+          <Route path="/cloud" element={<CloudSync />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
       <ToastHost />
       <XPPopupHost />
+      <BottomNav />
     </>
   );
 }

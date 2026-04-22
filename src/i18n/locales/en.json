@@ -15,7 +15,8 @@
     "exams": "Exams",
     "stats": "Stats",
     "social": "Social",
-    "techniques": "Techniques"
+    "techniques": "Techniques",
+    "cloud": "Cloud Sync"
   },
   "sidebar": {
     "level": "Level",
@@ -27,7 +28,8 @@
     "language": "Language",
     "install": "Install EstudIA",
     "installIOS": "Install on iPhone",
-    "installIOSSteps": "Tap Share (⬆) → Add to Home Screen"
+    "installIOSSteps": "Tap Share (⬆) → Add to Home Screen",
+    "moreTools": "More tools"
   },
   "common": {
     "add": "Add",
@@ -46,6 +48,18 @@
     "importSuccess": "Data loaded successfully"
   },
   "dashboard": {
+    "heroTitle": "Welcome back! 👋",
+    "heroDesc": "What do you want to achieve today? Choose an action to start.",
+    "actionTimerTitle": "Focus Session",
+    "actionTimerDesc": "Start a Pomodoro timer to maximize concentration and add productive minutes.",
+    "actionTimerBtn": "Start →",
+    "actionCardsTitle": "Notes Alchemy",
+    "actionCardsDesc": "Upload your notes and the AI will extract key memory cards automatically.",
+    "actionCardsBtn": "Generate with AI →",
+    "actionExamsTitle": "Mock Exam",
+    "actionExamsDesc": "Face AI-generated questions and get real-time feedback and corrections.",
+    "actionExamsBtn": "Test myself →",
+    "streakTitle": "Your study streak",
     "todayPlan": "📋 Today's plan",
     "upcomingExams": "📅 Upcoming exams",
     "noTasks": "No tasks today — add exams!",
@@ -94,12 +108,57 @@
     "modes": {
       "pom": { "nm": "Pomodoro", "ideal": "Flashcards, review, vocabulary" },
       "d52": { "nm": "Ultradian", "ideal": "Mixed study, active reading" },
-      "d90": { "nm": "Deep Work", "ideal": "Math, physics, programming" }
+      "d90": { "nm": "Deep Work", "ideal": "Math, physics, programming" },
+      "d120": { "nm": "Hyper Focus", "ideal": "Complex projects, total flow" }
     },
     "notifOn": "Notifications enabled",
     "notifOff": "Enable notifications",
     "notifFocusDone": "{{mode}} session complete! Time to rest.",
     "notifRestDone": "Break over! Back to focus."
+  },
+  "chaos": {
+    "minProblems": "Add at least 3 problems from different topics to start."
+  },
+  "stats": {
+    "last7d": "Last 7 days",
+    "totalTime": "total time",
+    "avgDaily": "Daily average",
+    "target120": "target: 120m",
+    "cards7d": "Cards 7d",
+    "correctSub": "{{n}} correct",
+    "accuracy7d": "Accuracy 7d",
+    "target85": "target: 85%",
+    "globalTitle": "📈 Global Stats",
+    "achTitle": "🏅 Achievements ({{unlocked}}/{{total}})",
+    "locked": "???",
+    "globals": {
+      "totalHours": "Total hours",
+      "totalSessions": "Total sessions",
+      "maxStreak": "Max streak",
+      "xpTotal": "Total XP",
+      "totalFlashcards": "Total flashcards",
+      "globalAccuracy": "Global accuracy",
+      "decks": "Decks created",
+      "level": "Level"
+    },
+    "ach": {
+      "first_session": { "name": "First Step", "desc": "Complete the first focus session" },
+      "streak_3": { "name": "Consistent", "desc": "Get a 3-day streak" },
+      "streak_7": { "name": "Unstoppable", "desc": "Streak of 7 days in a row" },
+      "streak_30": { "name": "Legend", "desc": "30-day streak!" },
+      "cards_50": { "name": "Explorer", "desc": "Review 50 flashcards" },
+      "cards_500": { "name": "Scholar", "desc": "Review 500 flashcards" },
+      "mem_80": { "name": "Iron Memory", "desc": "Reach 80% memory strength" },
+      "hours_10": { "name": "Dedicated", "desc": "Accumulate 10 hours of study" },
+      "hours_50": { "name": "Master", "desc": "Accumulate 50 hours of study" },
+      "hours_100": { "name": "Elite Academic", "desc": "100 hours of total study" },
+      "chaos_10": { "name": "Gladiator", "desc": "Complete 10 rounds of Chaos Mode" },
+      "level_10": { "name": "Veteran", "desc": "Reach level 10" },
+      "level_25": { "name": "Expert", "desc": "Reach level 25" },
+      "level_50": { "name": "Grand Master", "desc": "Reach level 50" },
+      "deep_work": { "name": "Deep Worker", "desc": "Complete a 90+ min session" },
+      "pom_10": { "name": "Pomodoro Master", "desc": "Complete 10 pomodoros" }
+    }
   },
   "cards": {
     "newDeck": "New deck",

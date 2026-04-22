@@ -7,6 +7,8 @@ import type { ExamDifficulty } from '@/types';
 import { ExamSimulator } from './ExamSimulator';
 import { ExamCorrector } from './ExamCorrector';
 
+import { ChaosMode } from '@/features/chaos/ChaosMode';
+
 export function Exams(): JSX.Element {
   const { t } = useTranslation();
   const exams = useAppStore((s) => s.exams);
@@ -20,7 +22,7 @@ export function Exams(): JSX.Element {
   const [subject, setSubject] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [diff, setDiff] = useState<ExamDifficulty>('mitjà');
-  const [activeTab, setActiveTab] = useState<'calendar' | 'simulator' | 'corrector'>('calendar');
+  const [activeTab, setActiveTab] = useState<'calendar' | 'simulator' | 'corrector' | 'chaos'>('calendar');
 
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
 
@@ -70,7 +72,7 @@ export function Exams(): JSX.Element {
       </div>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        {(['calendar', 'simulator', 'corrector'] as const).map(tab => (
+        {(['calendar', 'simulator', 'corrector', 'chaos'] as const).map(tab => (
           <button
             key={tab}
             className="bp"
@@ -82,13 +84,17 @@ export function Exams(): JSX.Element {
             }}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === 'calendar' ? 'Calendari' : tab === 'simulator' ? 'Simulador IA' : 'Corrector IA'}
+            {tab === 'calendar' ? 'Calendari' : 
+             tab === 'simulator' ? 'Simulador IA' : 
+             tab === 'corrector' ? 'Corrector IA' : 
+             t('nav.chaos') + ' ⚡'}
           </button>
         ))}
       </div>
 
       {activeTab === 'simulator' && <ExamSimulator />}
       {activeTab === 'corrector' && <ExamCorrector />}
+      {activeTab === 'chaos' && <ChaosMode />}
 
       {activeTab === 'calendar' && (
         <>

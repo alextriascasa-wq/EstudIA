@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
-import { fmtTime, today, weeklyIndex } from '@/lib/date';
+import { fmtTime, weeklyIndex } from '@/lib/date';
 import { playChime } from '@/lib/audio';
 import { TIMER_MODES } from './modes';
 import { useInterval } from '@/hooks/useInterval';
@@ -15,8 +15,6 @@ import {
 export function Timer(): JSX.Element {
   const { t } = useTranslation();
   const patch = useAppStore((s) => s.patch);
-  const save = useAppStore((s) => s.save);
-  const addXP = useAppStore((s) => s.addXP);
   const todaySess = useAppStore((s) => s.todaySess);
   const totalMin = useAppStore((s) => s.totalMin);
   const pomCount = useAppStore((s) => s.pomCount);
@@ -49,37 +47,21 @@ export function Timer(): JSX.Element {
       );
     }
     if (!resting) {
+      const { incrementDailyLog, addXP } = useAppStore.getState();
       const mins = Math.round(mode.w / 60);
-      const newTotalMin = totalMin + mins;
-      const newTodaySess = todaySess + 1;
-      const newPomCount = pomCount + 1;
-      const dateKey = today();
+      
       const s = useAppStore.getState();
-      const nextHeatmap = { ...s.heatmap, [dateKey]: (s.heatmap[dateKey] ?? 0) + mins };
       const weekly = s.weekly.map((w) => ({ ...w }));
       const mi = weeklyIndex(new Date().getDay());
       if (weekly[mi]) weekly[mi] = { ...weekly[mi]!, m: weekly[mi]!.m + mins };
-      const dailyLog = [...s.dailyLog];
-      const existing = dailyLog.find((d) => d.date === dateKey);
-      if (existing) {
-        existing.minutes += mins;
-        existing.sessions += 1;
-      } else {
-        dailyLog.push({ date: dateKey, minutes: mins, cards: 0, correct: 0, sessions: 1 });
-      }
-      patch({
-        totalMin: newTotalMin,
-        todaySess: newTodaySess,
-        pomCount: newPomCount,
-        heatmap: nextHeatmap,
-        weekly,
-        dailyLog,
-      });
-      save();
+
+      patch({ weekly });
+      
+      incrementDailyLog({ minutes: mins, sessions: 1, pomodoros: 1 } as any);
       addXP(mins * 2);
       setResting(true);
       // Long rest every 4 pomodoros (pom mode only).
-      const useLong = mode.id === 'pom' && newPomCount % 4 === 0;
+      const useLong = mode.id === 'pom' && (s.pomCount + 1) % 4 === 0;
       setLeft(useLong ? (mode.lr ?? mode.r) : mode.r);
     } else {
       setResting(false);

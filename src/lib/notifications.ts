@@ -38,3 +38,18 @@ export function sendTimerNotification(title: string, body: string): void {
     // Notification constructor can throw in some contexts (e.g. SW scope).
   }
 }
+
+/** Update the PWA App Badge with the number of pending tasks (due cards). */
+export function updateAppBadge(count: number): void {
+  if (typeof navigator !== 'undefined' && 'setAppBadge' in navigator) {
+    try {
+      if (count > 0) {
+        (navigator as any).setAppBadge(count);
+      } else {
+        (navigator as any).clearAppBadge();
+      }
+    } catch (e) {
+      console.warn('App badge not supported', e);
+    }
+  }
+}

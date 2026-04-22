@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AppState } from '@/types';
+import type { AppState, DailyLogEntry } from '@/types';
 import { DEFAULT_STATE, STATE_KEY } from './defaults';
 import { createIdbStorage } from './persist';
 import { mergeLegacy, readLegacyLocalStorage } from './migration';
@@ -9,6 +9,8 @@ import { ACHIEVEMENTS } from '@/lib/achievements';
 import { XP_TABLE } from '@/lib/xp';
 import { showToast } from '@/components/ui/Toast';
 import { showXPPopup } from '@/components/ui/XPPopup';
+
+let _isChecking = false;
 
 type ToastKind = 'info' | 'level' | 'achievement';
 export interface ToastInput {
@@ -30,6 +32,8 @@ export interface StoreActions {
   checkAchievements: () => string[];
   /** Compute day-rollover side effects (streak, weekly reset, per-day counters). Mirrors Pro boot logic. */
   rolloverIfNeeded: () => void;
+  /** Increment daily metrics (minutes, cards, sessions, etc.). */
+  incrementDailyLog: (data: Partial<Omit<DailyLogEntry, 'date'>>) => void;
 }
 
 export type AppStore = AppState & StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean };
@@ -52,7 +56,6 @@ export const useAppStore = create<AppStore>()(
         set((prev) => {
           const heatmap = { ...prev.heatmap };
           const t = today();
-          if (heatmap[t] === undefined) heatmap[t] = 0;
           // Clean entries older than 120 days.
           const cutoff = new Date();
           cutoff.setDate(cutoff.getDate() - 120);
@@ -70,6 +73,7 @@ export const useAppStore = create<AppStore>()(
           let { xp, totalXp, level } = prev;
           xp += amount;
           totalXp += amount;
+          
           while (level < 50 && totalXp >= (XP_TABLE[level] ?? Infinity)) {
             level++;
             leveled.push(level);
@@ -91,14 +95,17 @@ export const useAppStore = create<AppStore>()(
       },
 
       checkAchievements: () => {
+        if (_isChecking) return [];
+        const s = get();
         const unlocked: string[] = [];
-        const current = get();
         ACHIEVEMENTS.forEach((a) => {
-          if (!current.achievements.includes(a.id) && a.check(current)) {
+          if (!s.achievements.includes(a.id) && a.check(s)) {
             unlocked.push(a.id);
           }
         });
+
         if (unlocked.length > 0) {
+          _isChecking = true;
           set((prev) => ({ achievements: [...prev.achievements, ...unlocked] }));
           unlocked.forEach((id) => {
             const ach = ACHIEVEMENTS.find((a) => a.id === id);
@@ -109,32 +116,97 @@ export const useAppStore = create<AppStore>()(
                 kind: 'achievement',
               });
             }
-            // +50 XP each, recursive (Pro behavior).
             get().addXP(50);
           });
+          _isChecking = false;
         }
         return unlocked;
       },
 
       rolloverIfNeeded: () => {
         const prev = get();
-        if (prev.lastDate && prev.lastDate !== today()) {
+        const t = today();
+        if (prev.lastDate && prev.lastDate !== t) {
+          const lastDateObj = new Date(prev.lastDate);
+          const todayObj = new Date(t);
           const diffDays = Math.floor(
-            (new Date(today()).getTime() - new Date(prev.lastDate).getTime()) / 864e5,
+            (todayObj.getTime() - lastDateObj.getTime()) / 864e5
           );
+
           set((s) => {
             let { streak, weekly, todaySess, cardsToday } = s;
-            if (diffDays === 1 && s.todaySess > 0) streak++;
-            else if (diffDays > 1) streak = 1;
+            
+            // Streak logic: 
+            // If diff is 1 and we studied on lastDate (todaySess > 0 before reset), we increment.
+            // If diff > 1, we lost the streak (reset to 1 or 0). 
+            if (diffDays === 1) {
+              if (s.todaySess === 0) streak = 1; 
+              else streak++;
+            } else if (diffDays > 1) {
+              streak = 1;
+            }
+            
             todaySess = 0;
             cardsToday = 0;
-            const dow = new Date().getDay();
+            
+            // Weekly reset on Monday
+            const dow = new Date().getDay(); // 0=Sun, 1=Mon
             if (dow === 1 && diffDays >= 1) {
               weekly = DEFAULT_STATE.weekly.map((w) => ({ ...w }));
             }
-            return { streak, weekly, todaySess, cardsToday };
+            
+            return { streak, weekly, todaySess, cardsToday, lastDate: t };
           });
+          get().save();
+        } else if (!prev.lastDate) {
+          set({ lastDate: t });
+          get().save();
         }
+      },
+
+      incrementDailyLog: (data) => {
+        const t = today();
+        set((prev) => {
+          const dailyLog = [...prev.dailyLog];
+          let entry = dailyLog.find((d) => d.date === t);
+          if (!entry) {
+            entry = { date: t, minutes: 0, cards: 0, correct: 0, sessions: 0 };
+            dailyLog.push(entry);
+          }
+
+          let { heatmap, quizTotal, quizCorrect, cardsToday, totalMin, todaySess, pomCount } = prev;
+          
+          if (data.minutes) {
+            entry.minutes += data.minutes;
+            totalMin += data.minutes;
+            heatmap = { ...heatmap, [t] : (heatmap[t] || 0) + data.minutes };
+          }
+          
+          if (data.cards) {
+            entry.cards += data.cards;
+            quizTotal += data.cards;
+            cardsToday += data.cards;
+          }
+          
+          if (data.correct) {
+            entry.correct += data.correct;
+            quizCorrect += data.correct;
+          }
+          
+          if (data.sessions) {
+            entry.sessions += data.sessions;
+            todaySess += data.sessions;
+          }
+
+          if ((data as any).pomodoros) {
+            pomCount += (data as any).pomodoros;
+          }
+
+          const memStrength = quizTotal > 0 ? Math.round((quizCorrect / quizTotal) * 100) : 0;
+
+          return { dailyLog, heatmap, quizTotal, quizCorrect, cardsToday, memStrength, totalMin, todaySess, pomCount };
+        });
+        get().save();
       },
     }),
     {
@@ -173,6 +245,8 @@ export const useAppStore = create<AppStore>()(
         friends: s.friends,
         sharedResources: s.sharedResources,
         friendCode: s.friendCode,
+        league: s.league,
+        chaosProblems: s.chaosProblems,
       }),
     },
   ),

@@ -12,6 +12,7 @@ export function Languages(): JSX.Element {
   const patch = useAppStore((s) => s.patch);
   const save = useAppStore((s) => s.save);
   const addXP = useAppStore((s) => s.addXP);
+  const incrementDailyLog = useAppStore((s) => s.incrementDailyLog);
 
   const [curDeck, setCurDeck] = useState<string | null>(null);
   const [curCardId, setCurCardId] = useState<string | null>(null);
@@ -103,7 +104,6 @@ export function Languages(): JSX.Element {
 
   const grade = (correct: boolean): void => {
     if (!deck || !card) return;
-    const s = useAppStore.getState();
     const mutableDecks = langDecks.map((d) =>
       d.id === deck.id
         ? {
@@ -114,8 +114,8 @@ export function Languages(): JSX.Element {
           }
         : d,
     );
-    patch({ langDecks: mutableDecks, cardsToday: s.cardsToday + 1 });
-    save();
+    patch({ langDecks: mutableDecks });
+    incrementDailyLog({ cards: 1, correct: correct ? 1 : 0 });
     if (correct) addXP(3);
 
     const freshDeck = mutableDecks.find((d) => d.id === deck.id);

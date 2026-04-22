@@ -94,6 +94,11 @@ const Icon = {
       <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
     </svg>
   ),
+  Cloud: (p: IconProps) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} {...p}>
+      <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+    </svg>
+  ),
 };
 
 interface NavItem {
@@ -101,19 +106,22 @@ interface NavItem {
   icon: (p: IconProps) => JSX.Element;
 }
 
-const NAV: readonly NavItem[] = [
+const PRIMARY_NAV: readonly NavItem[] = [
   { tab: 'dashboard', icon: Icon.Dashboard },
   { tab: 'timer', icon: Icon.Timer },
   { tab: 'cards', icon: Icon.Cards },
-  { tab: 'feynman', icon: Icon.Feynman },
+  { tab: 'exams', icon: Icon.Exams },
+];
 
+const SECONDARY_NAV: readonly NavItem[] = [
+  { tab: 'stats', icon: Icon.Stats },
+  { tab: 'feynman', icon: Icon.Feynman },
+  { tab: 'techniques', icon: Icon.Techniques },
   { tab: 'languages', icon: Icon.Languages },
   { tab: 'sounds', icon: Icon.Sounds },
   { tab: 'recovery', icon: Icon.Recovery },
-  { tab: 'exams', icon: Icon.Exams },
-  { tab: 'stats', icon: Icon.Stats },
   { tab: 'social', icon: Icon.Social },
-  { tab: 'techniques', icon: Icon.Techniques },
+  { tab: 'cloud', icon: Icon.Cloud },
 ];
 
 export function Sidebar(): JSX.Element {
@@ -193,28 +201,48 @@ export function Sidebar(): JSX.Element {
   return (
     <nav className="sb">
       <div className="sb-brand">
-        <h1>Estud<span style={{ color: 'var(--a)', marginLeft: '1px' }}>IA</span></h1>
+        <h1 className="brand-logo">Estud<span style={{ color: 'var(--a)', marginLeft: '1px' }}>IA</span></h1>
         <p>{t('brand.tagline')}</p>
       </div>
-      {NAV.map((item, idx) => {
-        const showDivider = idx === 0 || idx === 6 || idx === 8;
-        return (
-          <div key={item.tab}>
-            <NavLink
-              to={`/${item.tab === 'dashboard' ? '' : item.tab}`}
-              className={({ isActive }) => `nb${isActive ? ' on pulse-glow' : ''} card-hover`}
-              style={{ transition: 'transform 0.2s' }}
-              end={item.tab === 'dashboard'}
-            >
-              <item.icon />
-              <span>{t(`nav.${item.tab}`)}</span>
-            </NavLink>
-            {showDivider && (
-              <div style={{ margin: '8px 16px', borderBottom: '1px solid var(--b)', opacity: 0.5 }} />
-            )}
-          </div>
-        );
-      })}
+      {PRIMARY_NAV.map((item) => (
+        <NavLink
+          key={item.tab}
+          to={`/${item.tab === 'dashboard' ? '' : item.tab}`}
+          className={({ isActive }) => `nb${isActive ? ' on pulse-glow' : ''} card-hover`}
+          style={{ transition: 'transform 0.2s', padding: '12px 14px', fontSize: 15 }}
+          end={item.tab === 'dashboard'}
+        >
+          <item.icon />
+          <span style={{ flex: 1 }}>{t(`nav.${item.tab}`)}</span>
+          {['cards', 'exams'].includes(item.tab) && (
+            <span style={{ fontSize: 10, fontWeight: 800, padding: '2px 6px', borderRadius: 6, background: 'rgba(139, 92, 246, 0.2)', color: 'var(--p)', marginLeft: 'auto', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 0 10px rgba(139, 92, 246, 0.3)', animation: 'pulse 2s infinite' }}>
+              ✨ IA
+            </span>
+          )}
+        </NavLink>
+      ))}
+      
+      <div style={{ margin: '16px 14px 6px', fontSize: 11, fontWeight: 700, color: 'var(--ts)', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+        {t('sidebar.moreTools')}
+      </div>
+      
+      {SECONDARY_NAV.map((item) => (
+        <NavLink
+          key={item.tab}
+          to={`/${item.tab === 'dashboard' ? '' : item.tab}`}
+          className={({ isActive }) => `nb${isActive ? ' on' : ''}`}
+          style={{ transition: 'transform 0.2s', padding: '8px 14px', fontSize: 13, color: 'var(--tm)' }}
+          end={item.tab === 'dashboard'}
+        >
+          <item.icon style={{ width: 16, height: 16, opacity: 0.7 }} />
+          <span style={{ flex: 1 }}>{t(`nav.${item.tab}`)}</span>
+          {['feynman'].includes(item.tab) && (
+            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 5px', borderRadius: 6, background: 'rgba(139, 92, 246, 0.15)', color: 'var(--p)', marginLeft: 'auto', border: '1px solid rgba(139, 92, 246, 0.3)', animation: 'pulse 2s infinite' }}>
+              ✨ IA
+            </span>
+          )}
+        </NavLink>
+      ))}
       <div className="sb-ft">
         <div className="row">
           <span className="k">{t('sidebar.level')}</span>

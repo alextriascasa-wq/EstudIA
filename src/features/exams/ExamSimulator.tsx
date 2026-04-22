@@ -26,20 +26,21 @@ export function ExamSimulator(): JSX.Element {
 
   // Results State
   const [score, setScore] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   const startGeneration = async () => {
     if (!topic.trim()) return;
+    setError(null);
     setView('loading');
     try {
-      // In a real scenario language would come from i18n
       const qs = await generateExam(topic, type, count, 'ca');
       setQuestions(qs);
       setAnswers({});
       setCurrentIdx(0);
       setView('taking');
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Error generant examen. Revisa la consola.');
+      setError(e?.message || 'Error generant examen.');
       setView('setup');
     }
   };
@@ -79,9 +80,9 @@ export function ExamSimulator(): JSX.Element {
         });
         finalScore = Math.round((correctCount / questions.length) * 100);
         setQuestions(finalQuestions);
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
-        alert('Error corregint examen.');
+        setError(e?.message || 'Error corregint examen.');
         setView('taking');
         return;
       }
@@ -90,7 +91,7 @@ export function ExamSimulator(): JSX.Element {
     setScore(finalScore);
     addXP(Math.round(finalScore / 2)); // Give up to 50 XP
     
-    // Save to history
+    // Save to history (ensuring quizzes is always an array to prevent iOS crash)
     const quiz: Quiz = {
       id: uid(),
       topic,
@@ -99,7 +100,7 @@ export function ExamSimulator(): JSX.Element {
       score: finalScore,
       questions: finalQuestions
     };
-    patch({ quizzes: [quiz, ...quizzes] });
+    patch({ quizzes: [quiz, ...(quizzes || [])] });
     save();
 
     setView('results');
@@ -255,6 +256,29 @@ export function ExamSimulator(): JSX.Element {
     <div className="c">
       <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 16 }}>Simulador d'Exàmens IA</h3>
       <p style={{ color: 'var(--ts)', marginBottom: 24, fontSize: 14 }}>Enganxa els teus apunts o escriu un tema per generar un examen a mida instantani.</p>
+
+      {error && (
+        <div style={{
+          background: 'var(--errl)', color: 'var(--err)',
+          border: '1.5px solid var(--err)', borderRadius: 10,
+          padding: '12px 16px', marginBottom: 16, fontSize: 13,
+          display: 'flex', alignItems: 'flex-start', gap: 10,
+        }}>
+          <span style={{ fontSize: 16, flexShrink: 0 }}>⚠️</span>
+          <div>
+            <strong>Error:</strong> {error}
+            {error.includes('Quota') && (
+              <div style={{ marginTop: 6, fontSize: 12, opacity: 0.85 }}>
+                La clau de l'API de Google ha esgotat el límit diari. Torna-ho a provar demà o actualitza la clau al Cloudflare Worker.
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => setError(null)}
+            style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--err)', fontSize: 18, lineHeight: 1 }}
+          >×</button>
+        </div>
+      )}
 
       <div className="g1" style={{ gap: 16 }}>
         <div>
