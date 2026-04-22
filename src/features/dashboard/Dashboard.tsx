@@ -48,7 +48,7 @@ export function Dashboard(): JSX.Element {
     <div className="sec">
       {/* HERO / WELCOME HUB */}
       <div style={{ marginBottom: 10, marginTop: 10 }}>
-        <h1 style={{ fontSize: 32, fontWeight: 900, letterSpacing: '-0.5px', marginBottom: 8 }}>
+        <h1 style={{ fontSize: 34, fontWeight: 700, fontFamily: "'Fraunces', serif", fontOpticalSizing: 'auto', letterSpacing: '-0.8px', marginBottom: 8 }}>
           {t('dashboard.heroTitle')}
         </h1>
         <p style={{ fontSize: 15, color: 'var(--ts)' }}>
@@ -56,87 +56,91 @@ export function Dashboard(): JSX.Element {
         </p>
       </div>
 
-      <div className="g3" style={{ marginBottom: 20 }}>
-        {/* ACTION 1: TIMER */}
-        <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 28 }}>
-          <div style={{ fontSize: 36, marginBottom: 16 }}>⏱️</div>
-          <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>{t('dashboard.actionTimerTitle')}</h3>
-          <p style={{ fontSize: 13, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 24 }}>
-            {t('dashboard.actionTimerDesc')}
-          </p>
-          <button className="bp" style={{ width: '100%', background: 'var(--s)', color: 'var(--t)', border: '1px solid var(--b)' }} onClick={() => nav('/timer')}>
-            {t('dashboard.actionTimerBtn')}
-          </button>
-        </div>
-
-        {/* ACTION 2: IA FLASHCARDS (PRIMARY HOOK) */}
-        <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 28, background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1))', border: '1px solid rgba(139, 92, 246, 0.3)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -10, right: -15, fontSize: 100, opacity: 0.05 }}>🧠</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-            <div style={{ fontSize: 36, filter: 'drop-shadow(0 0 10px rgba(139,92,246,0.5))' }}>✨</div>
-            <span style={{ fontSize: 10, fontWeight: 800, padding: '4px 8px', borderRadius: 6, background: 'var(--p)', color: '#fff', textTransform: 'uppercase', letterSpacing: 1, boxShadow: '0 0 10px rgba(139,92,246,0.4)', animation: 'pulse 2s infinite' }}>
+      {/* BENTO ROW 1: 2/3 + 1/3 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16, marginBottom: 16 }}>
+        {/* PRIMARY: IA FLASHCARDS */}
+        <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 32, background: 'linear-gradient(135deg, rgba(212, 160, 23, 0.09), rgba(224, 92, 58, 0.06))', border: '1px solid rgba(212, 160, 23, 0.25)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', top: -8, right: -12, fontSize: 90, opacity: 0.04 }}>🧠</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
+            <div style={{ fontSize: 32, filter: 'drop-shadow(0 0 8px rgba(212,160,23,0.4))' }}>✨</div>
+            <span style={{ fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 6, background: 'var(--a)', color: '#0F0D0A', textTransform: 'uppercase', letterSpacing: 0.8 }}>
               IA Power
             </span>
           </div>
-          <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8, zIndex: 1 }}>{t('dashboard.actionCardsTitle')}</h3>
-          <p style={{ fontSize: 13, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 24, zIndex: 1 }}>
+          <h3 style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 8, zIndex: 1 }}>{t('dashboard.actionCardsTitle')}</h3>
+          <p style={{ fontSize: 13, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 28, zIndex: 1 }}>
             {t('dashboard.actionCardsDesc')}
           </p>
-          <button className="bp" style={{ width: '100%', background: 'linear-gradient(90deg, var(--p), #ec4899)', color: '#fff', boxShadow: '0 4px 15px rgba(236, 72, 153, 0.3)' }} onClick={() => nav('/cards')}>
+          <button className="bp" style={{ width: '100%' }} onClick={() => nav('/cards')}>
             {t('dashboard.actionCardsBtn')}
           </button>
         </div>
 
-        {/* ACTION 3: IA EXAM */}
+        {/* TIMER */}
         <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 28 }}>
-          <div style={{ fontSize: 36, marginBottom: 16 }}>📝</div>
-          <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>{t('dashboard.actionExamsTitle')}</h3>
-          <p style={{ fontSize: 13, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 24 }}>
+          <div style={{ fontSize: 32, marginBottom: 16 }}>⏱️</div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 8 }}>{t('dashboard.actionTimerTitle')}</h3>
+          <p style={{ fontSize: 12, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 20 }}>
+            {t('dashboard.actionTimerDesc')}
+          </p>
+          <button className="bs" style={{ width: '100%' }} onClick={() => nav('/timer')}>
+            {t('dashboard.actionTimerBtn')}
+          </button>
+        </div>
+      </div>
+
+      {/* BENTO ROW 2: 1/3 + 2/3 */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 16, marginBottom: 20 }}>
+        {/* IA EXAMS */}
+        <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 28 }}>
+          <div style={{ fontSize: 32, marginBottom: 16 }}>📝</div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 8 }}>{t('dashboard.actionExamsTitle')}</h3>
+          <p style={{ fontSize: 12, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 20 }}>
             {t('dashboard.actionExamsDesc')}
           </p>
           <button className="bp" style={{ width: '100%' }} onClick={() => nav('/exams')}>
             {t('dashboard.actionExamsBtn')}
           </button>
         </div>
-      </div>
-      {/* 7-DAY STREAK (DUOLINGO STYLE) */}
-      <div className="c grad glow" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 32px', marginBottom: 20 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ fontSize: 48, filter: streak > 0 ? 'drop-shadow(0 0 15px rgba(245, 158, 11, 0.5))' : 'grayscale(1)', transform: streak > 0 ? 'scale(1.1)' : 'scale(1)', transition: 'all 0.3s' }}>
-            🔥
-          </div>
-          <div style={{ fontSize: 24, fontWeight: 900, color: streak > 0 ? 'var(--w)' : 'var(--ts)', marginTop: 4 }}>
-            {streak}
-          </div>
-        </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 12 }}>{t('dashboard.streakTitle')}</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-            {weekly.map((d, i) => {
-               const isActive = d.m > 0;
-               return (
-                 <div key={d.d + i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                   <div style={{ 
-                     width: 36, height: 36, borderRadius: '50%', 
-                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                     background: isActive ? 'linear-gradient(135deg, var(--w), var(--wd))' : 'var(--bg)',
-                     border: `2px solid ${isActive ? 'var(--w)' : 'var(--b)'}`,
-                     color: isActive ? '#fff' : 'var(--ts)',
-                     fontWeight: 800, fontSize: 14,
-                     boxShadow: isActive ? '0 0 15px rgba(245, 158, 11, 0.4)' : 'none'
-                   }}>
-                     {isActive ? '✓' : ''}
-                   </div>
-                   <div style={{ fontSize: 11, fontWeight: 700, color: isActive ? 'var(--w)' : 'var(--ts)' }}>
-                     {d.d}
-                   </div>
-                 </div>
-               )
-            })}
-          </div>
-        </div>
-      </div>
 
+        {/* 7-DAY STREAK */}
+        <div className="c grad glow" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 32px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div style={{ fontSize: 44, filter: streak > 0 ? 'drop-shadow(0 0 12px rgba(212, 160, 23, 0.5))' : 'grayscale(1)', transform: streak > 0 ? 'scale(1.1)' : 'scale(1)', transition: 'all 0.3s' }}>
+              🔥
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: streak > 0 ? 'var(--a)' : 'var(--ts)', marginTop: 4 }}>
+              {streak}
+            </div>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 14 }}>{t('dashboard.streakTitle')}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
+              {weekly.map((d, i) => {
+                 const isActive = d.m > 0;
+                 return (
+                   <div key={d.d + i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+                     <div style={{
+                       width: 34, height: 34, borderRadius: '50%',
+                       display: 'flex', alignItems: 'center', justifyContent: 'center',
+                       background: isActive ? 'linear-gradient(135deg, var(--a), var(--ad))' : 'var(--bg)',
+                       border: `2px solid ${isActive ? 'var(--a)' : 'var(--b)'}`,
+                       color: isActive ? '#0F0D0A' : 'var(--ts)',
+                       fontWeight: 800, fontSize: 13,
+                       boxShadow: isActive ? '0 0 12px rgba(212, 160, 23, 0.35)' : 'none'
+                     }}>
+                       {isActive ? '✓' : ''}
+                     </div>
+                     <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? 'var(--a)' : 'var(--ts)' }}>
+                       {d.d}
+                     </div>
+                   </div>
+                 )
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="g2">
         {/* LEVEL & STREAK INFO */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -147,29 +151,30 @@ export function Dashboard(): JSX.Element {
                 width: 48,
                 height: 48,
                 borderRadius: '50%',
-                background: 'linear-gradient(135deg,var(--a),var(--p))',
+                background: 'linear-gradient(135deg, var(--a), var(--ad))',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 22,
-                fontWeight: 900,
-                color: '#fff',
-                boxShadow: '0 4px 15px rgba(99,102,241,.35)',
+                fontSize: 20,
+                fontWeight: 500,
+                fontFamily: "'DM Mono', monospace",
+                color: '#0F0D0A',
+                boxShadow: '0 4px 15px rgba(212, 160, 23, 0.35)',
               }}
             >
               {level}
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 14, fontWeight: 800 }}>{t('sidebar.level')} {level}</span>
-                <span style={{ fontSize: 12, color: 'var(--ts)' }}>{cur}/{need} XP</span>
+                <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Fraunces', serif" }}>{t('sidebar.level')} {level}</span>
+                <span style={{ fontSize: 12, color: 'var(--ts)', fontFamily: "'DM Mono', monospace" }}>{cur}/{need} XP</span>
               </div>
               <div className="pb pb-lg">
                 <div
                   className="fill"
                   style={{
                     width: `${(cur / Math.max(need, 1)) * 100}%`,
-                    background: 'linear-gradient(90deg,var(--a),var(--p))',
+                    background: 'linear-gradient(90deg, var(--a), var(--a2))',
                   }}
                 />
               </div>
@@ -222,8 +227,8 @@ export function Dashboard(): JSX.Element {
 
         {/* TODAY'S PLAN */}
         <div className="c">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 800 }}>{t('dashboard.todayPlan')}</h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, borderLeft: '3px solid var(--a)', paddingLeft: 12 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Fraunces', serif" }}>{t('dashboard.todayPlan')}</h3>
             <span className="badge" style={{ background: 'var(--al)', color: 'var(--a)' }}>
               {doneToday}/{todayTasks.length}
             </span>
@@ -250,8 +255,8 @@ export function Dashboard(): JSX.Element {
           )}
 
           {/* UPCOMING EXAMS IN PLAN */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 24, marginBottom: 14 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 800 }}>{t('dashboard.upcomingExams')}</h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 24, marginBottom: 14, borderLeft: '3px solid var(--b)', paddingLeft: 12 }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Fraunces', serif" }}>{t('dashboard.upcomingExams')}</h3>
             <button className="bs" style={{ padding: '5px 12px', fontSize: 11 }} onClick={() => nav('/exams')}>
               {t('dashboard.addShort')}
             </button>

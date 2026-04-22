@@ -208,15 +208,15 @@ export function Sidebar(): JSX.Element {
         <NavLink
           key={item.tab}
           to={`/${item.tab === 'dashboard' ? '' : item.tab}`}
-          className={({ isActive }) => `nb${isActive ? ' on pulse-glow' : ''} card-hover`}
-          style={{ transition: 'transform 0.2s', padding: '12px 14px', fontSize: 15 }}
+          className={({ isActive }) => `nb${isActive ? ' on' : ''}`}
+          style={{ padding: '12px 12px', fontSize: 14 }}
           end={item.tab === 'dashboard'}
         >
           <item.icon />
           <span style={{ flex: 1 }}>{t(`nav.${item.tab}`)}</span>
           {['cards', 'exams'].includes(item.tab) && (
-            <span style={{ fontSize: 10, fontWeight: 800, padding: '2px 6px', borderRadius: 6, background: 'rgba(139, 92, 246, 0.2)', color: 'var(--p)', marginLeft: 'auto', border: '1px solid rgba(139, 92, 246, 0.4)', boxShadow: '0 0 10px rgba(139, 92, 246, 0.3)', animation: 'pulse 2s infinite' }}>
-              ✨ IA
+            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 6, background: 'var(--al)', color: 'var(--a)', marginLeft: 'auto', border: '1px solid rgba(212, 160, 23, 0.3)' }}>
+              IA
             </span>
           )}
         </NavLink>
@@ -237,8 +237,8 @@ export function Sidebar(): JSX.Element {
           <item.icon style={{ width: 16, height: 16, opacity: 0.7 }} />
           <span style={{ flex: 1 }}>{t(`nav.${item.tab}`)}</span>
           {['feynman'].includes(item.tab) && (
-            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 5px', borderRadius: 6, background: 'rgba(139, 92, 246, 0.15)', color: 'var(--p)', marginLeft: 'auto', border: '1px solid rgba(139, 92, 246, 0.3)', animation: 'pulse 2s infinite' }}>
-              ✨ IA
+            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 5px', borderRadius: 6, background: 'var(--al)', color: 'var(--a)', marginLeft: 'auto', border: '1px solid rgba(212, 160, 23, 0.25)' }}>
+              IA
             </span>
           )}
         </NavLink>
@@ -246,14 +246,14 @@ export function Sidebar(): JSX.Element {
       <div className="sb-ft">
         <div className="row">
           <span className="k">{t('sidebar.level')}</span>
-          <span className="v">{level}</span>
+          <span className="v" style={{ fontFamily: "'DM Mono', monospace" }}>{level}</span>
         </div>
         <div className="xp-bar">
           <div className="xp-fill" style={{ width: `${pct}%` }} />
         </div>
         <div className="row">
           <span className="k">{t('sidebar.xpOf', { cur, need })}</span>
-          <span className="v">{t('sidebar.streak', { days: streak })}</span>
+          <span className="v" style={{ fontFamily: "'DM Mono', monospace" }}>{t('sidebar.streak', { days: streak })}</span>
         </div>
         <div
           className="row"
