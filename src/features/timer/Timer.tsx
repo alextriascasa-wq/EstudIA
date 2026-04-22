@@ -234,7 +234,7 @@ export function Timer(): JSX.Element {
           ].map((x, i, arr) => (
             <div key={x.l} style={{ display: 'contents' }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 22, fontWeight: 900 }}>{x.v}</div>
+                <div style={{ fontSize: 22, fontWeight: 500, fontFamily: "'DM Mono', monospace" }}>{x.v}</div>
                 <div style={{ fontSize: 11, color: 'var(--tm)' }}>{x.l}</div>
               </div>
               {i < arr.length - 1 && <div style={{ width: 1, background: 'var(--b)' }} />}

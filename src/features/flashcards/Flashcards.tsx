@@ -363,7 +363,7 @@ export function Flashcards(): JSX.Element {
             </button>
             <button
               className="bs"
-              style={{ flex: 1, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', borderColor: '#f59e0b', color: '#f59e0b' }}
+              style={{ flex: 1, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', borderColor: 'var(--w)', color: 'var(--w)' }}
               onClick={() => grade(Rating.Hard)}
             >
               <span style={{ fontWeight: 800 }}>Difícil</span>

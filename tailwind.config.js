@@ -45,7 +45,9 @@ export default {
         'sf-xs': 'var(--radius-xs)',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans:    ['DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Fraunces', 'Georgia', 'serif'],
+        mono:    ['DM Mono', 'ui-monospace', 'monospace'],
       },
     },
   },
