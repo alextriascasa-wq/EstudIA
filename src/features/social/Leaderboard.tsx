@@ -13,9 +13,11 @@ export function Leaderboard({ sortedFriends, sortBy }: { sortedFriends: any[], s
     streak,
     weeklyMinutes: myWeeklyMinutes,
     isOnline: true,
+    league: useAppStore(s => s.league) || 'Bronze',
   };
 
-  const all = [...sortedFriends, me].sort((a, b) => b[sortBy] - a[sortBy]);
+  const leagueUsers = sortedFriends.filter((f) => f.league === me.league);
+  const all = [...leagueUsers, me].sort((a, b) => b[sortBy] - a[sortBy]);
 
   const top3 = all.slice(0, 3);
 
@@ -26,9 +28,25 @@ export function Leaderboard({ sortedFriends, sortBy }: { sortedFriends: any[], s
     return `${idx + 1}`;
   };
 
+  const getLeagueIcon = (league: string) => {
+    switch (league) {
+      case 'Bronze': return '🟤';
+      case 'Plata': return '⚪';
+      case 'Or': return '🟡';
+      case 'Diamant': return '💎';
+      case 'Mestre': return '👑';
+      default: return '🏆';
+    }
+  };
+
   return (
     <div className="c glass">
-      <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 20 }}>🏆 Rànquing</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+        <h3 style={{ fontSize: 18, fontWeight: 800 }}>🏆 Rànquing Setmanal</h3>
+        <div className="badge" style={{ fontSize: 14, background: 'var(--al)', color: 'var(--a)', padding: '6px 12px' }}>
+          {getLeagueIcon(me.league)} Lliga de {me.league}
+        </div>
+      </div>
       
       {/* Podium for top 3 */}
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 16, marginBottom: 32, height: 160 }}>

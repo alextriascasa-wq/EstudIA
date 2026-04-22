@@ -19,6 +19,7 @@ export function ExamCorrector(): JSX.Element {
   const [view, setView] = useState<'input' | 'loading' | 'results'>('input');
   const [results, setResults] = useState<CorrectionResult[]>([]);
   const [score, setScore] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   // File upload state
   const [uploadedFile, setUploadedFile] = useState<{ name: string; base64: string; mimeType: string } | null>(null);
@@ -28,11 +29,11 @@ export function ExamCorrector(): JSX.Element {
   const handleFileSelect = async (file: File) => {
     const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'];
     if (!validTypes.includes(file.type)) {
-      alert('Format no suportat. Utilitza JPG, PNG, WebP o PDF.');
+      setError('Format no suportat. Utilitza JPG, PNG, WebP o PDF.');
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      alert('Fitxer massa gran. Màxim 10 MB.');
+      setError('Fitxer massa gran. Màxim 10 MB.');
       return;
     }
 
@@ -81,7 +82,10 @@ export function ExamCorrector(): JSX.Element {
         body: JSON.stringify(body),
       });
 
-      if (!res.ok) throw new Error(`Error: ${res.status}`);
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || `Error: ${res.status}`);
+      }
       const data = await res.json() as CorrectionResult[];
       
       setResults(data);
@@ -90,9 +94,9 @@ export function ExamCorrector(): JSX.Element {
       setScore(finalScore);
       addXP(Math.round(finalScore / 4));
       setView('results');
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Error corregint l\'examen. Assegura\'t que el worker estigui actiu.');
+      setError(e?.message || 'Error corregint l\'examen. Assegura\'t que el worker estigui actiu i tinguis connexió.');
       setView('input');
     }
   };
@@ -174,6 +178,29 @@ export function ExamCorrector(): JSX.Element {
       <p style={{ color: 'var(--ts)', marginBottom: 20, fontSize: 14, lineHeight: 1.5 }}>
         Puja una foto o PDF del teu examen, o enganxa el text manualment. La IA el corregirà amb feedback detallat.
       </p>
+
+      {error && (
+        <div style={{
+          background: 'var(--errl)', color: 'var(--err)',
+          border: '1.5px solid var(--err)', borderRadius: 10,
+          padding: '12px 16px', marginBottom: 16, fontSize: 13,
+          display: 'flex', alignItems: 'flex-start', gap: 10,
+        }}>
+          <span style={{ fontSize: 16, flexShrink: 0 }}>⚠️</span>
+          <div>
+            <strong>Error:</strong> {error}
+            {error.includes('Quota') && (
+              <div style={{ marginTop: 6, fontSize: 12, opacity: 0.85 }}>
+                La clau de l'API de Google ha esgotat el límit diari. Torna-ho a provar demà o actualitza la clau al Cloudflare Worker.
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => setError(null)}
+            style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--err)', fontSize: 18, lineHeight: 1 }}
+          >×</button>
+        </div>
+      )}
 
       {/* File Upload Area */}
       <div

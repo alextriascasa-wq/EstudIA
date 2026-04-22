@@ -1,14 +1,14 @@
 export interface Technique {
   nm: string;
   ico: string;
-  rat: 'Alta' | 'Mod-Alta' | 'Recuperació';
+  rat: 'Alta' | 'Mod-Alta' | 'Moderada' | 'Recuperació';
   bg: string;
   col: string;
   sum: string;
   steps: readonly string[];
 }
 
-/** 5 science-backed study techniques — verbatim from Pro. */
+/** 6 science-backed study techniques — verbatim from Pro. */
 export const TECHNIQUES: readonly Technique[] = [
   {
     nm: 'Recuperació Activa',
@@ -72,6 +72,22 @@ export const TECHNIQUES: readonly Technique[] = [
       'Identifica errors',
       'Augmenta similitud',
       'Ideal per STEM',
+    ],
+  },
+  {
+    nm: 'Interrogació Elaborativa',
+    ico: '💡',
+    rat: 'Moderada',
+    bg: 'var(--rl)',
+    col: 'var(--r)',
+    sum: 'Pregunta "Per què?" a cada afirmació.',
+    steps: [
+      'Llegeix una afirmació del text',
+      'Pregunta: "Per què és cert això?"',
+      'Genera una explicació causal propia',
+      'Pregunta: "En què es diferencia de X?"',
+      'Connecta amb coneixements previs',
+      'Transforma text en diagrama visual',
     ],
   },
   {

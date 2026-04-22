@@ -13,8 +13,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.104.0",
     "@types/jszip": "^3.4.0",
     "@types/sql.js": "^1.4.11",
+    "@vercel/speed-insights": "^2.0.0",
     "anki-apkg-export": "^4.0.3",
     "file-saver": "^2.0.5",
     "framer-motion": "^11.5.6",

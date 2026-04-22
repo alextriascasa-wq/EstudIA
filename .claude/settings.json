@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /c/Users/alext/Documents/Claude/Projects/Estudi && npm run build && npx wrangler pages deploy dist --project-name estudia"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -10,8 +10,8 @@ export async function generateExam(topic: string, type: QuizType, count: number,
   });
 
   if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Failed to generate exam: ${res.status} ${txt}`);
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || `Failed to generate exam: ${res.status}`);
   }
 
   return res.json();
@@ -25,8 +25,8 @@ export async function correctExam(questions: QuizQuestion[], language: string): 
   });
 
   if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`Failed to correct exam: ${res.status} ${txt}`);
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.error || `Failed to correct exam: ${res.status}`);
   }
 
   return res.json();

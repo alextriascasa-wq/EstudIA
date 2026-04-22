@@ -25,6 +25,14 @@ export interface Exam {
 
 export type QuizType = 'test' | 'tf' | 'open' | 'practical';
 
+export interface ChaosProblem {
+  id: string;
+  topic: string;
+  text: string;
+  solution: string;
+  difficulty: ExamDifficulty;
+}
+
 export interface QuizQuestion {
   id: string;
   q: string;
@@ -111,6 +119,7 @@ export interface Friend {
   streak: number;
   weeklyMinutes: number;
   isOnline: boolean;
+  league: string;
 }
 
 export interface SharedResource {
@@ -159,6 +168,8 @@ export interface AppState {
   friends: Friend[];
   sharedResources: SharedResource[];
   friendCode: string;
+  league: string;
+  chaosProblems: ChaosProblem[];
 }
 
 export interface StudyTask {
@@ -179,7 +190,7 @@ export interface Achievement {
 }
 
 export interface TimerMode {
-  id: 'pom' | 'd52' | 'd90';
+  id: 'pom' | 'd52' | 'd90' | 'd120';
   nm: string;
   w: number;
   r: number;
@@ -202,4 +213,6 @@ export type Tab =
   | 'exams'
   | 'stats'
   | 'techniques'
-  | 'social';
+  | 'social'
+  | 'cloud'
+  | 'chaos';

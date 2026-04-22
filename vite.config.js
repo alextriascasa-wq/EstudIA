@@ -2,16 +2,18 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
         react(),
+        nodePolyfills(),
         VitePWA({
             registerType: 'autoUpdate',
             includeAssets: ['icons/*.png'],
             manifest: {
-                name: 'StudyFlow Pro',
-                short_name: 'StudyFlow',
+                name: 'EstudIA',
+                short_name: 'EstudIA',
                 description: 'La teva arma secreta acadèmica — Ciència del rendiment',
                 theme_color: '#6366f1',
                 background_color: '#0b0f1a',
@@ -90,6 +92,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
+            'script-loader!sql.js': 'sql.js',
             '@': path.resolve(__dirname, './src'),
             '@/components': path.resolve(__dirname, './src/components'),
             '@/features': path.resolve(__dirname, './src/features'),

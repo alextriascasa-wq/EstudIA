@@ -8,6 +8,8 @@ import { Rating } from 'ts-fsrs';
 import { importApkg, exportApkg } from '@/lib/anki';
 import type { Deck, Flashcard } from '@/types';
 
+const WORKER_URL = import.meta.env.VITE_WORKER_URL || 'http://localhost:8787';
+
 const renderText = (text: string) => {
   const parts = text.split(/(!\[.*?\]\(.*?\))/g);
   return parts.map((part, i) => {
@@ -32,6 +34,7 @@ export function Flashcards(): JSX.Element {
   const patch = useAppStore((s) => s.patch);
   const save = useAppStore((s) => s.save);
   const addXP = useAppStore((s) => s.addXP);
+  const incrementDailyLog = useAppStore((s) => s.incrementDailyLog);
 
   const [curDeck, setCurDeck] = useState<string | null>(null);
   const [curCardId, setCurCardId] = useState<string | null>(null);
@@ -40,6 +43,12 @@ export function Flashcards(): JSX.Element {
   const [cardInputs, setCardInputs] = useState<Record<string, { q: string; a: string; s: string }>>(
     {},
   );
+
+  // AI Generation State
+  const [aiTopic, setAiTopic] = useState('');
+  const [aiFile, setAiFile] = useState<{ name: string; type: string; data: string } | null>(null);
+  const [aiCount, setAiCount] = useState<number>(5);
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const deck = useMemo<Deck | null>(
     () => (curDeck ? decks.find((d) => d.id === curDeck) ?? null : null),
@@ -67,6 +76,76 @@ export function Flashcards(): JSX.Element {
     save();
   };
 
+  const handleAIGenerate = async () => {
+    if (!aiTopic.trim() && !aiFile) return;
+    setIsAiLoading(true);
+    try {
+      const payload: any = { count: aiCount, language: 'ca' };
+      if (aiTopic.trim()) payload.text = aiTopic;
+      if (aiFile) {
+        payload.fileData = aiFile.data;
+        payload.mimeType = aiFile.type;
+      }
+
+      const res = await fetch(`${WORKER_URL}/generate-cards`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error('Error de connexió amb la IA');
+      const data: { q: string; a: string }[] = await res.json();
+      
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('La IA no ha generat cap targeta.');
+      }
+
+      const newDeck: Deck = {
+        id: uid(),
+        name: `Generat: ${aiTopic.substring(0, 15)}...`,
+        cards: data.map((c) => ({
+          id: uid(),
+          q: c.q,
+          a: c.a,
+          subject: 'General',
+          hits: 0,
+          sessionHits: 0,
+          nextReview: today(),
+          strength: 0,
+          interval: 1,
+          lastSeen: null,
+        })),
+      };
+
+      patch({ decks: [newDeck, ...decks] });
+      save();
+      setAiTopic('');
+      setAiFile(null);
+      showToast({ title: '✨ Fet!', desc: `S'han generat ${data.length} flashcards.` });
+    } catch (error: any) {
+      showToast({ title: 'Error', desc: error.message, kind: 'info' });
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast({ title: 'Error', desc: 'El fitxer és massa gran (màx. 5MB)', kind: 'info' });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const result = ev.target?.result as string;
+      const base64Data = result.split(',')[1];
+      if (base64Data) {
+        setAiFile({ name: file.name, type: file.type, data: base64Data });
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
   const handleAnkiImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -151,7 +230,6 @@ export function Flashcards(): JSX.Element {
 
   const grade = (rating: Rating): void => {
     if (!deck || !card) return;
-    const s = useAppStore.getState();
     const correct = rating !== Rating.Again;
 
     // Mutate the specific card through a fresh copy.
@@ -165,35 +243,11 @@ export function Flashcards(): JSX.Element {
           }
         : d,
     );
-    const newQuizTotal = s.quizTotal + 1;
-    const newQuizCorrect = s.quizCorrect + (correct ? 1 : 0);
-    const memStrength =
-      newQuizTotal > 0 ? Math.round((newQuizCorrect / newQuizTotal) * 100) : 0;
-    const dateKey = today();
-    const dailyLog = [...s.dailyLog];
-    const existing = dailyLog.find((d) => d.date === dateKey);
-    if (existing) {
-      existing.cards += 1;
-      if (correct) existing.correct += 1;
-    } else {
-      dailyLog.push({
-        date: dateKey,
-        minutes: 0,
-        cards: 1,
-        correct: correct ? 1 : 0,
-        sessions: 0,
-      });
-    }
-    patch({
-      decks: mutableDecks,
-      quizTotal: newQuizTotal,
-      quizCorrect: newQuizCorrect,
-      cardsToday: s.cardsToday + 1,
-      memStrength,
-      dailyLog,
-    });
-    save();
+
+    patch({ decks: mutableDecks });
+    incrementDailyLog({ cards: 1, correct: correct ? 1 : 0 });
     if (correct) addXP(5);
+    save();
 
     // Pick next due card (not yet graduated this session).
     const freshDeck = mutableDecks.find((d) => d.id === deck.id);
@@ -381,10 +435,45 @@ export function Flashcards(): JSX.Element {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ background: 'var(--pl)', color: 'var(--p)', padding: 8, borderRadius: 8, fontSize: 16 }}>🤖</div>
-              <div>
-                <strong style={{ display: 'block', marginBottom: 4 }}>2. Genera amb Intel·ligència Artificial</strong>
-                <span style={{ fontSize: 13, color: 'var(--tm)' }}>(Properament) Enganxa els teus apunts i la IA extraurà els conceptes clau automàticament.</span>
+              <div style={{ background: 'var(--s2)', color: 'var(--a)', padding: 12, borderRadius: 12, fontSize: 20 }}>🧠</div>
+              <div style={{ flex: 1 }}>
+                <strong style={{ display: 'block', marginBottom: 4, fontSize: 16 }}>2. Extracció de Conceptes (IA)</strong>
+                <span style={{ fontSize: 13, color: 'var(--tm)', display: 'block', marginBottom: 12 }}>Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les targetes clau.</span>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  {aiFile ? (
+                    <div style={{ padding: 12, background: 'var(--sh)', borderRadius: 'var(--radius-sm)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ fontSize: 13, fontWeight: 600 }}>📄 {aiFile.name}</div>
+                      <button className="bi" onClick={() => setAiFile(null)}>✕</button>
+                    </div>
+                  ) : (
+                    <label className="inp" style={{ borderStyle: 'dashed', textAlign: 'center', padding: '24px 16px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: 24 }}>📥</span>
+                      <span style={{ fontWeight: 600, fontSize: 13 }}>Pujar fitxer (PDF o Imatge)</span>
+                      <span style={{ fontSize: 11, color: 'var(--tm)' }}>Fins a 5MB</span>
+                      <input type="file" accept="image/*,application/pdf" style={{ display: 'none' }} onChange={handleFileChange} />
+                    </label>
+                  )}
+                  
+                  <textarea 
+                    className="inp" 
+                    placeholder="O bé, enganxa els teus apunts aquí..."
+                    style={{ minHeight: 80 }}
+                    value={aiTopic}
+                    onChange={(e) => setAiTopic(e.target.value)}
+                    disabled={isAiLoading}
+                  />
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <select className="inp" style={{ flex: 1 }} value={aiCount} onChange={(e) => setAiCount(Number(e.target.value))} disabled={isAiLoading}>
+                      <option value="5">5 targetes</option>
+                      <option value="10">10 targetes</option>
+                      <option value="20">20 targetes</option>
+                    </select>
+                    <button className="bp" style={{ flex: 2 }} onClick={handleAIGenerate} disabled={isAiLoading || (!aiTopic.trim() && !aiFile)}>
+                      {isAiLoading ? 'Analitzant i Generant...' : '✨ Extreure Conceptes'}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>

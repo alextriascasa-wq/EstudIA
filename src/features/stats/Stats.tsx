@@ -23,6 +23,24 @@ export function Stats(): JSX.Element {
 
   const { totalMins7, totalCards7, totalCorrect7, avgMin7 } = stats7;
 
+  const heatmapCells = useMemo(() => {
+    const cells = [];
+    const todayDate = new Date();
+    for (let i = 119; i >= 0; i--) {
+      const d = new Date(todayDate);
+      d.setDate(d.getDate() - i);
+      const iso = d.toISOString().split('T')[0]!;
+      const val = state.heatmap[iso] || 0;
+      let lvl = 0;
+      if (val > 0) lvl = 1;
+      if (val >= 30) lvl = 2;
+      if (val >= 60) lvl = 3;
+      if (val >= 120) lvl = 4;
+      cells.push({ date: iso, lvl, val });
+    }
+    return cells;
+  }, [state.heatmap]);
+
   const topCards = [
     { l: 'Últims 7 dies', v: `${totalMins7}m`, sub: 'temps total', c: 'var(--a)' },
     { l: 'Mitjana diària', v: `${avgMin7}m`, sub: 'objectiu: 120m', c: 'var(--p)' },
@@ -109,6 +127,31 @@ export function Stats(): JSX.Element {
               </div>
             );
           })}
+        </div>
+      </div>
+
+      <div className="c">
+        <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 14 }}>
+          🔥 Activitat (Últims 120 dies)
+        </h3>
+        <div className="heatmap" style={{ marginBottom: 12 }}>
+          {heatmapCells.map((c) => (
+            <div 
+              key={c.date} 
+              className="hm-cell" 
+              data-lvl={c.lvl} 
+              title={`${c.date}: ${c.val} minuts d'estudi`} 
+            />
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 6, fontSize: 11, color: 'var(--ts)', alignItems: 'center' }}>
+          <span>Menys</span>
+          <div className="hm-cell" data-lvl="0" style={{ background: 'var(--bg)', border: '1px solid var(--b)' }} />
+          <div className="hm-cell" data-lvl="1" />
+          <div className="hm-cell" data-lvl="2" />
+          <div className="hm-cell" data-lvl="3" />
+          <div className="hm-cell" data-lvl="4" />
+          <span>Més</span>
         </div>
       </div>
 

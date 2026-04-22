@@ -20,7 +20,62 @@ export function Feynman(): JSX.Element {
   const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
   const [lastSource, setLastSource] = useState<'ai' | 'fallback' | null>(null);
   const [rateRemaining, setRateRemaining] = useState<number | null>(null);
+  const [isListening, setIsListening] = useState<boolean>(false);
   const chatRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      // You could dynamically set this based on i18n, but Catalan is default
+      recognition.lang = 'ca-ES'; 
+
+      recognition.onresult = (event: any) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + ' ';
+          }
+        }
+        if (finalTranscript) {
+          setDraft((prev) => prev + finalTranscript);
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      alert('El teu navegador no suporta el reconeixement de veu.');
+      return;
+    }
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   useEffect(() => {
     if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight;
@@ -224,16 +279,38 @@ export function Feynman(): JSX.Element {
               />
             ))}
           </div>
-          <div className="chat-input" style={{ opacity: isAiLoading ? 0.6 : 1, pointerEvents: isAiLoading ? 'none' : 'auto' }}>
-            <input
+          <div className="chat-input" style={{ opacity: isAiLoading ? 0.6 : 1, pointerEvents: isAiLoading ? 'none' : 'auto', display: 'flex', gap: 8 }}>
+            <button 
+              className="bs" 
+              style={{ 
+                padding: '0 16px', 
+                background: isListening ? 'var(--err)' : 'var(--bg)', 
+                color: isListening ? '#fff' : 'var(--t)', 
+                borderColor: isListening ? 'var(--err)' : 'var(--b)',
+                transition: 'all 0.2s',
+                animation: isListening ? 'pulse 1.5s infinite' : 'none'
+              }} 
+              onClick={toggleListening}
+              disabled={isAiLoading}
+              title={isListening ? "Aturar gravació" : "Parlar pel micròfon"}
+            >
+              <span style={{ fontSize: 20 }}>{isListening ? '🛑' : '🎙️'}</span>
+            </button>
+            <textarea
               className="inp"
-              placeholder={isAiLoading ? "Penseu..." : "Explica amb les teves paraules..."}
+              placeholder={isListening ? "Escoltant..." : isAiLoading ? "Penseu..." : "Explica amb les teves paraules..."}
+              style={{ flex: 1, minHeight: 44, resize: 'none', padding: '12px 16px', borderRadius: 8 }}
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && send()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
               disabled={isAiLoading}
             />
-            <button className="bp" onClick={send} disabled={isAiLoading}>
+            <button className="bp" style={{ padding: '0 24px' }} onClick={send} disabled={isAiLoading || !draft.trim()}>
               {isAiLoading ? '...' : 'Enviar'}
             </button>
           </div>

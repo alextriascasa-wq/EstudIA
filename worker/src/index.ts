@@ -14,7 +14,7 @@ const CORS_HEADERS = {
 
 // In-memory rate limit (resets when worker restarts, but good enough for basic protection)
 const rateLimits = new Map<string, { count: number; date: string }>();
-const MAX_REQUESTS_PER_DAY = 30;
+const MAX_REQUESTS_PER_DAY = 50; // Increased from 30
 
 function getClientIP(request: Request): string {
   return request.headers.get('cf-connecting-ip') || 'unknown';
@@ -38,6 +38,7 @@ function checkRateLimit(ip: string): { allowed: boolean; remaining: number } {
 }
 
 async function callGemini(env: Env, payload: any) {
+  // Using gemini-2.5-flash as gemini-1.5-flash is deprecated in this environment
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${env.GEMINI_API_KEY}`;
   const response = await fetch(url, {
     method: 'POST',
@@ -46,8 +47,16 @@ async function callGemini(env: Env, payload: any) {
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Gemini API error: ${response.status} - ${errorText}`);
+    const errorData: any = await response.json().catch(() => ({}));
+    const message = errorData.error?.message || response.statusText;
+    const code = errorData.error?.code || response.status;
+    
+    // Check for quota error
+    if (code === 429) {
+      throw new Error("Quota esgotada a l'API de Google. Torna-ho a provar més tard o canvia la clau d'API.");
+    }
+    
+    throw new Error(`Gemini API error: ${code} - ${message}`);
   }
 
   return await response.json();
@@ -82,10 +91,11 @@ export default {
     const { allowed, remaining } = checkRateLimit(ip);
     
     if (!allowed) {
-      return new Response('Rate limit exceeded. Try again tomorrow.', {
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded. Try again tomorrow.' }), {
         status: 429,
         headers: {
           ...CORS_HEADERS,
+          'Content-Type': 'application/json',
           'Retry-After': '86400',
           'X-RateLimit-Remaining': '0',
         },
@@ -119,19 +129,25 @@ export default {
       }
 
       if (url.pathname === '/generate-cards' && request.method === 'POST') {
-        const body = await request.json() as { text: string; count: number; language: string };
-        const prompt = `Ets un expert creador de flashcards. A partir del següent text, genera exactament ${body.count} flashcards en ${body.language === 'ca' ? 'català' : 'castellà'}.
+        const body = await request.json() as { text?: string; fileData?: string; mimeType?: string; count: number; language: string };
+        const prompt = `Ets un expert creador de flashcards. A partir de la informació proporcionada, genera exactament ${body.count} flashcards en ${body.language === 'ca' ? 'català' : 'castellà'}.
 El format ha de ser un JSON array valid de l'estil: [{"q": "Pregunta", "a": "Resposta curtes i clares"}].
-No incloguis markdown, només el JSON brut.
+No incloguis markdown, només el JSON brut.`;
 
-Text:
-${body.text}`;
+        const parts: any[] = [{ text: prompt }];
+
+        if (body.fileData && body.mimeType) {
+          parts.push({
+            inlineData: { mimeType: body.mimeType, data: body.fileData }
+          });
+          parts.push({ text: "Analitza el document o imatge adjunta i extreu els conceptes clau en format de flashcards." });
+        } else if (body.text) {
+          parts.push({ text: `Text:\n${body.text}` });
+        }
 
         const payload = {
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-          generationConfig: {
-            responseMimeType: "application/json"
-          }
+          contents: [{ role: "user", parts }],
+          generationConfig: { responseMimeType: "application/json" }
         };
 
         const geminiResponse: any = await callGemini(env, payload);
@@ -203,12 +219,17 @@ ${JSON.stringify(body.questions, null, 2)}`;
       }
 
       if (url.pathname === '/exam-correct-upload' && request.method === 'POST') {
-        const body = await request.json() as { 
-          examText?: string; 
-          fileData?: string; 
-          mimeType?: string; 
-          language: string 
-        };
+        let body;
+        try {
+          body = await request.json() as { 
+            examText?: string; 
+            fileData?: string; 
+            mimeType?: string; 
+            language: string 
+          };
+        } catch (e) {
+          return new Response(JSON.stringify({ error: 'Invalid JSON payload' }), { status: 400, headers: defaultHeaders });
+        }
 
         const systemPrompt = `Ets un professor expert corregint un examen en ${body.language === 'ca' ? 'català' : 'castellà'}.
 L'alumne t'envia el seu examen (pot ser text, una foto o un PDF) amb les preguntes i les seves respostes.
@@ -220,35 +241,60 @@ IMPORTANT:
 - Si l'examen és una imatge o PDF, llegeix el contingut i identifica les preguntes i respostes.
 - Retorna NOMÉS el JSON array, cap text addicional.`;
 
-        const parts: any[] = [{ text: systemPrompt }];
-
+        const parts: any[] = [];
         if (body.fileData && body.mimeType) {
-          // Multimodal: send the image/PDF as inline data
           parts.push({
             inlineData: {
               mimeType: body.mimeType,
               data: body.fileData
             }
           });
-          parts.push({ text: "Corregeix l'examen que apareix en aquesta imatge/document." });
+          parts.push({ text: "Corregeix l'examen adjunt." });
         } else if (body.examText) {
           parts.push({ text: `Text de l'examen:\n${body.examText}` });
+        } else {
+          return new Response(JSON.stringify({ error: 'No exam content provided' }), { status: 400, headers: defaultHeaders });
         }
 
         const payload = {
+          system_instruction: {
+            parts: [{ text: systemPrompt }]
+          },
           contents: [{ role: "user", parts }],
-          generationConfig: { responseMimeType: "application/json" }
+          generationConfig: { 
+            responseMimeType: "application/json",
+            temperature: 0.1
+          }
         };
 
-        const geminiResponse: any = await callGemini(env, payload);
-        const replyText = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
-        let results = [];
-        try { results = JSON.parse(replyText); } catch(e) { console.error("Parse error", replyText); }
-        
-        return new Response(JSON.stringify(results), { headers: defaultHeaders });
+        try {
+          const geminiResponse: any = await callGemini(env, payload);
+          const replyText = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
+          let results = [];
+          try { 
+            results = JSON.parse(replyText); 
+          } catch(e) { 
+            console.error("Parse error", replyText);
+            // Fallback: try to find JSON in the text if it's not raw JSON
+            const match = replyText.match(/\[[\s\S]*\]/);
+            if (match) {
+              results = JSON.parse(match[0]);
+            } else {
+              throw new Error("La IA ha retornat un format invàlid.");
+            }
+          }
+          
+          return new Response(JSON.stringify(results), { headers: defaultHeaders });
+        } catch (error: any) {
+          console.error("Gemini call failed:", error);
+          return new Response(JSON.stringify({ error: error.message }), { 
+            status: 500, 
+            headers: defaultHeaders 
+          });
+        }
       }
 
-      return new Response('Not found', { status: 404, headers: CORS_HEADERS });
+      return new Response(JSON.stringify({ error: 'Endpoint not found' }), { status: 404, headers: CORS_HEADERS });
 
     } catch (error: any) {
       console.error(error);

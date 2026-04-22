@@ -33,4 +33,13 @@ export const TIMER_MODES: readonly TimerMode[] = [
     ds: '90/27 min',
     ideal: 'Mates, física, programació',
   },
+  {
+    id: 'd120',
+    nm: 'Hyper Focus',
+    w: 120 * 60,
+    r: 20 * 60,
+    ico: '🚀',
+    ds: '120/20 min',
+    ideal: 'Projectes complexos, flux total',
+  },
 ];

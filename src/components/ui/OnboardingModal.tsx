@@ -241,7 +241,13 @@ export function OnboardingModal(): JSX.Element | null {
                 fill="none" stroke="var(--ok)" strokeWidth="4" 
               />
               
-              <text x="360" y="30" fill="var(--ok)" fontSize="12" fontWeight="bold">EstudIA</text>
+              <text 
+                x="360" y="30" fill="var(--ok)" 
+                fontSize="12" fontWeight="900"
+                style={{ fontFamily: "'Roboto Slab', serif" }}
+              >
+                EstudIA
+              </text>
               <text x="360" y="110" fill="var(--err)" fontSize="12">El teu mètode</text>
             </svg>
           </motion.div>

@@ -15,7 +15,8 @@
     "exams": "Exámenes",
     "stats": "Estadísticas",
     "social": "Social",
-    "techniques": "Técnicas"
+    "techniques": "Técnicas",
+    "cloud": "Nube (Sync)"
   },
   "sidebar": {
     "level": "Nivel",
@@ -27,7 +28,8 @@
     "language": "Idioma",
     "install": "Instalar EstudIA",
     "installIOS": "Instalar en iPhone",
-    "installIOSSteps": "Toca Compartir (⬆) → Añadir a pantalla de inicio"
+    "installIOSSteps": "Toca Compartir (⬆) → Añadir a pantalla de inicio",
+    "moreTools": "Más herramientas"
   },
   "common": {
     "add": "Añadir",
@@ -46,6 +48,18 @@
     "importSuccess": "Datos cargados correctamente"
   },
   "dashboard": {
+    "heroTitle": "¡Bienvenido de nuevo! 👋",
+    "heroDesc": "¿Qué quieres conseguir hoy? Elige una acción para empezar.",
+    "actionTimerTitle": "Sesión de Focus",
+    "actionTimerDesc": "Inicia un temporizador Pomodoro para concentrarte al máximo y sumar minutos productivos.",
+    "actionTimerBtn": "Empezar →",
+    "actionCardsTitle": "Alquimia de Apuntes",
+    "actionCardsDesc": "Sube tus apuntes y la IA extraerá tarjetas de memoria clave automáticamente.",
+    "actionCardsBtn": "Generar con IA →",
+    "actionExamsTitle": "Simulacro de Examen",
+    "actionExamsDesc": "Enfréntate a preguntas generadas por IA y haz que te corrija los resultados en tiempo real.",
+    "actionExamsBtn": "Ponerme a prueba →",
+    "streakTitle": "Tu racha de estudio",
     "todayPlan": "📋 Plan de hoy",
     "upcomingExams": "📅 Próximos exámenes",
     "noTasks": "Ninguna tarea hoy — ¡añade exámenes!",
@@ -94,12 +108,16 @@
     "modes": {
       "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repaso, vocabulario" },
       "d52": { "nm": "Ultradiano", "ideal": "Estudio mixto, lectura activa" },
-      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programación" }
+      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programación" },
+      "d120": { "nm": "Hyper Focus", "ideal": "Proyectos complejos, flujo total" }
     },
     "notifOn": "Notificaciones activadas",
     "notifOff": "Activar notificaciones",
     "notifFocusDone": "Sesión de {{mode}} completada. ¡Hora de descansar!",
     "notifRestDone": "Descanso terminado. ¡Vuelve al focus!"
+  },
+  "chaos": {
+    "minProblems": "Añade al menos 3 problemas de diferentes temas para empezar."
   },
   "stats": {
     "last7d": "Últimos 7 días",

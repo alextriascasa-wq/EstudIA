@@ -10,6 +10,7 @@ export const MOCK_FRIENDS: Friend[] = [
     streak: 45,
     weeklyMinutes: 650,
     isOnline: true,
+    league: 'Diamant',
   },
   {
     id: 'f2',
@@ -20,6 +21,7 @@ export const MOCK_FRIENDS: Friend[] = [
     streak: 12,
     weeklyMinutes: 420,
     isOnline: false,
+    league: 'Or',
   },
   {
     id: 'f3',
@@ -30,6 +32,7 @@ export const MOCK_FRIENDS: Friend[] = [
     streak: 30,
     weeklyMinutes: 380,
     isOnline: true,
+    league: 'Or',
   },
   {
     id: 'f4',
@@ -40,6 +43,7 @@ export const MOCK_FRIENDS: Friend[] = [
     streak: 5,
     weeklyMinutes: 210,
     isOnline: false,
+    league: 'Plata',
   },
   {
     id: 'f5',
@@ -50,6 +54,7 @@ export const MOCK_FRIENDS: Friend[] = [
     streak: 2,
     weeklyMinutes: 150,
     isOnline: true,
+    league: 'Plata',
   },
   {
     id: 'f6',
@@ -60,6 +65,7 @@ export const MOCK_FRIENDS: Friend[] = [
     streak: 8,
     weeklyMinutes: 90,
     isOnline: false,
+    league: 'Bronze',
   },
   {
     id: 'f7',
@@ -70,5 +76,6 @@ export const MOCK_FRIENDS: Friend[] = [
     streak: 1,
     weeklyMinutes: 45,
     isOnline: true,
+    league: 'Bronze',
   },
 ];
