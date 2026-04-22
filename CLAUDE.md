@@ -8,6 +8,7 @@ AI-powered study assistant that helps students understand material, generate sum
 - Backend:
 - AI: Claude API (claude-sonnet-4-6) via Anthropic SDK
 - Database:
+- Deployment: Cloudflare (ignore any Vercel CI checks — not used)
 
 ## Dev Commands
 <!-- Fill in when project is scaffolded -->
