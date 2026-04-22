@@ -91,25 +91,27 @@ Always use path aliases — never use relative `../../` imports.
 
 ### Color Palette
 
-All colors referenced via CSS variables — never hard-code hex in components.
+Theme: **Warm Editorial Dark**. All colors referenced via CSS variables — never hard-code hex in components.
 
 | Variable | Value | Semantic |
 |---|---|---|
-| `--bg` | `#000000` | Page background |
-| `--s` | `rgba(255,255,255,0.03)` | Surface (glass card) |
-| `--s2` | `rgba(255,255,255,0.05)` | Surface elevated |
-| `--sh` | `rgba(255,255,255,0.08)` | Surface hover |
-| `--b` | `rgba(255,255,255,0.10)` | Border subtle |
-| `--t` | `#f4f4f5` (zinc-100) | Text primary |
-| `--ts` | `#a1a1aa` (zinc-400) | Text secondary |
-| `--tm` | `#71717a` (zinc-500) | Text muted |
-| `--tw` | `#52525b` (zinc-600) | Text weak |
-| `--a` | `#6366f1` | Indigo — primary accent |
-| `--al` | `rgba(99,102,241,0.15)` | Indigo tint |
-| `--ad` | `#4f46e5` | Indigo dark |
-| `--a2` | `#818cf8` | Indigo light |
-| `--p` | `#8b5cf6` | Violet |
-| `--pl` | `rgba(139,92,246,0.15)` | Violet tint |
+| `--bg` | `#0F0D0A` | Page background (warm near-black) |
+| `--s` | `#1C1916` | Surface (card) |
+| `--s2` | `#241F1A` | Surface elevated |
+| `--sh` | `#2E2820` | Surface hover |
+| `--b` | `rgba(212,160,23,0.12)` | Border subtle (amber-tinted) |
+| `--bl` | `rgba(212,160,23,0.06)` | Border lighter |
+| `--t` | `#F0EDE8` | Text primary (warm off-white) |
+| `--ts` | `#C8BFB5` | Text secondary |
+| `--tm` | `#8A7F74` | Text muted |
+| `--tw` | `#5A5047` | Text weak |
+| `--a` | `#D4A017` | Amber/gold — primary accent |
+| `--al` | `rgba(212,160,23,0.12)` | Amber tint |
+| `--ad` | `#B8880F` | Amber dark |
+| `--a2` | `#E8B832` | Amber light |
+| `--p` | `#E05C3A` | Coral/terracotta — secondary accent |
+| `--pl` | `rgba(224,92,58,0.12)` | Coral tint |
+| `--pd` | `#C44D2E` | Coral dark |
 | `--ok` | `#10b981` | Emerald — success |
 | `--okl` | `rgba(16,185,129,0.15)` | Emerald tint |
 | `--w` | `#f59e0b` | Amber — warning |
@@ -128,9 +130,10 @@ A full `[data-theme='light']` override set exists in `src/styles/index.css`.
 | Role | Font | Usage |
 |---|---|---|
 | Body / UI | Inter | All body text, buttons, inputs |
+| Display / Hero | Fraunces | Dashboard hero headings only |
 | Brand | Roboto Slab 800 | `.brand-logo` class only |
 
-Both fonts loaded from Google Fonts (inline in `index.html`). `-webkit-font-smoothing: antialiased` applied globally.
+All fonts loaded from Google Fonts (inline in `index.html`). `-webkit-font-smoothing: antialiased` applied globally.
 
 ### Spacing & Shape
 
@@ -233,7 +236,7 @@ Persistence: idb-keyval under key `studyflow-state-v2`. Never access IndexedDB d
 
 ```tsx
 // Never
-<span style={{ color: '#6366f1' }}>...</span>
+<span style={{ color: '#D4A017' }}>...</span>
 
 // Use CSS vars
 <span style={{ color: 'var(--a)' }}>...</span>
@@ -312,5 +315,5 @@ Never commit `.env.local`.
 - Service worker: auto-update (`registerType: 'autoUpdate'`)
 - Precaches: all `js, css, html, png, svg, woff2, ico`
 - Runtime cache: Google Fonts (StaleWhileRevalidate), Worker API routes (NetworkFirst 3s)
-- Manifest theme: `#6366f1` (indigo), background: `#0a0a0b`
+- Manifest theme: `#D4A017` (amber), background: `#0F0D0A`
 - Shortcuts: Timer (`/timer`), Flashcards (`/cards`)
