@@ -31,3 +31,31 @@ coverage
 .env.*.local
 worker/.dev.vars
 .vercel
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Obsidian workspace state
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Agent/tool scratch dirs
+.agent/
+.agents/
+.superpowers/
+memory/
+scratch/
+
+# Loose notes (Obsidian "Sin título" defaults + dated notes)
+Sin título*
+Sin título*.md
+Sin título*.base
+Sin título*.canvas
+20??-??-??.md
+
+# Ad-hoc HTML previews
+dashboard.html
+
+# Task tracker (local)
+TASKS.md
+
