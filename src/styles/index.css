@@ -1051,6 +1051,13 @@
     margin-top: 8px;
     line-height: 1.5;
   }
+  .route-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    color: var(--ts);
+  }
 
   @keyframes levelUp {
     0% {

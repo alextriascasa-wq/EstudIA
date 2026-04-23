@@ -1,22 +1,23 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Sidebar } from '@/components/Layout/Sidebar';
 import { ToastHost } from '@/components/ui/Toast';
 import { XPPopupHost } from '@/components/ui/XPPopup';
-import { Dashboard } from '@/features/dashboard/Dashboard';
-import { Timer } from '@/features/timer/Timer';
-import { Flashcards } from '@/features/flashcards/Flashcards';
-import { Feynman } from '@/features/feynman/Feynman';
-import { Languages } from '@/features/languages/Languages';
-import { Sounds } from '@/features/sounds/Sounds';
-import { Recovery } from '@/features/recovery/Recovery';
-import { Exams } from '@/features/exams/Exams';
-import { Stats } from '@/features/stats/Stats';
-import { Techniques } from '@/features/techniques/Techniques';
-import { Social } from '@/features/social/Social';
-import { CloudSync } from '@/features/cloud/CloudSync';
 import { OnboardingModal } from '@/components/ui/OnboardingModal';
 import { BottomNav } from '@/components/Layout/BottomNav';
+
+const Dashboard  = lazy(() => import('@/features/dashboard/Dashboard').then(m => ({ default: m.Dashboard })));
+const Timer      = lazy(() => import('@/features/timer/Timer').then(m => ({ default: m.Timer })));
+const Flashcards = lazy(() => import('@/features/flashcards/Flashcards').then(m => ({ default: m.Flashcards })));
+const Feynman    = lazy(() => import('@/features/feynman/Feynman').then(m => ({ default: m.Feynman })));
+const Languages  = lazy(() => import('@/features/languages/Languages').then(m => ({ default: m.Languages })));
+const Sounds     = lazy(() => import('@/features/sounds/Sounds').then(m => ({ default: m.Sounds })));
+const Recovery   = lazy(() => import('@/features/recovery/Recovery').then(m => ({ default: m.Recovery })));
+const Exams      = lazy(() => import('@/features/exams/Exams').then(m => ({ default: m.Exams })));
+const Stats      = lazy(() => import('@/features/stats/Stats').then(m => ({ default: m.Stats })));
+const Techniques = lazy(() => import('@/features/techniques/Techniques').then(m => ({ default: m.Techniques })));
+const Social     = lazy(() => import('@/features/social/Social').then(m => ({ default: m.Social })));
+const CloudSync  = lazy(() => import('@/features/cloud/CloudSync').then(m => ({ default: m.CloudSync })));
 import { useAppStore } from '@/store/useAppStore';
 import { filterDueFlashcards } from '@/lib/srs';
 import { updateAppBadge } from '@/lib/notifications';
@@ -47,21 +48,23 @@ export default function App(): JSX.Element {
       <OnboardingModal />
       <Sidebar />
       <main className="mn">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/timer" element={<Timer />} />
-          <Route path="/cards" element={<Flashcards />} />
-          <Route path="/feynman" element={<Feynman />} />
-          <Route path="/languages" element={<Languages />} />
-          <Route path="/sounds" element={<Sounds />} />
-          <Route path="/recovery" element={<Recovery />} />
-          <Route path="/exams" element={<Exams />} />
-          <Route path="/stats" element={<Stats />} />
-          <Route path="/social" element={<Social />} />
-          <Route path="/techniques" element={<Techniques />} />
-          <Route path="/cloud" element={<CloudSync />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<div className="route-loading" />}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/timer" element={<Timer />} />
+            <Route path="/cards" element={<Flashcards />} />
+            <Route path="/feynman" element={<Feynman />} />
+            <Route path="/languages" element={<Languages />} />
+            <Route path="/sounds" element={<Sounds />} />
+            <Route path="/recovery" element={<Recovery />} />
+            <Route path="/exams" element={<Exams />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/social" element={<Social />} />
+            <Route path="/techniques" element={<Techniques />} />
+            <Route path="/cloud" element={<CloudSync />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </main>
       <ToastHost />
       <XPPopupHost />
