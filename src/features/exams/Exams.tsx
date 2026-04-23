@@ -6,8 +6,7 @@ import { genStudyTasks } from '@/lib/exams';
 import type { ExamDifficulty } from '@/types';
 import { ExamSimulator } from './ExamSimulator';
 import { ExamCorrector } from './ExamCorrector';
-
-import { ChaosMode } from '@/features/chaos/ChaosMode';
+import { ZeroSession } from './ZeroSession';
 
 export function Exams(): JSX.Element {
   const { t } = useTranslation();
@@ -22,7 +21,7 @@ export function Exams(): JSX.Element {
   const [subject, setSubject] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [diff, setDiff] = useState<ExamDifficulty>('mitjà');
-  const [activeTab, setActiveTab] = useState<'calendar' | 'simulator' | 'corrector' | 'chaos'>('calendar');
+  const [activeTab, setActiveTab] = useState<'calendar' | 'simulator' | 'corrector' | 'zero'>('calendar');
 
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
 
@@ -72,7 +71,7 @@ export function Exams(): JSX.Element {
       </div>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        {(['calendar', 'simulator', 'corrector', 'chaos'] as const).map(tab => (
+        {(['calendar', 'simulator', 'corrector', 'zero'] as const).map(tab => (
           <button
             key={tab}
             className="bp"
@@ -84,17 +83,17 @@ export function Exams(): JSX.Element {
             }}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === 'calendar' ? 'Calendari' : 
-             tab === 'simulator' ? 'Simulador IA' : 
-             tab === 'corrector' ? 'Corrector IA' : 
-             t('nav.chaos') + ' ⚡'}
+            {tab === 'calendar' ? 'Calendari' :
+             tab === 'simulator' ? 'Simulador IA' :
+             tab === 'corrector' ? 'Corrector IA' :
+             `🧭 ${t('nav.zero')}`}
           </button>
         ))}
       </div>
 
       {activeTab === 'simulator' && <ExamSimulator />}
       {activeTab === 'corrector' && <ExamCorrector />}
-      {activeTab === 'chaos' && <ChaosMode />}
+      {activeTab === 'zero' && <ZeroSession />}
 
       {activeTab === 'calendar' && (
         <>

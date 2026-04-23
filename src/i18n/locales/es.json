@@ -8,7 +8,7 @@
     "timer": "Timer",
     "cards": "Flashcards",
     "feynman": "Tutor IA",
-    "chaos": "Modo Caos",
+    "zero": "Desde Cero",
     "languages": "Idiomas",
     "sounds": "Sonidos",
     "recovery": "Recuperación",
@@ -116,8 +116,61 @@
     "notifFocusDone": "Sesión de {{mode}} completada. ¡Hora de descansar!",
     "notifRestDone": "Descanso terminado. ¡Vuelve al focus!"
   },
-  "chaos": {
-    "minProblems": "Añade al menos 3 problemas de diferentes temas para empezar."
+  "zero": {
+    "setup": {
+      "title": "Aprende desde Cero",
+      "desc": "¿No sabes nada del tema? Perfecto. La IA te guiará paso a paso con un ejemplo resuelto.",
+      "notesLabel": "Tus apuntes o descripción del tema",
+      "placeholder": "Pega tus apuntes o describe el tema del examen...",
+      "modeLabel": "Tipo de asignatura",
+      "stem": "Ciencias / Técnica",
+      "stemDesc": "Matemáticas, Física, Química...",
+      "humanities": "Humanidades / Letras",
+      "humanitiesDesc": "Literatura, Historia, Filosofía...",
+      "cta": "Generar sesión",
+      "minLength": "Escribe al menos 50 caracteres para generar la sesión."
+    },
+    "loading": "Generando sesión personalizada...",
+    "error": "Error al generar la sesión. Inténtalo de nuevo.",
+    "worked": {
+      "title": "Ejemplo Resuelto",
+      "problem": "Problema:",
+      "cta": "Lo entiendo, ponme a prueba"
+    },
+    "practice": {
+      "title": "Pruébate",
+      "problem": "Ejercicio similar:",
+      "answerLabel": "Tu respuesta",
+      "placeholder": "Escribe tu solución paso a paso...",
+      "cta": "Comprobar"
+    },
+    "map": {
+      "title": "Mapa Conceptual",
+      "themes": "Temas principales",
+      "figures": "Personajes / Figuras clave",
+      "quotes": "Citas clave",
+      "timeline": "Cronología",
+      "cta": "Leído, pregúntame"
+    },
+    "recall": {
+      "title": "Recuperación Activa",
+      "question": "Pregunta:",
+      "rubricLabel": "Criterios de evaluación:",
+      "answerLabel": "Tu respuesta",
+      "placeholder": "Responde libremente. Incluye ejemplos del texto si puedes.",
+      "cta": "Corregir con IA"
+    },
+    "results": {
+      "title": "Resultados",
+      "firstSession": "primera sesión",
+      "gaps": "Lagunas detectadas",
+      "nsdr": "¡Descansa ahora!",
+      "nsdrDesc": "Haz 10–20 min de descanso (NSDR) para consolidar lo que has aprendido.",
+      "flashcards": "Crear flashcards para las lagunas",
+      "flashcardsCreated": "Flashcards creadas",
+      "retry": "Volver a intentar"
+    },
+    "scienceBadge": "Basado en: Sweller (Worked Example Effect) · Dunlosky (Active Recall) · Huberman (NSDR)"
   },
   "stats": {
     "last7d": "Últimos 7 días",
@@ -152,7 +205,6 @@
       "hours_10": { "name": "Dedicado", "desc": "Acumula 10 horas de estudio" },
       "hours_50": { "name": "Maestro", "desc": "Acumula 50 horas de estudio" },
       "hours_100": { "name": "Académico de Élite", "desc": "100 horas de estudio total" },
-      "chaos_10": { "name": "Gladiador", "desc": "Completa 10 rondas de Modo Caos" },
       "level_10": { "name": "Veterano", "desc": "Llega al nivel 10" },
       "level_25": { "name": "Experto", "desc": "Llega al nivel 25" },
       "level_50": { "name": "Gran Maestro", "desc": "Llega al nivel 50" },
@@ -239,7 +291,7 @@
     "timer": { "title": "⏱ Temporizador Científico", "desc": "Deep Work, Pomodoro y Ultradiano" },
     "cards": { "title": "📇 Flashcards — Reaprendizaje Sucesivo", "desc": "Regla del 3 + Repetición Espaciada automática (SRS)" },
     "feynman": { "title": "🧒 Tutor IA — Destructor de Ilusiones", "desc": "Técnica Feynman potenciada. Explica conceptos sin jerga y la IA detecta comprensión falsa." },
-    "chaos": { "title": "⚡ Modo Caos — Práctica Intercalada", "desc": "Mezcla problemas de temas distintos. Entrena discriminación inductiva." },
+    "zero": { "title": "🧭 Desde Cero", "desc": "Aprende desde cero con ejemplos resueltos y recuperación activa guiada por IA" },
     "languages": { "title": "🌍 Idiomas — Vocabulario + SRS", "desc": "Aprende palabras nuevas con repetición espaciada" },
     "sounds": { "title": "🎵 Mixer de Sonidos Ambientales", "desc": "Crea tu paisaje sonoro perfecto para concentrarte" },
     "recovery": { "title": "🌙 Estación de Recuperación", "desc": "NSDR, respiración y estiramientos. Descanso REAL para el cerebro." },

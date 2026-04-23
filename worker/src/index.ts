@@ -294,6 +294,158 @@ IMPORTANT:
         }
       }
 
+      if (url.pathname === '/zero-session' && request.method === 'POST') {
+        const body = await request.json() as { notes: string; mode: 'stem' | 'humanities'; language: string };
+        const lang = body.language === 'ca' ? 'català' : body.language === 'es' ? 'castellà' : 'English';
+
+        if (body.mode === 'stem') {
+          const prompt = `Ets un professor expert en ciències i tècnica. Un alumne té ZERO coneixement previ d'aquest tema i necessita aprendre'l des de zero.
+
+A partir dels apunts o descripció que et dona l'alumne, genera una sessió d'aprenentatge en ${lang} amb aquest format JSON exacte:
+{
+  "topic": "nom curt del tema detectat",
+  "concept": "explicació del concepte core en 2-3 frases simples, sense argot",
+  "workedExample": {
+    "problem": "enunciat d'un problema tipus representatiu del tema",
+    "steps": ["Pas 1: ...", "Pas 2: ...", "Pas 3: ..."],
+    "answer": "resultat final clar"
+  },
+  "practiceProblems": [
+    {
+      "problem": "problema similar al worked example però amb dades/context diferent",
+      "answer": "solució completa pas a pas",
+      "hints": ["pista 1", "pista 2"]
+    }
+  ]
+}
+
+IMPORTANT:
+- El worked example ha de tenir 3-5 passos molt clars
+- El practice problem ha de ser similar al worked example però diferent (números o context distintos)
+- Explica com si fos la primera vegada que l'alumne veu el tema
+- Retorna NOMÉS el JSON brut, sense markdown
+
+Apunts/descripció de l'alumne:
+${body.notes}`;
+
+          const payload = {
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: 'application/json' },
+          };
+          const geminiResponse: any = await callGemini(env, payload);
+          const replyText = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+          let session = {};
+          try { session = JSON.parse(replyText); } catch (e) { console.error('Parse error', replyText); }
+          return new Response(JSON.stringify(session), { headers: defaultHeaders });
+        }
+
+        // Humanities mode
+        const prompt = `Ets un professor expert en humanitats. Un alumne té ZERO coneixement previ d'aquest tema.
+
+A partir dels apunts o descripció, genera una sessió en ${lang} amb aquest format JSON exacte:
+{
+  "topic": "nom curt del tema",
+  "conceptMap": {
+    "themes": ["tema 1", "tema 2", "tema 3"],
+    "keyFigures": [
+      { "name": "nom", "role": "rol o importància breu" }
+    ],
+    "timeline": ["event 1 (any)", "event 2 (any)"],
+    "keyQuotes": ["cita literal o paràfrasi clau 1", "cita 2"]
+  },
+  "recallQuestions": [
+    {
+      "question": "pregunta oberta que requereix comprensió, no memorització",
+      "idealAnswer": "resposta model de 3-5 frases",
+      "rubric": ["criteri 1", "criteri 2", "criteri 3"]
+    }
+  ]
+}
+
+NOTES:
+- Si el tema és literatura, omit "timeline" i inclou "keyQuotes"
+- Si el tema és història, inclou "timeline" i omit "keyQuotes" si no hi ha cites rellevants
+- Genera 1 recall question exigent però justa
+- Retorna NOMÉS el JSON brut
+
+Apunts/descripció:
+${body.notes}`;
+
+        const payload = {
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: 'application/json' },
+        };
+        const geminiResponse: any = await callGemini(env, payload);
+        const replyText = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        let session = {};
+        try { session = JSON.parse(replyText); } catch (e) { console.error('Parse error', replyText); }
+        return new Response(JSON.stringify(session), { headers: defaultHeaders });
+      }
+
+      if (url.pathname === '/zero-check' && request.method === 'POST') {
+        const body = await request.json() as { problem: string; userAnswer: string; idealAnswer: string; language: string };
+        const lang = body.language === 'ca' ? 'català' : body.language === 'es' ? 'castellà' : 'English';
+        const prompt = `Ets un professor corregint un exercici de ciències/tècnica en ${lang}.
+
+Problema: ${body.problem}
+Resposta de l'alumne: ${body.userAnswer}
+Resposta correcta: ${body.idealAnswer}
+
+Avalua la resposta de l'alumne i retorna aquest JSON exacte:
+{
+  "correct": true/false,
+  "score": número entre 0 i 100 (percentatge d'encert),
+  "feedback": "correcció breu de 1-2 frases explicant si és correcta, i si no, on està l'error"
+}
+
+Retorna NOMÉS el JSON brut.`;
+
+        const payload = {
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: 'application/json' },
+        };
+        const geminiResponse: any = await callGemini(env, payload);
+        const replyText = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        let result = { correct: false, score: 0, feedback: '' };
+        try { result = JSON.parse(replyText); } catch (e) { console.error('Parse error', replyText); }
+        return new Response(JSON.stringify(result), { headers: defaultHeaders });
+      }
+
+      if (url.pathname === '/zero-check-humanities' && request.method === 'POST') {
+        const body = await request.json() as { question: string; userAnswer: string; idealAnswer: string; rubric: string[]; language: string };
+        const lang = body.language === 'ca' ? 'català' : body.language === 'es' ? 'castellà' : 'English';
+        const prompt = `Ets un professor corregint una pregunta de recuperació activa en ${lang}.
+
+Pregunta: ${body.question}
+Resposta ideal: ${body.idealAnswer}
+Rúbrica: ${body.rubric.join(' | ')}
+Resposta de l'alumne: ${body.userAnswer}
+
+Avalua i retorna aquest JSON exacte:
+{
+  "score": número entre 0 i 100,
+  "gaps": ["llacuna 1 breu", "llacuna 2 breu"],
+  "feedback": "feedback constructiu de 2-3 frases",
+  "flashcardSuggestions": ["concepte per fer flashcard 1", "concepte 2"]
+}
+
+NOTES:
+- "gaps" ha de tenir 0-3 elements (llacunes concretes que falta a la resposta)
+- "flashcardSuggestions" ha de tenir 0-3 elements (conceptes que cal memoritzar)
+- Si la resposta és excel·lent, "gaps" i "flashcardSuggestions" han de ser arrays buits
+- Retorna NOMÉS el JSON brut.`;
+
+        const payload = {
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: 'application/json' },
+        };
+        const geminiResponse: any = await callGemini(env, payload);
+        const replyText = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+        let result = { score: 0, gaps: [] as string[], feedback: '', flashcardSuggestions: [] as string[] };
+        try { result = JSON.parse(replyText); } catch (e) { console.error('Parse error', replyText); }
+        return new Response(JSON.stringify(result), { headers: defaultHeaders });
+      }
+
       return new Response(JSON.stringify({ error: 'Endpoint not found' }), { status: 404, headers: CORS_HEADERS });
 
     } catch (error: any) {
