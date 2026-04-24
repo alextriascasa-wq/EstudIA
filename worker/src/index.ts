@@ -72,6 +72,38 @@ REGLES ESTRICTES:
 5. VALIDACIÓ: Quan l'explicació sigui molt simple, clara, sense argot i amb una bona analogia, digues-li "Ara ho entenc perfectament! Gràcies per explicar-m'ho." i dona per tancat el tema.
 6. Mai li donis la resposta directament. Guia'l perquè ell mateix la trobi.`;
 
+function buildConverseSystemPrompt(
+  character: string,
+  scenarioTitle: string,
+  language: string,
+  targetVocab: string[],
+): string {
+  return `You are a ${character} in a "${scenarioTitle}" scenario. Speak ONLY in ${language}. Keep your replies natural and short (1-3 sentences maximum).
+
+After responding to the user, you MUST append a JSON block using exactly this delimiter on its own line: ---JSON---
+Then output this JSON structure (no markdown, raw JSON only):
+{
+  "corrections": [
+    {"original": "exact phrase user said", "corrected": "correct version", "explanation": "brief reason", "type": "grammar|vocabulary|fluency"}
+  ],
+  "newVocabCards": [
+    {"word": "word in target language", "translation": "translation in Catalan", "example": "example sentence"}
+  ],
+  "fluencyScore": 0
+}
+
+Rules:
+- corrections: list ONLY real errors in what the user just said. Empty array [] if the user spoke correctly.
+- newVocabCards: words or phrases the user got wrong that they should memorise. Empty array [] if none.
+- fluencyScore: integer 0-100 estimating the user's fluency level for this session so far.
+- Target vocabulary to watch for errors: ${targetVocab.slice(0, 20).join(', ') || 'none'}
+- NEVER mention corrections or the JSON block inside your conversational reply.
+- NEVER break character in the conversational reply.
+- The format is: [your conversational reply]
+---JSON---
+[the JSON object]`;
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     // Handle CORS preflight
@@ -444,6 +476,74 @@ NOTES:
         let result = { score: 0, gaps: [] as string[], feedback: '', flashcardSuggestions: [] as string[] };
         try { result = JSON.parse(replyText); } catch (e) { console.error('Parse error', replyText); }
         return new Response(JSON.stringify(result), { headers: defaultHeaders });
+      }
+
+      if (url.pathname === '/converse' && request.method === 'POST') {
+        const body = await request.json() as {
+          language: string;
+          scenario: { id: string; character: string; title: string };
+          messages: { role: 'user' | 'ai'; text: string }[];
+          latestUserSpeech: string;
+          targetVocab: string[];
+        };
+
+        const systemPrompt = buildConverseSystemPrompt(
+          body.scenario.character,
+          body.scenario.title,
+          body.language,
+          body.targetVocab ?? [],
+        );
+
+        const contents = [
+          ...body.messages.map((m) => ({
+            role: m.role === 'ai' ? 'model' : 'user',
+            parts: [{ text: m.text }],
+          })),
+          {
+            role: 'user',
+            parts: [{ text: body.latestUserSpeech }],
+          },
+        ];
+
+        const payload = {
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents,
+        };
+
+        const geminiResponse: any = await callGemini(env, payload);
+        const fullText: string =
+          geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+
+        const DELIMITER = '---JSON---';
+        const delimIdx = fullText.indexOf(DELIMITER);
+
+        let reply = fullText.trim();
+        let corrections: unknown[] = [];
+        let newVocabCards: unknown[] = [];
+        let fluencyScore = 0;
+
+        if (delimIdx !== -1) {
+          reply = fullText.slice(0, delimIdx).trim();
+          const jsonStr = fullText.slice(delimIdx + DELIMITER.length).trim();
+          try {
+            const parsed = JSON.parse(jsonStr) as {
+              corrections?: unknown[];
+              newVocabCards?: unknown[];
+              fluencyScore?: number;
+            };
+            corrections = parsed.corrections ?? [];
+            newVocabCards = parsed.newVocabCards ?? [];
+            fluencyScore =
+              typeof parsed.fluencyScore === 'number' ? parsed.fluencyScore : 0;
+          } catch {
+            console.error('ConvIA: failed to parse JSON block', jsonStr);
+          }
+        }
+
+        return new Response(
+          JSON.stringify({ reply, corrections, newVocabCards, fluencyScore }),
+          { headers: defaultHeaders },
+        );
       }
 
       return new Response(JSON.stringify({ error: 'Endpoint not found' }), { status: 404, headers: CORS_HEADERS });
