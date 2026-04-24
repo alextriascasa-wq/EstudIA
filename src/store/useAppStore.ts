@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AppState, DailyLogEntry } from '@/types';
+import type { AppState, DailyLogEntry, ConvMessage, LangCard, ConvSession } from '@/types';
 import { DEFAULT_STATE, STATE_KEY } from './defaults';
 import { createIdbStorage } from './persist';
 import { mergeLegacy, readLegacyLocalStorage } from './migration';
-import { today } from '@/lib/date';
+import { today, uid } from '@/lib/date';
 import { ACHIEVEMENTS } from '@/lib/achievements';
 import { XP_TABLE } from '@/lib/xp';
 import { showToast } from '@/components/ui/Toast';
@@ -34,6 +34,14 @@ export interface StoreActions {
   rolloverIfNeeded: () => void;
   /** Increment daily metrics (minutes, cards, sessions, etc.). */
   incrementDailyLog: (data: Partial<Omit<DailyLogEntry, 'date'>>) => void;
+  /** Start a new ConvIA session, returns the session id. */
+  startConvSession: (langDeckId: string, scenarioId: string) => string;
+  /** Append a message to a ConvIA session. */
+  addConvMessage: (sessionId: string, message: ConvMessage) => void;
+  /** Mark a ConvIA session as ended with a final fluency score. */
+  endConvSession: (sessionId: string, fluencyScore: number) => void;
+  /** Add vocab cards from corrections to the linked lang deck. */
+  queueConvCards: (sessionId: string, cards: Pick<LangCard, 'word' | 'translation' | 'example'>[]) => void;
 }
 
 export type AppStore = AppState & StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean };
@@ -206,6 +214,76 @@ export const useAppStore = create<AppStore>()(
 
           return { dailyLog, heatmap, quizTotal, quizCorrect, cardsToday, memStrength, totalMin, todaySess, pomCount };
         });
+        get().save();
+      },
+
+      startConvSession: (langDeckId, scenarioId) => {
+        const deck = get().langDecks.find((d) => d.id === langDeckId);
+        const language = deck?.lang ?? 'en';
+        const id = uid();
+        const session: ConvSession = {
+          id,
+          langDeckId,
+          scenarioId,
+          language,
+          messages: [],
+          fluencyScore: 0,
+          newCards: 0,
+          startedAt: new Date().toISOString(),
+          endedAt: null,
+        };
+        set((prev) => ({ convSessions: [...prev.convSessions, session] }));
+        return id;
+      },
+
+      addConvMessage: (sessionId, message) => {
+        set((prev) => ({
+          convSessions: prev.convSessions.map((s) =>
+            s.id === sessionId
+              ? { ...s, messages: [...s.messages, message] }
+              : s,
+          ),
+        }));
+      },
+
+      endConvSession: (sessionId, fluencyScore) => {
+        set((prev) => ({
+          convSessions: prev.convSessions.map((s) =>
+            s.id === sessionId
+              ? { ...s, fluencyScore, endedAt: new Date().toISOString() }
+              : s,
+          ),
+        }));
+        get().save();
+      },
+
+      queueConvCards: (sessionId, cards) => {
+        const session = get().convSessions.find((s) => s.id === sessionId);
+        if (!session) return;
+        const newLangCards: LangCard[] = cards.map((c) => ({
+          id: uid(),
+          word: c.word,
+          translation: c.translation,
+          example: c.example,
+          hits: 0,
+          sessionHits: 0,
+          nextReview: today(),
+          interval: 1,
+          strength: 0,
+        }));
+        const newLangDecks = get().langDecks.map((d) =>
+          d.id === session.langDeckId
+            ? { ...d, cards: [...d.cards, ...newLangCards] }
+            : d,
+        );
+        set((prev) => ({
+          langDecks: newLangDecks,
+          convSessions: prev.convSessions.map((s) =>
+            s.id === sessionId
+              ? { ...s, newCards: s.newCards + cards.length }
+              : s,
+          ),
+        }));
         get().save();
       },
     }),
