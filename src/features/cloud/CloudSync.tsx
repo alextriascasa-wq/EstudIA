@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAppStore } from '@/store/useAppStore';
 
+function friendlyError(msg: string): string {
+  if (msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('network')) {
+    return "No s'ha pogut connectar al servidor. Comprova la teva connexió a internet.";
+  }
+  return `Error: ${msg}`;
+}
+
 export function CloudSync(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,6 +22,8 @@ export function CloudSync(): JSX.Element {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setLoading(false);
+    }).catch(() => {
       setLoading(false);
     });
 
@@ -30,23 +39,38 @@ export function CloudSync(): JSX.Element {
   const handleSignUp = async () => {
     setLoading(true);
     setStatusMsg('');
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) setStatusMsg(`Error: ${error.message}`);
-    else setStatusMsg("T'has registrat correctament. Revisa el teu correu per confirmar (si cal).");
-    setLoading(false);
+    try {
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) setStatusMsg(friendlyError(error.message));
+      else setStatusMsg("T'has registrat correctament. Revisa el teu correu per confirmar (si cal).");
+    } catch (e: unknown) {
+      setStatusMsg(friendlyError(e instanceof Error ? e.message : 'Error desconegut'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogin = async () => {
     setLoading(true);
     setStatusMsg('');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setStatusMsg(`Error: ${error.message}`);
-    else setStatusMsg("Sessió iniciada amb èxit.");
-    setLoading(false);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) setStatusMsg(friendlyError(error.message));
+      else setStatusMsg('Sessió iniciada amb èxit.');
+    } catch (e: unknown) {
+      setStatusMsg(friendlyError(e instanceof Error ? e.message : 'Error desconegut'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // signOut failing is non-critical; clear local session anyway
+      setSession(null);
+    }
   };
 
   const pushToCloud = async () => {
@@ -59,14 +83,19 @@ export function CloudSync(): JSX.Element {
     // @ts-ignore
     delete stateToSave.setState; delete stateToSave.patch; delete stateToSave.save; delete stateToSave.addXP; delete stateToSave.checkAchievements; delete stateToSave.rolloverIfNeeded; delete stateToSave._toastQueue; delete stateToSave._hasHydrated;
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({ app_state: stateToSave, updated_at: new Date().toISOString() })
-      .eq('id', session.user.id);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ app_state: stateToSave, updated_at: new Date().toISOString() })
+        .eq('id', session.user.id);
 
-    if (error) setStatusMsg(`Error pujant: ${error.message}`);
-    else setStatusMsg('✅ Dades guardades al núvol amb èxit!');
-    setLoading(false);
+      if (error) setStatusMsg(friendlyError(error.message));
+      else setStatusMsg('✅ Dades guardades al núvol amb èxit!');
+    } catch (e: unknown) {
+      setStatusMsg(friendlyError(e instanceof Error ? e.message : 'Error desconegut'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const pullFromCloud = async () => {
@@ -74,25 +103,29 @@ export function CloudSync(): JSX.Element {
     setLoading(true);
     setStatusMsg('Descarregant dades...');
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('app_state')
-      .eq('id', session.user.id)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('app_state')
+        .eq('id', session.user.id)
+        .single();
 
-    if (error) {
-      setStatusMsg(`Error baixant dades: ${error.message}`);
-    } else if (data && data.app_state) {
-      // Patch local state with cloud state
-      const stateFromCloud = data.app_state;
-      if (Object.keys(stateFromCloud).length > 0) {
-        patch(stateFromCloud);
-        setStatusMsg('✅ Dades sincronitzades correctament! Has recuperat el teu progrés.');
-      } else {
-        setStatusMsg('El núvol està buit. Puja les dades primer.');
+      if (error) {
+        setStatusMsg(friendlyError(error.message));
+      } else if (data && data.app_state) {
+        const stateFromCloud = data.app_state;
+        if (Object.keys(stateFromCloud).length > 0) {
+          patch(stateFromCloud);
+          setStatusMsg('✅ Dades sincronitzades correctament! Has recuperat el teu progrés.');
+        } else {
+          setStatusMsg('El núvol està buit. Puja les dades primer.');
+        }
       }
+    } catch (e: unknown) {
+      setStatusMsg(friendlyError(e instanceof Error ? e.message : 'Error desconegut'));
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
