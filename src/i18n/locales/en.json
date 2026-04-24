@@ -298,5 +298,38 @@
     "exams": { "title": "📅 Exams & Study Plan", "desc": "Automatic SRS based on difficulty" },
     "stats": { "title": "📊 Advanced Stats", "desc": "Real data on your academic performance" },
     "techniques": { "title": "📚 Scientific Techniques", "desc": "Based on Dunlosky et al. (2013)" }
+  },
+  "conv": {
+    "tab": "Converse",
+    "vocabTab": "Vocabulary",
+    "pickScenario": "Pick a scenario",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "fluency": "Fluency",
+    "endSession": "End",
+    "holdToSpeak": "Type or hold to speak",
+    "addToDeckCta": "Add {{n}} cards to deck",
+    "sessionDone": "Session complete",
+    "newConv": "New conversation",
+    "noDecks": "Select a deck first",
+    "emptyTranscript": "No speech detected",
+    "correctionTypes": {
+      "grammar": "Grammar",
+      "vocabulary": "Vocabulary",
+      "fluency": "Fluency"
+    },
+    "scenarios": {
+      "cafe": "At the café",
+      "shop": "At the shop",
+      "doctor": "At the doctor",
+      "job": "Job interview",
+      "hotel": "Hotel check-in",
+      "phone": "Phone call",
+      "debate": "Film debate",
+      "directions": "Asking for directions"
+    }
   }
 }

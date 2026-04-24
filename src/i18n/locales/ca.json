@@ -298,5 +298,38 @@
     "exams": { "title": "📅 Exàmens i Pla d'Estudi", "desc": "SRS automàtic basat en la dificultat" },
     "stats": { "title": "📊 Estadístiques Avançades", "desc": "Dades reals del teu rendiment acadèmic" },
     "techniques": { "title": "📚 Tècniques Científiques", "desc": "Basades en Dunlosky et al. (2013)" }
+  },
+  "conv": {
+    "tab": "Conversa",
+    "vocabTab": "Vocabulari",
+    "pickScenario": "Tria un escenari",
+    "difficulty": {
+      "easy": "Fàcil",
+      "medium": "Mitjà",
+      "hard": "Difícil"
+    },
+    "fluency": "Fluïdesa",
+    "endSession": "Acabar",
+    "holdToSpeak": "Escriu o mantén per parlar",
+    "addToDeckCta": "Afegir {{n}} targetes al deck",
+    "sessionDone": "Sessió completada",
+    "newConv": "Nova conversa",
+    "noDecks": "Selecciona un deck primer",
+    "emptyTranscript": "No s'ha detectat veu",
+    "correctionTypes": {
+      "grammar": "Gramàtica",
+      "vocabulary": "Vocabulari",
+      "fluency": "Fluïdesa"
+    },
+    "scenarios": {
+      "cafe": "Al cafè",
+      "shop": "A la botiga",
+      "doctor": "Al metge",
+      "job": "Entrevista de feina",
+      "hotel": "Check-in a l'hotel",
+      "phone": "Trucada telefònica",
+      "debate": "Debat cinematogràfic",
+      "directions": "Demanar direccions"
+    }
   }
 }

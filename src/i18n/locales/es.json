@@ -298,5 +298,38 @@
     "exams": { "title": "📅 Exámenes y Plan de Estudio", "desc": "SRS automático basado en la dificultad" },
     "stats": { "title": "📊 Estadísticas Avanzadas", "desc": "Datos reales de tu rendimiento académico" },
     "techniques": { "title": "📚 Técnicas Científicas", "desc": "Basadas en Dunlosky et al. (2013)" }
+  },
+  "conv": {
+    "tab": "Conversar",
+    "vocabTab": "Vocabulario",
+    "pickScenario": "Elige un escenario",
+    "difficulty": {
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil"
+    },
+    "fluency": "Fluidez",
+    "endSession": "Terminar",
+    "holdToSpeak": "Escribe o mantén para hablar",
+    "addToDeckCta": "Añadir {{n}} tarjetas al deck",
+    "sessionDone": "Sesión completada",
+    "newConv": "Nueva conversación",
+    "noDecks": "Selecciona un deck primero",
+    "emptyTranscript": "No se detectó voz",
+    "correctionTypes": {
+      "grammar": "Gramática",
+      "vocabulary": "Vocabulario",
+      "fluency": "Fluidez"
+    },
+    "scenarios": {
+      "cafe": "En el café",
+      "shop": "En la tienda",
+      "doctor": "En el médico",
+      "job": "Entrevista de trabajo",
+      "hotel": "Check-in en el hotel",
+      "phone": "Llamada telefónica",
+      "debate": "Debate cinematográfico",
+      "directions": "Pedir indicaciones"
+    }
   }
 }
