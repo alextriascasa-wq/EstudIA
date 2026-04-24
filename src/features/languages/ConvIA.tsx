@@ -393,8 +393,7 @@ export function ConvIA({ sessionId, deck, scenario, onEnd }: Props): JSX.Element
                 maxWidth: '78%',
                 padding: '10px 14px',
                 borderRadius: msg.role === 'ai' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                border:
-                  msg.role === 'ai' ? '1px solid rgba(212,160,23,0.2)' : '1px solid var(--b)',
+                border: msg.role === 'ai' ? '1px solid rgba(212,160,23,0.2)' : '1px solid var(--b)',
                 fontSize: 13,
                 lineHeight: 1.5,
               }}

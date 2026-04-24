@@ -31,9 +31,7 @@ export function ConvSummary({
       {/* Score card */}
       <div className="c" style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 8 }}>🎉</div>
-        <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 20 }}>
-          {t('conv.sessionDone')}
-        </h2>
+        <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 20 }}>{t('conv.sessionDone')}</h2>
         <div
           style={{
             fontSize: 64,
