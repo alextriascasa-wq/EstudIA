@@ -76,6 +76,15 @@ export interface QuizQuestion {
   isCorrect?: boolean;
 }
 
+export interface ActiveExamState {
+  topic: string;
+  type: QuizType;
+  questions: QuizQuestion[];
+  answers: Record<string, string>;
+  currentIdx: number;
+  startedAt: string; // ISO timestamp — lets UI show "resumed from X"
+}
+
 export interface Quiz {
   id: string;
   topic: string;
@@ -237,6 +246,8 @@ export interface AppState {
   league: string;
   zeroSessions: ZeroSessionResult[];
   convSessions: ConvSession[];
+  /** Active exam in progress. null when none running. Persisted across reload/tab switch. */
+  activeExam: ActiveExamState | null;
 }
 
 export interface StudyTask {
