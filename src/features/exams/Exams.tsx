@@ -12,6 +12,7 @@ export function Exams(): JSX.Element {
   const { t } = useTranslation();
   const exams = useAppStore((s) => s.exams);
   const doneTasks = useAppStore((s) => s.doneTasks);
+  const activeExam = useAppStore((s) => s.activeExam);
   const patch = useAppStore((s) => s.patch);
   const save = useAppStore((s) => s.save);
   const addXP = useAppStore((s) => s.addXP);
@@ -21,7 +22,10 @@ export function Exams(): JSX.Element {
   const [subject, setSubject] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [diff, setDiff] = useState<ExamDifficulty>('mitjà');
-  const [activeTab, setActiveTab] = useState<'calendar' | 'simulator' | 'corrector' | 'zero'>('calendar');
+  // Resume into the simulator tab if a persisted exam is in progress (Bug 1 fix).
+  const [activeTab, setActiveTab] = useState<'calendar' | 'simulator' | 'corrector' | 'zero'>(
+    activeExam ? 'simulator' : 'calendar',
+  );
 
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
 
