@@ -42,6 +42,12 @@ export interface StoreActions {
   endConvSession: (sessionId: string, fluencyScore: number) => void;
   /** Add vocab cards from corrections to the linked lang deck. */
   queueConvCards: (sessionId: string, cards: Pick<LangCard, 'word' | 'translation' | 'example'>[]) => void;
+  /** Start an active exam — replaces any prior in-progress exam. */
+  startActiveExam: (exam: import('@/types').ActiveExamState) => void;
+  /** Patch the running exam (answers, index, questions after correction). No-op if none. */
+  updateActiveExam: (patch: Partial<import('@/types').ActiveExamState>) => void;
+  /** Clear the in-progress exam (call on submit or explicit cancel). */
+  clearActiveExam: () => void;
 }
 
 export type AppStore = AppState & StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean };
@@ -286,6 +292,22 @@ export const useAppStore = create<AppStore>()(
         }));
         get().save();
       },
+
+      startActiveExam: (exam) => {
+        set({ activeExam: exam });
+      },
+
+      updateActiveExam: (patch) => {
+        set((prev) => ({
+          activeExam: prev.activeExam
+            ? { ...prev.activeExam, ...patch }
+            : prev.activeExam,
+        }));
+      },
+
+      clearActiveExam: () => {
+        set({ activeExam: null });
+      },
     }),
     {
       name: STATE_KEY,
@@ -326,6 +348,7 @@ export const useAppStore = create<AppStore>()(
         league: s.league,
         zeroSessions: s.zeroSessions,
         convSessions: s.convSessions,
+        activeExam: s.activeExam,
       }),
     },
   ),
