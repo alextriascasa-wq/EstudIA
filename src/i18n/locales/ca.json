@@ -8,7 +8,7 @@
     "timer": "Timer",
     "cards": "Flashcards",
     "feynman": "Tutor IA",
-    "chaos": "Mode Caos",
+    "zero": "Des de Zero",
     "languages": "Idiomes",
     "sounds": "Sons",
     "recovery": "Recuperació",
@@ -116,8 +116,61 @@
     "notifFocusDone": "Sessió de {{mode}} completada! Hora de descansar.",
     "notifRestDone": "Descans acabat! Torna al focus."
   },
-  "chaos": {
-    "minProblems": "Afegeix almenys 3 problemes de diferents temes per començar."
+  "zero": {
+    "setup": {
+      "title": "Aprèn des de Zero",
+      "desc": "No saps res del tema? Perfecte. La IA et guiarà pas a pas amb un exemple resolt.",
+      "notesLabel": "Els teus apunts o descripció del tema",
+      "placeholder": "Enganxa els teus apunts o descriu el tema de l'examen...",
+      "modeLabel": "Tipus d'assignatura",
+      "stem": "Ciències / Tècnica",
+      "stemDesc": "Matemàtiques, Física, Química...",
+      "humanities": "Humanitats / Lletres",
+      "humanitiesDesc": "Literatura, Història, Filosofia...",
+      "cta": "Generar sessió",
+      "minLength": "Escriu almenys 50 caràcters per poder generar la sessió."
+    },
+    "loading": "Generant sessió personalitzada...",
+    "error": "Error en generar la sessió. Torna-ho a provar.",
+    "worked": {
+      "title": "Exemple Resolt",
+      "problem": "Problema:",
+      "cta": "Ho entenc, prova-m'ho"
+    },
+    "practice": {
+      "title": "Prova't Tu",
+      "problem": "Exercici similar:",
+      "answerLabel": "La teva resposta",
+      "placeholder": "Escriu la teva solució pas a pas...",
+      "cta": "Comprovar"
+    },
+    "map": {
+      "title": "Mapa Conceptual",
+      "themes": "Temes principals",
+      "figures": "Personatges / Figures clau",
+      "quotes": "Cites clau",
+      "timeline": "Cronologia",
+      "cta": "Llegit, pregunta'm"
+    },
+    "recall": {
+      "title": "Recuperació Activa",
+      "question": "Pregunta:",
+      "rubricLabel": "Criteris d'avaluació:",
+      "answerLabel": "La teva resposta",
+      "placeholder": "Respon lliurement. Inclou exemples del text si pots.",
+      "cta": "Corregir amb IA"
+    },
+    "results": {
+      "title": "Resultats",
+      "firstSession": "primera sessió",
+      "gaps": "Llacunes detectades",
+      "nsdr": "Ara descansa!",
+      "nsdrDesc": "Fes 10–20 min de descans (NSDR) per consolidar el que has après.",
+      "flashcards": "Crear flashcards per les llacunes",
+      "flashcardsCreated": "Flashcards creades",
+      "retry": "Tornar a intentar"
+    },
+    "scienceBadge": "Basat en: Sweller (Worked Example Effect) · Dunlosky (Active Recall) · Huberman (NSDR)"
   },
   "stats": {
     "last7d": "Últims 7 dies",
@@ -152,7 +205,6 @@
       "hours_10": { "name": "Dedicat", "desc": "Acumula 10 hores d'estudi" },
       "hours_50": { "name": "Mestre", "desc": "Acumula 50 hores d'estudi" },
       "hours_100": { "name": "Acadèmic d'Elit", "desc": "100 hores d'estudi total" },
-      "chaos_10": { "name": "Gladiador", "desc": "Completa 10 rondes de Mode Caos" },
       "level_10": { "name": "Veterà", "desc": "Arriba al nivell 10" },
       "level_25": { "name": "Expert", "desc": "Arriba al nivell 25" },
       "level_50": { "name": "Gran Mestre", "desc": "Arriba al nivell 50" },
@@ -239,12 +291,45 @@
     "timer": { "title": "⏱ Temporitzador Científic", "desc": "Deep Work, Pomodoro i Ultradian" },
     "cards": { "title": "📇 Flashcards — Reaprenentatge Successiu", "desc": "Regla del 3 + Repetició Espaïada automàtica (SRS)" },
     "feynman": { "title": "🧒 Tutor IA — Destructor d'Il·lusions", "desc": "Tècnica Feynman potenciada. Explica conceptes sense jerga i l'IA detecta comprensió falsa." },
-    "chaos": { "title": "⚡ Mode Caos — Pràctica Intercalada", "desc": "Barreja problemes de temes diferents. Entrena discriminació inductiva." },
+    "zero": { "title": "🧭 Des de Zero", "desc": "Aprèn des de zero amb exemples resolts i recuperació activa guiada per IA" },
     "languages": { "title": "🌍 Idiomes — Vocabulari + SRS", "desc": "Aprèn paraules noves amb el sistema de repetició espaïada" },
     "sounds": { "title": "🎵 Mixer de Sons Ambientals", "desc": "Crea el teu paisatge sonor perfecte per concentrar-te" },
     "recovery": { "title": "🌙 Estació de Recuperació", "desc": "NSDR, respiració i estiraments. Descans REAL per al cervell." },
     "exams": { "title": "📅 Exàmens i Pla d'Estudi", "desc": "SRS automàtic basat en la dificultat" },
     "stats": { "title": "📊 Estadístiques Avançades", "desc": "Dades reals del teu rendiment acadèmic" },
     "techniques": { "title": "📚 Tècniques Científiques", "desc": "Basades en Dunlosky et al. (2013)" }
+  },
+  "conv": {
+    "tab": "Conversa",
+    "vocabTab": "Vocabulari",
+    "pickScenario": "Tria un escenari",
+    "difficulty": {
+      "easy": "Fàcil",
+      "medium": "Mitjà",
+      "hard": "Difícil"
+    },
+    "fluency": "Fluïdesa",
+    "endSession": "Acabar",
+    "holdToSpeak": "Escriu o mantén per parlar",
+    "addToDeckCta": "Afegir {{n}} targetes al deck",
+    "sessionDone": "Sessió completada",
+    "newConv": "Nova conversa",
+    "noDecks": "Selecciona un deck primer",
+    "emptyTranscript": "No s'ha detectat veu",
+    "correctionTypes": {
+      "grammar": "Gramàtica",
+      "vocabulary": "Vocabulari",
+      "fluency": "Fluïdesa"
+    },
+    "scenarios": {
+      "cafe": "Al cafè",
+      "shop": "A la botiga",
+      "doctor": "Al metge",
+      "job": "Entrevista de feina",
+      "hotel": "Check-in a l'hotel",
+      "phone": "Trucada telefònica",
+      "debate": "Debat cinematogràfic",
+      "directions": "Demanar direccions"
+    }
   }
 }

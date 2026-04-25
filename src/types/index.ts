@@ -25,12 +25,45 @@ export interface Exam {
 
 export type QuizType = 'test' | 'tf' | 'open' | 'practical';
 
-export interface ChaosProblem {
+export type ZeroSubjectMode = 'stem' | 'humanities';
+
+export interface ZeroSessionResult {
   id: string;
+  date: string; // ISO yyyy-mm-dd
   topic: string;
-  text: string;
-  solution: string;
-  difficulty: ExamDifficulty;
+  mode: ZeroSubjectMode;
+  score: number;
+  gaps: string[];
+}
+
+export interface StemSession {
+  topic: string;
+  concept: string;
+  workedExample: {
+    problem: string;
+    steps: string[];
+    answer: string;
+  };
+  practiceProblems: Array<{
+    problem: string;
+    answer: string;
+    hints: string[];
+  }>;
+}
+
+export interface HumanitiesSession {
+  topic: string;
+  conceptMap: {
+    themes: string[];
+    keyFigures: Array<{ name: string; role: string }>;
+    timeline?: string[];
+    keyQuotes?: string[];
+  };
+  recallQuestions: Array<{
+    question: string;
+    idealAnswer: string;
+    rubric: string[];
+  }>;
 }
 
 export interface QuizQuestion {
@@ -96,6 +129,39 @@ export interface LangDeck {
   name: string;
   lang: string;
   cards: LangCard[];
+}
+
+export interface Scenario {
+  id: string;
+  emoji: string;
+  titleKey: string;        // i18n key, e.g. 'conv.scenarios.cafe'
+  character: string;       // e.g. 'barista'
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
+export interface ConvCorrection {
+  original: string;
+  corrected: string;
+  explanation: string;
+  type: 'grammar' | 'vocabulary' | 'fluency';
+}
+
+export interface ConvMessage {
+  role: 'user' | 'ai';
+  text: string;
+  corrections: ConvCorrection[];   // empty array for AI messages
+}
+
+export interface ConvSession {
+  id: string;
+  langDeckId: string;              // links to existing LangDeck
+  scenarioId: string;
+  language: string;                // e.g. 'en', 'fr'
+  messages: ConvMessage[];
+  fluencyScore: number;            // 0–100, updated each turn
+  newCards: number;                // total vocab cards queued this session
+  startedAt: string;               // ISO date string
+  endedAt: string | null;
 }
 
 export type SoundKey = 'rain' | 'cafe' | 'fire' | 'forest' | 'waves' | 'brown';
@@ -169,7 +235,8 @@ export interface AppState {
   sharedResources: SharedResource[];
   friendCode: string;
   league: string;
-  chaosProblems: ChaosProblem[];
+  zeroSessions: ZeroSessionResult[];
+  convSessions: ConvSession[];
 }
 
 export interface StudyTask {
@@ -214,5 +281,4 @@ export type Tab =
   | 'stats'
   | 'techniques'
   | 'social'
-  | 'cloud'
-  | 'chaos';
+  | 'cloud';

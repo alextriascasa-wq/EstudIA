@@ -46,5 +46,6 @@ export const DEFAULT_STATE: AppState = {
   sharedResources: [],
   friendCode: `SF-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
   league: 'Bronze',
-  chaosProblems: [],
+  zeroSessions: [],
+  convSessions: [],
 };

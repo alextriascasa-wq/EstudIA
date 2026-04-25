@@ -8,7 +8,7 @@
     "timer": "Timer",
     "cards": "Flashcards",
     "feynman": "AI Tutor",
-    "chaos": "Chaos Mode",
+    "zero": "From Scratch",
     "languages": "Languages",
     "sounds": "Sounds",
     "recovery": "Recovery",
@@ -116,8 +116,61 @@
     "notifFocusDone": "{{mode}} session complete! Time to rest.",
     "notifRestDone": "Break over! Back to focus."
   },
-  "chaos": {
-    "minProblems": "Add at least 3 problems from different topics to start."
+  "zero": {
+    "setup": {
+      "title": "Learn From Scratch",
+      "desc": "Know nothing about the topic? Perfect. The AI will guide you step by step with a worked example.",
+      "notesLabel": "Your notes or topic description",
+      "placeholder": "Paste your notes or describe the exam topic...",
+      "modeLabel": "Subject type",
+      "stem": "Science / Technical",
+      "stemDesc": "Mathematics, Physics, Chemistry...",
+      "humanities": "Humanities / Liberal Arts",
+      "humanitiesDesc": "Literature, History, Philosophy...",
+      "cta": "Generate session",
+      "minLength": "Write at least 50 characters to generate the session."
+    },
+    "loading": "Generating personalized session...",
+    "error": "Error generating the session. Please try again.",
+    "worked": {
+      "title": "Worked Example",
+      "problem": "Problem:",
+      "cta": "Got it, test me"
+    },
+    "practice": {
+      "title": "Try It Yourself",
+      "problem": "Similar exercise:",
+      "answerLabel": "Your answer",
+      "placeholder": "Write your step-by-step solution...",
+      "cta": "Check"
+    },
+    "map": {
+      "title": "Concept Map",
+      "themes": "Main themes",
+      "figures": "Key characters / figures",
+      "quotes": "Key quotes",
+      "timeline": "Timeline",
+      "cta": "Read, now ask me"
+    },
+    "recall": {
+      "title": "Active Recall",
+      "question": "Question:",
+      "rubricLabel": "Evaluation criteria:",
+      "answerLabel": "Your answer",
+      "placeholder": "Answer freely. Include examples from the text if you can.",
+      "cta": "Correct with AI"
+    },
+    "results": {
+      "title": "Results",
+      "firstSession": "first session",
+      "gaps": "Detected gaps",
+      "nsdr": "Rest now!",
+      "nsdrDesc": "Take 10–20 min of rest (NSDR) to consolidate what you've learned.",
+      "flashcards": "Create flashcards for the gaps",
+      "flashcardsCreated": "Flashcards created",
+      "retry": "Try again"
+    },
+    "scienceBadge": "Based on: Sweller (Worked Example Effect) · Dunlosky (Active Recall) · Huberman (NSDR)"
   },
   "stats": {
     "last7d": "Last 7 days",
@@ -152,7 +205,6 @@
       "hours_10": { "name": "Dedicated", "desc": "Accumulate 10 hours of study" },
       "hours_50": { "name": "Master", "desc": "Accumulate 50 hours of study" },
       "hours_100": { "name": "Elite Academic", "desc": "100 hours of total study" },
-      "chaos_10": { "name": "Gladiator", "desc": "Complete 10 rounds of Chaos Mode" },
       "level_10": { "name": "Veteran", "desc": "Reach level 10" },
       "level_25": { "name": "Expert", "desc": "Reach level 25" },
       "level_50": { "name": "Grand Master", "desc": "Reach level 50" },
@@ -239,12 +291,45 @@
     "timer": { "title": "⏱ Scientific Timer", "desc": "Deep Work, Pomodoro and Ultradian" },
     "cards": { "title": "📇 Flashcards — Successive Relearning", "desc": "Rule of 3 + automatic Spaced Repetition (SRS)" },
     "feynman": { "title": "🧒 AI Tutor — Illusion Destroyer", "desc": "Enhanced Feynman technique. Explain concepts without jargon and the AI detects fake understanding." },
-    "chaos": { "title": "⚡ Chaos Mode — Interleaved Practice", "desc": "Mix problems from different topics. Train inductive discrimination." },
+    "zero": { "title": "🧭 From Scratch", "desc": "Learn from zero with worked examples and AI-guided active recall" },
     "languages": { "title": "🌍 Languages — Vocabulary + SRS", "desc": "Learn new words with spaced repetition" },
     "sounds": { "title": "🎵 Ambient Sound Mixer", "desc": "Craft your perfect soundscape to focus" },
     "recovery": { "title": "🌙 Recovery Station", "desc": "NSDR, breathing and stretches. REAL rest for the brain." },
     "exams": { "title": "📅 Exams & Study Plan", "desc": "Automatic SRS based on difficulty" },
     "stats": { "title": "📊 Advanced Stats", "desc": "Real data on your academic performance" },
     "techniques": { "title": "📚 Scientific Techniques", "desc": "Based on Dunlosky et al. (2013)" }
+  },
+  "conv": {
+    "tab": "Converse",
+    "vocabTab": "Vocabulary",
+    "pickScenario": "Pick a scenario",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "fluency": "Fluency",
+    "endSession": "End",
+    "holdToSpeak": "Type or hold to speak",
+    "addToDeckCta": "Add {{n}} cards to deck",
+    "sessionDone": "Session complete",
+    "newConv": "New conversation",
+    "noDecks": "Select a deck first",
+    "emptyTranscript": "No speech detected",
+    "correctionTypes": {
+      "grammar": "Grammar",
+      "vocabulary": "Vocabulary",
+      "fluency": "Fluency"
+    },
+    "scenarios": {
+      "cafe": "At the café",
+      "shop": "At the shop",
+      "doctor": "At the doctor",
+      "job": "Job interview",
+      "hotel": "Hotel check-in",
+      "phone": "Phone call",
+      "debate": "Film debate",
+      "directions": "Asking for directions"
+    }
   }
 }
