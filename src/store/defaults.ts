@@ -48,4 +48,5 @@ export const DEFAULT_STATE: AppState = {
   league: 'Bronze',
   zeroSessions: [],
   convSessions: [],
+  activeExam: null,
 };
