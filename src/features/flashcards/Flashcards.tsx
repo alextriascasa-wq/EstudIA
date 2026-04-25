@@ -499,7 +499,7 @@ export function Flashcards(): JSX.Element {
 
               {/* Target selector */}
               <div>
-                <div className="lbl">{t('flashcards.aiTarget.label')}</div>
+                <div className="lbl">{t('cards.aiTarget.label')}</div>
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
                   <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
                     <input
@@ -508,7 +508,7 @@ export function Flashcards(): JSX.Element {
                       checked={aiTarget === 'new'}
                       onChange={() => setAiTarget('new')}
                     />
-                    {t('flashcards.aiTarget.new')}
+                    {t('cards.aiTarget.new')}
                   </label>
                   <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
                     <input
@@ -518,7 +518,7 @@ export function Flashcards(): JSX.Element {
                       onChange={() => setAiTarget([])}
                       disabled={decks.length === 0}
                     />
-                    {t('flashcards.aiTarget.existing')}
+                    {t('cards.aiTarget.existing')}
                   </label>
                 </div>
                 {Array.isArray(aiTarget) && (

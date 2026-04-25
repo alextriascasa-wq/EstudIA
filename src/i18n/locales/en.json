@@ -234,7 +234,12 @@
     "gradeBad": "❌ Didn't know it",
     "gradeGood": "✅ Knew it!",
     "sessionDone": "🎉 Session complete!",
-    "sessionDoneDesc": "All concepts reviewed"
+    "sessionDoneDesc": "All concepts reviewed",
+    "aiTarget": {
+      "label": "Where would you like to add the cards?",
+      "new": "New deck",
+      "existing": "Existing deck"
+    }
   },
   "exams": {
     "newExam": "+ New exam",

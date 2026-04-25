@@ -234,7 +234,12 @@
     "gradeBad": "❌ No ho sabia",
     "gradeGood": "✅ Ho sabia!",
     "sessionDone": "🎉 Sessió completa!",
-    "sessionDoneDesc": "Tots els conceptes revisats"
+    "sessionDoneDesc": "Tots els conceptes revisats",
+    "aiTarget": {
+      "label": "On vols afegir les targetes?",
+      "new": "Nou deck",
+      "existing": "Deck existent"
+    }
   },
   "exams": {
     "newExam": "+ Nou examen",
