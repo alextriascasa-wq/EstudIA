@@ -76,6 +76,7 @@ export function Flashcards(): JSX.Element {
       setCurDeck(null);
       setCurCardId(null);
     }
+    setAiTarget((prev) => (Array.isArray(prev) ? prev.filter((tid) => tid !== id) : prev));
     save();
   };
 
@@ -107,6 +108,9 @@ export function Flashcards(): JSX.Element {
         throw new Error('La IA no ha generat cap targeta.');
       }
 
+      // Read fresh state after the async fetch so concurrent mutations aren't lost
+      const freshDecks = useAppStore.getState().decks;
+
       // Factory: fresh ids per call so fan-out has unique ids per deck
       const mkCards = (): Flashcard[] =>
         data.map((c) => ({
@@ -122,17 +126,29 @@ export function Flashcards(): JSX.Element {
           lastSeen: null,
         }));
 
+      const targetIds = Array.isArray(aiTarget) ? new Set(aiTarget) : null;
+      const validTargets = targetIds
+        ? freshDecks.filter((d) => targetIds.has(d.id))
+        : [];
+
       if (aiTarget === 'new') {
         const newDeck: Deck = {
           id: uid(),
           name: `Generat: ${aiTopic.substring(0, 15) || 'Apunts'}...`,
           cards: mkCards(),
         };
-        patch({ decks: [newDeck, ...decks] });
+        patch({ decks: [newDeck, ...freshDecks] });
       } else {
-        const targetIds = new Set(aiTarget);
-        const updated = decks.map((d) =>
-          targetIds.has(d.id) ? { ...d, cards: [...d.cards, ...mkCards()] } : d,
+        if (validTargets.length === 0) {
+          showToast({
+            title: 'Error',
+            desc: 'Cap deck seleccionat ja no existeix.',
+            kind: 'info',
+          });
+          return;
+        }
+        const updated = freshDecks.map((d) =>
+          targetIds!.has(d.id) ? { ...d, cards: [...d.cards, ...mkCards()] } : d,
         );
         patch({ decks: updated });
       }
@@ -140,7 +156,7 @@ export function Flashcards(): JSX.Element {
       save();
       setAiTopic('');
       setAiFile(null);
-      const targetCount = Array.isArray(aiTarget) ? aiTarget.length : 0;
+      const targetCount = Array.isArray(aiTarget) ? validTargets.length : 0;
       showToast({
         title: '✨ Fet!',
         desc:
@@ -488,6 +504,7 @@ export function Flashcards(): JSX.Element {
                   <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
                     <input
                       type="radio"
+                      name="ai-target"
                       checked={aiTarget === 'new'}
                       onChange={() => setAiTarget('new')}
                     />
@@ -496,6 +513,7 @@ export function Flashcards(): JSX.Element {
                   <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
                     <input
                       type="radio"
+                      name="ai-target"
                       checked={Array.isArray(aiTarget)}
                       onChange={() => setAiTarget([])}
                       disabled={decks.length === 0}
