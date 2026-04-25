@@ -201,7 +201,9 @@ export function Sidebar(): JSX.Element {
   return (
     <nav className="sb">
       <div className="sb-brand">
-        <h1 className="brand-logo">Estud<strong>IA</strong></h1>
+        <h1 className="brand-logo">
+          Estud<strong>IA</strong>
+        </h1>
         <p>{t('brand.tagline')}</p>
       </div>
       {PRIMARY_NAV.map((item) => (
@@ -213,9 +215,7 @@ export function Sidebar(): JSX.Element {
         >
           <item.icon />
           <span>{t(`nav.${item.tab}`)}</span>
-          {['cards', 'exams'].includes(item.tab) && (
-            <span className="ai-badge">IA</span>
-          )}
+          {['cards', 'exams'].includes(item.tab) && <span className="ai-badge">IA</span>}
         </NavLink>
       ))}
 
@@ -230,9 +230,7 @@ export function Sidebar(): JSX.Element {
         >
           <item.icon />
           <span>{t(`nav.${item.tab}`)}</span>
-          {['feynman'].includes(item.tab) && (
-            <span className="ai-badge">IA</span>
-          )}
+          {['feynman'].includes(item.tab) && <span className="ai-badge">IA</span>}
         </NavLink>
       ))}
       <div className="sb-ft">
@@ -284,18 +282,11 @@ export function Sidebar(): JSX.Element {
           </button>
         )}
         {!canInstall && isIOSSafari() && (
-          <button
-            className="install-banner ios"
-            onClick={() => setShowIOSHint((p) => !p)}
-          >
+          <button className="install-banner ios" onClick={() => setShowIOSHint((p) => !p)}>
             📲 {t('sidebar.installIOS')}
           </button>
         )}
-        {showIOSHint && (
-          <div className="ios-hint">
-            {t('sidebar.installIOSSteps')}
-          </div>
-        )}
+        {showIOSHint && <div className="ios-hint">{t('sidebar.installIOSSteps')}</div>}
 
         <div className="sb-tools">
           <button onClick={toggle} aria-label={t('sidebar.themeToggle')}>
@@ -306,12 +297,7 @@ export function Sidebar(): JSX.Element {
           </button>
           <label aria-label={t('sidebar.import')}>
             📂
-            <input
-              type="file"
-              accept=".json"
-              style={{ display: 'none' }}
-              onChange={onImport}
-            />
+            <input type="file" accept=".json" style={{ display: 'none' }} onChange={onImport} />
           </label>
         </div>
       </div>
