@@ -50,6 +50,9 @@ export function Flashcards(): JSX.Element {
   const [aiCount, setAiCount] = useState<number>(5);
   const [isAiLoading, setIsAiLoading] = useState(false);
 
+  type AITarget = 'new' | string[];
+  const [aiTarget, setAiTarget] = useState<AITarget>('new');
+
   const deck = useMemo<Deck | null>(
     () => (curDeck ? decks.find((d) => d.id === curDeck) ?? null : null),
     [curDeck, decks],
@@ -78,9 +81,13 @@ export function Flashcards(): JSX.Element {
 
   const handleAIGenerate = async () => {
     if (!aiTopic.trim() && !aiFile) return;
+    if (Array.isArray(aiTarget) && aiTarget.length === 0) return;
     setIsAiLoading(true);
     try {
-      const payload: any = { count: aiCount, language: 'ca' };
+      const payload: { count: number; language: string; text?: string; fileData?: string; mimeType?: string } = {
+        count: aiCount,
+        language: 'ca',
+      };
       if (aiTopic.trim()) payload.text = aiTopic;
       if (aiFile) {
         payload.fileData = aiFile.data;
@@ -95,15 +102,14 @@ export function Flashcards(): JSX.Element {
 
       if (!res.ok) throw new Error('Error de connexió amb la IA');
       const data: { q: string; a: string }[] = await res.json();
-      
+
       if (!Array.isArray(data) || data.length === 0) {
         throw new Error('La IA no ha generat cap targeta.');
       }
 
-      const newDeck: Deck = {
-        id: uid(),
-        name: `Generat: ${aiTopic.substring(0, 15)}...`,
-        cards: data.map((c) => ({
+      // Factory: fresh ids per call so fan-out has unique ids per deck
+      const mkCards = (): Flashcard[] =>
+        data.map((c) => ({
           id: uid(),
           q: c.q,
           a: c.a,
@@ -114,16 +120,39 @@ export function Flashcards(): JSX.Element {
           strength: 0,
           interval: 1,
           lastSeen: null,
-        })),
-      };
+        }));
 
-      patch({ decks: [newDeck, ...decks] });
+      if (aiTarget === 'new') {
+        const newDeck: Deck = {
+          id: uid(),
+          name: `Generat: ${aiTopic.substring(0, 15) || 'Apunts'}...`,
+          cards: mkCards(),
+        };
+        patch({ decks: [newDeck, ...decks] });
+      } else {
+        const targetIds = new Set(aiTarget);
+        const updated = decks.map((d) =>
+          targetIds.has(d.id) ? { ...d, cards: [...d.cards, ...mkCards()] } : d,
+        );
+        patch({ decks: updated });
+      }
+
       save();
       setAiTopic('');
       setAiFile(null);
-      showToast({ title: '✨ Fet!', desc: `S'han generat ${data.length} flashcards.` });
-    } catch (error: any) {
-      showToast({ title: 'Error', desc: error.message, kind: 'info' });
+      showToast({
+        title: '✨ Fet!',
+        desc:
+          aiTarget === 'new'
+            ? `S'han generat ${data.length} flashcards.`
+            : `S'han afegit ${data.length} flashcards a ${(aiTarget as string[]).length} ${(aiTarget as string[]).length === 1 ? 'deck' : 'decks'}.`,
+      });
+    } catch (error: unknown) {
+      showToast({
+        title: 'Error',
+        desc: error instanceof Error ? error.message : 'Error desconegut',
+        kind: 'info',
+      });
     } finally {
       setIsAiLoading(false);
     }
@@ -154,8 +183,8 @@ export function Flashcards(): JSX.Element {
       patch({ decks: [...useAppStore.getState().decks, newDeck] });
       save();
       showToast({ title: 'Importació exitosa', desc: `S'han importat ${newDeck.cards.length} targetes.` });
-    } catch (err: any) {
-      showToast({ title: 'Error', desc: err.message, kind: 'info' });
+    } catch (err: unknown) {
+      showToast({ title: 'Error', desc: err instanceof Error ? err.message : 'Error desconegut', kind: 'info' });
     }
     e.target.value = '';
   };
@@ -169,8 +198,8 @@ export function Flashcards(): JSX.Element {
       a.download = `${deckToExport.name}.apkg`;
       a.click();
       URL.revokeObjectURL(url);
-    } catch (err: any) {
-      showToast({ title: 'Error', desc: err.message, kind: 'info' });
+    } catch (err: unknown) {
+      showToast({ title: 'Error', desc: err instanceof Error ? err.message : 'Error desconegut', kind: 'info' });
     }
   };
 
@@ -419,6 +448,103 @@ export function Flashcards(): JSX.Element {
           <input type="file" accept=".apkg" style={{ display: 'none' }} onChange={handleAnkiImport} />
         </label>
       </div>
+      {/* Always-visible AI generation panel */}
+      <div className="c" style={{ marginTop: 16 }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          <div style={{ background: 'var(--s2)', color: 'var(--a)', padding: 12, borderRadius: 12, fontSize: 20, flexShrink: 0 }}>🧠</div>
+          <div style={{ flex: 1 }}>
+            <strong style={{ display: 'block', marginBottom: 4, fontSize: 15 }}>Extracció de Conceptes (IA)</strong>
+            <span style={{ fontSize: 13, color: 'var(--tm)', display: 'block', marginBottom: 12 }}>Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les targetes clau.</span>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {aiFile ? (
+                <div style={{ padding: 12, background: 'var(--sh)', borderRadius: 'var(--radius-sm)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontSize: 13, fontWeight: 600 }}>📄 {aiFile.name}</div>
+                  <button className="bi" onClick={() => setAiFile(null)}>✕</button>
+                </div>
+              ) : (
+                <label className="inp" style={{ borderStyle: 'dashed', textAlign: 'center', padding: '24px 16px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: 24 }}>📥</span>
+                  <span style={{ fontWeight: 600, fontSize: 13 }}>Pujar fitxer (PDF o Imatge)</span>
+                  <span style={{ fontSize: 11, color: 'var(--tm)' }}>Fins a 5MB</span>
+                  <input type="file" accept="image/*,application/pdf" style={{ display: 'none' }} onChange={handleFileChange} />
+                </label>
+              )}
+
+              <textarea
+                className="inp"
+                placeholder="O bé, enganxa els teus apunts aquí..."
+                style={{ minHeight: 80 }}
+                value={aiTopic}
+                onChange={(e) => setAiTopic(e.target.value)}
+                disabled={isAiLoading}
+              />
+
+              {/* Target selector */}
+              <div>
+                <div className="lbl">{t('flashcards.aiTarget.label')}</div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
+                  <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
+                    <input
+                      type="radio"
+                      checked={aiTarget === 'new'}
+                      onChange={() => setAiTarget('new')}
+                    />
+                    {t('flashcards.aiTarget.new')}
+                  </label>
+                  <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
+                    <input
+                      type="radio"
+                      checked={Array.isArray(aiTarget)}
+                      onChange={() => setAiTarget([])}
+                      disabled={decks.length === 0}
+                    />
+                    {t('flashcards.aiTarget.existing')}
+                  </label>
+                </div>
+                {Array.isArray(aiTarget) && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8, maxHeight: 140, overflowY: 'auto', padding: 8, background: 'var(--bg)', borderRadius: 'var(--radius-sm)' }}>
+                    {decks.map((d) => (
+                      <label key={d.id} style={{ display: 'flex', gap: 8, cursor: 'pointer', fontSize: 13 }}>
+                        <input
+                          type="checkbox"
+                          checked={aiTarget.includes(d.id)}
+                          onChange={(e) => {
+                            setAiTarget((prev) => {
+                              if (!Array.isArray(prev)) return prev;
+                              return e.target.checked
+                                ? [...prev, d.id]
+                                : prev.filter((id) => id !== d.id);
+                            });
+                          }}
+                        />
+                        {d.name} <span style={{ color: 'var(--tm)' }}>({d.cards.length})</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <select className="inp" style={{ flex: 1 }} value={aiCount} onChange={(e) => setAiCount(Number(e.target.value))} disabled={isAiLoading}>
+                  <option value="5">5 targetes</option>
+                  <option value="10">10 targetes</option>
+                  <option value="20">20 targetes</option>
+                </select>
+                <button
+                  className="bp"
+                  style={{ flex: 2 }}
+                  onClick={handleAIGenerate}
+                  disabled={isAiLoading || (!aiTopic.trim() && !aiFile) || (Array.isArray(aiTarget) && aiTarget.length === 0)}
+                >
+                  {isAiLoading ? 'Analitzant i Generant...' : '✨ Extreure Conceptes'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {decks.length === 0 && (
         <div className="c glow empty" style={{ padding: 40, marginTop: 20, textAlign: 'left' }}>
           <div style={{ fontSize: 40, marginBottom: 15 }}>🧠</div>
@@ -435,45 +561,10 @@ export function Flashcards(): JSX.Element {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ background: 'var(--s2)', color: 'var(--a)', padding: 12, borderRadius: 12, fontSize: 20 }}>🧠</div>
-              <div style={{ flex: 1 }}>
-                <strong style={{ display: 'block', marginBottom: 4, fontSize: 16 }}>2. Extracció de Conceptes (IA)</strong>
-                <span style={{ fontSize: 13, color: 'var(--tm)', display: 'block', marginBottom: 12 }}>Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les targetes clau.</span>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {aiFile ? (
-                    <div style={{ padding: 12, background: 'var(--sh)', borderRadius: 'var(--radius-sm)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 600 }}>📄 {aiFile.name}</div>
-                      <button className="bi" onClick={() => setAiFile(null)}>✕</button>
-                    </div>
-                  ) : (
-                    <label className="inp" style={{ borderStyle: 'dashed', textAlign: 'center', padding: '24px 16px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 24 }}>📥</span>
-                      <span style={{ fontWeight: 600, fontSize: 13 }}>Pujar fitxer (PDF o Imatge)</span>
-                      <span style={{ fontSize: 11, color: 'var(--tm)' }}>Fins a 5MB</span>
-                      <input type="file" accept="image/*,application/pdf" style={{ display: 'none' }} onChange={handleFileChange} />
-                    </label>
-                  )}
-                  
-                  <textarea 
-                    className="inp" 
-                    placeholder="O bé, enganxa els teus apunts aquí..."
-                    style={{ minHeight: 80 }}
-                    value={aiTopic}
-                    onChange={(e) => setAiTopic(e.target.value)}
-                    disabled={isAiLoading}
-                  />
-                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <select className="inp" style={{ flex: 1 }} value={aiCount} onChange={(e) => setAiCount(Number(e.target.value))} disabled={isAiLoading}>
-                      <option value="5">5 targetes</option>
-                      <option value="10">10 targetes</option>
-                      <option value="20">20 targetes</option>
-                    </select>
-                    <button className="bp" style={{ flex: 2 }} onClick={handleAIGenerate} disabled={isAiLoading || (!aiTopic.trim() && !aiFile)}>
-                      {isAiLoading ? 'Analitzant i Generant...' : '✨ Extreure Conceptes'}
-                    </button>
-                  </div>
-                </div>
+              <div style={{ background: 'var(--s2)', color: 'var(--a)', padding: 8, borderRadius: 8, fontSize: 16 }}>🧠</div>
+              <div>
+                <strong style={{ display: 'block', marginBottom: 4 }}>2. Extracció de Conceptes (IA)</strong>
+                <span style={{ fontSize: 13, color: 'var(--tm)' }}>Fes servir el panell de dalt per extreure targetes des de text o fitxers PDF/imatge.</span>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
