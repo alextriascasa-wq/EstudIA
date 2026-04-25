@@ -10,6 +10,8 @@ import type { Deck, Flashcard } from '@/types';
 
 const WORKER_URL = import.meta.env.VITE_WORKER_URL || 'http://localhost:8787';
 
+type AITarget = 'new' | string[];
+
 const renderText = (text: string) => {
   const parts = text.split(/(!\[.*?\]\(.*?\))/g);
   return parts.map((part, i) => {
@@ -49,8 +51,6 @@ export function Flashcards(): JSX.Element {
   const [aiFile, setAiFile] = useState<{ name: string; type: string; data: string } | null>(null);
   const [aiCount, setAiCount] = useState<number>(5);
   const [isAiLoading, setIsAiLoading] = useState(false);
-
-  type AITarget = 'new' | string[];
   const [aiTarget, setAiTarget] = useState<AITarget>('new');
 
   const deck = useMemo<Deck | null>(
@@ -140,12 +140,13 @@ export function Flashcards(): JSX.Element {
       save();
       setAiTopic('');
       setAiFile(null);
+      const targetCount = Array.isArray(aiTarget) ? aiTarget.length : 0;
       showToast({
         title: '✨ Fet!',
         desc:
           aiTarget === 'new'
             ? `S'han generat ${data.length} flashcards.`
-            : `S'han afegit ${data.length} flashcards a ${(aiTarget as string[]).length} ${(aiTarget as string[]).length === 1 ? 'deck' : 'decks'}.`,
+            : `S'han afegit ${data.length} flashcards a ${targetCount} ${targetCount === 1 ? 'deck' : 'decks'}.`,
       });
     } catch (error: unknown) {
       showToast({
