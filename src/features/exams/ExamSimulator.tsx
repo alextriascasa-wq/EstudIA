@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { uid, today } from '@/lib/date';
 import { generateExam, correctExam } from '@/lib/examAI';
-import type { QuizType, Quiz } from '@/types';
+import type { QuizType, Quiz, QuizQuestion } from '@/types';
 import { motion } from 'framer-motion';
 
 export function ExamSimulator(): JSX.Element {
@@ -28,6 +28,7 @@ export function ExamSimulator(): JSX.Element {
   // Results / Error State
   const [score, setScore] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [resultsQuestions, setResultsQuestions] = useState<QuizQuestion[]>([]);
 
   const startGeneration = async () => {
     if (!topic.trim()) return;
@@ -62,35 +63,35 @@ export function ExamSimulator(): JSX.Element {
 
   const submitExam = async () => {
     if (!activeExam) return;
+    // Snapshot before any await — survives external clears
+    const { topic: examTopic, type: examType, questions: examQuestions, answers: examAnswers } = activeExam;
     setView('loading');
     let finalScore = 0;
-    let finalQuestions = [...activeExam.questions];
+    let finalQuestions = [...examQuestions];
 
-    if (activeExam.type === 'test' || activeExam.type === 'tf') {
+    if (examType === 'test' || examType === 'tf') {
       // Instant correction
       let correctCount = 0;
-      finalQuestions = activeExam.questions.map((q) => {
-        const isCorrect = activeExam.answers[q.id] === q.correctAnswer;
+      finalQuestions = examQuestions.map((q) => {
+        const isCorrect = examAnswers[q.id] === q.correctAnswer;
         if (isCorrect) correctCount++;
-        return { ...q, userAnswer: activeExam.answers[q.id], isCorrect };
+        return { ...q, userAnswer: examAnswers[q.id], isCorrect };
       });
-      finalScore = Math.round((correctCount / activeExam.questions.length) * 100);
-      updateActiveExam({ questions: finalQuestions });
+      finalScore = Math.round((correctCount / examQuestions.length) * 100);
     } else {
       // AI correction for open ended
       try {
-        const answeredQs = activeExam.questions.map(q => ({ ...q, userAnswer: activeExam.answers[q.id] || '' }));
+        const answeredQs = examQuestions.map((q) => ({ ...q, userAnswer: examAnswers[q.id] || '' }));
         const corrections = await correctExam(answeredQs, 'ca');
 
         let correctCount = 0;
-        finalQuestions = activeExam.questions.map(q => {
-          const cor = corrections.find(c => c.id === q.id);
+        finalQuestions = examQuestions.map((q) => {
+          const cor = corrections.find((c) => c.id === q.id);
           const isCorrect = cor ? cor.isCorrect : false;
           if (isCorrect) correctCount++;
-          return { ...q, userAnswer: activeExam.answers[q.id], isCorrect, feedback: cor?.feedback };
+          return { ...q, userAnswer: examAnswers[q.id], isCorrect, feedback: cor?.feedback };
         });
-        finalScore = Math.round((correctCount / activeExam.questions.length) * 100);
-        updateActiveExam({ questions: finalQuestions });
+        finalScore = Math.round((correctCount / examQuestions.length) * 100);
       } catch (e: unknown) {
         console.error(e);
         setError(e instanceof Error ? e.message : 'Error corregint examen.');
@@ -105,15 +106,18 @@ export function ExamSimulator(): JSX.Element {
     // Save to history (ensuring quizzes is always an array to prevent iOS crash)
     const quiz: Quiz = {
       id: uid(),
-      topic: activeExam.topic,
-      type: activeExam.type,
+      topic: examTopic,
+      type: examType,
       date: today(),
       score: finalScore,
-      questions: finalQuestions
+      questions: finalQuestions,
     };
     patch({ quizzes: [quiz, ...(quizzes || [])] });
     save();
 
+    // Snapshot results locally, then clear the persisted slice so reload doesn't drop user back into submitted exam
+    setResultsQuestions(finalQuestions);
+    clearActiveExam();
     setView('results');
   };
 
@@ -230,7 +234,7 @@ export function ExamSimulator(): JSX.Element {
   }
 
   if (view === 'results') {
-    const questions = activeExam?.questions ?? [];
+    const questions = resultsQuestions;
     return (
       <div className="c glow" style={{ padding: 30 }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -272,7 +276,6 @@ export function ExamSimulator(): JSX.Element {
         </div>
 
         <button className="bp" style={{ width: '100%', marginTop: 30 }} onClick={() => {
-          clearActiveExam();
           setTopic('');
           setView('setup');
         }}>
