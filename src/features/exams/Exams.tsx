@@ -65,25 +65,16 @@ export function Exams(): JSX.Element {
 
   return (
     <div className="sec">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div className="sec-hdr">
-          <h2>{t('headers.exams.title')}</h2>
-          <p>{t('headers.exams.desc')}</p>
-        </div>
+      <div className="sec-hdr">
+        <h2>{t('headers.exams.title')}</h2>
+        <p>{t('headers.exams.desc')}</p>
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+      <div className="exams-tabs">
         {(['calendar', 'simulator', 'corrector', 'zero'] as const).map((tab) => (
           <button
             key={tab}
-            className="bp"
-            style={{
-              flex: 1,
-              fontSize: 13,
-              background: activeTab === tab ? 'var(--a)' : 'var(--bg)',
-              color: activeTab === tab ? '#fff' : 'var(--t)',
-              border: '2px solid var(--a)',
-            }}
+            className={`tab-btn${activeTab === tab ? ' on' : ''}`}
             onClick={() => setActiveTab(tab)}
           >
             {tab === 'calendar'
@@ -103,17 +94,16 @@ export function Exams(): JSX.Element {
 
       {activeTab === 'calendar' && (
         <>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+          <div className="exams-add-row">
             <button className="bp" onClick={() => setShowForm((v) => !v)}>
               {t('exams.newExam')}
             </button>
           </div>
+
           {showForm && (
-            <div className="c" style={{ border: '2px solid var(--al)' }}>
-              <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 14 }}>
-                {t('exams.addTitle')}
-              </h3>
-              <div className="g2" style={{ marginBottom: 10 }}>
+            <div className="c exam-form">
+              <h3 className="exam-form-title">{t('exams.addTitle')}</h3>
+              <div className="g2 mb-2.5">
                 <div>
                   <label className="lbl">{t('exams.name')}</label>
                   <input
@@ -159,6 +149,7 @@ export function Exams(): JSX.Element {
               </button>
             </div>
           )}
+
           {exams.length > 0 && (
             <div className="c">
               {exams.map((e) => {
@@ -169,36 +160,18 @@ export function Exams(): JSX.Element {
                 return (
                   <div
                     key={e.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 12,
-                      padding: '12px 14px',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'var(--bg)',
-                      marginBottom: 6,
-                      opacity: past ? 0.5 : 1,
-                    }}
+                    className="exam-row"
+                    style={{ opacity: past ? 0.5 : 1 }}
                   >
                     <div
-                      style={{
-                        width: 42,
-                        height: 42,
-                        borderRadius: 'var(--radius-sm)',
-                        background: bg,
-                        color: uc,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 800,
-                        fontSize: 16,
-                      }}
+                      className="exam-day-badge"
+                      style={{ background: bg, color: uc }}
                     >
                       {past ? '✓' : d}
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700 }}>{e.name}</div>
-                      <div style={{ fontSize: 11, color: 'var(--ts)' }}>
+                    <div className="flex-1">
+                      <div className="exam-row-name">{e.name}</div>
+                      <div className="exam-row-sub">
                         {e.subject} · {fmtDate(e.date)}
                       </div>
                     </div>
@@ -210,48 +183,25 @@ export function Exams(): JSX.Element {
               })}
             </div>
           )}
+
           {tasks.length > 0 && (
             <div className="c">
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: 14,
-                }}
-              >
-                <h3 style={{ fontSize: 15, fontWeight: 800 }}>{t('exams.plan')}</h3>
-                <span style={{ fontSize: 11, color: 'var(--tm)' }}>
-                  {t('exams.sessions', { n: tasks.length })}
-                </span>
+              <div className="exams-plan-hdr">
+                <h3 className="t-h3">{t('exams.plan')}</h3>
+                <span className="t-label">{t('exams.sessions', { n: tasks.length })}</span>
               </div>
-              <div
-                style={{
-                  maxHeight: 350,
-                  overflowY: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 5,
-                }}
-              >
+              <div className="exams-task-list">
                 {tasks.slice(0, 40).map((task) => {
                   const isToday = task.date === td;
                   const done = doneTasks.includes(task.id);
                   return (
                     <div
                       key={task.id}
-                      className={`ti ${done ? 'done' : ''}`}
-                      style={
-                        isToday
-                          ? {
-                              background: 'var(--al)',
-                              borderColor: 'rgba(99,102,241,.15)',
-                            }
-                          : undefined
-                      }
+                      className={`ti${done ? ' done' : ''}`}
+                      style={isToday ? { background: 'var(--al)', borderColor: 'rgba(99,102,241,.15)' } : undefined}
                       onClick={() => toggleTask(task.id)}
                     >
-                      <span style={{ fontSize: 14 }}>{done ? '✅' : '⭕'}</span>
+                      <span>{done ? '✅' : '⭕'}</span>
                       <div className="info">
                         <span className="nm">{task.examName}</span>{' '}
                         <span className="ds">— {task.session}</span>
