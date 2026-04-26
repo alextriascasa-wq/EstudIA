@@ -1,43 +1,39 @@
-import type { Friend } from '@/types';
-import { xpInLevel } from '@/lib/xp';
+import { useTranslation } from 'react-i18next';
+import type { Friendship } from '@/types';
 
-export function FriendCard({ friend, onShare }: { friend: Friend, onShare: (f: Friend) => void }): JSX.Element {
-  const { cur, need } = xpInLevel({ level: friend.level, totalXp: friend.totalXp });
-  const pct = Math.min(100, (cur / Math.max(need, 1)) * 100);
+interface Props {
+  friendship: Friendship;
+  onUnfriend: () => void;
+}
+
+export function FriendCard({ friendship, onUnfriend }: Props): JSX.Element {
+  const { t } = useTranslation();
+  const profile = friendship.friend;
+  const name = profile?.username ?? friendship.friendId;
+  const avatarLetter = (name[0] ?? '?').toUpperCase();
+  const xp = profile?.xp ?? 0;
+  const streak = profile?.streak ?? 0;
 
   return (
-    <div className="c card-hover glass" style={{ position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 16, right: 16 }}>
-        <span className="badge" style={{ background: friend.isOnline ? 'var(--okl)' : 'var(--bl)', color: friend.isOnline ? 'var(--okd)' : 'var(--ts)' }}>
-          <span className={`conn-dot${friend.isOnline ? '' : ' off'}`} style={{ marginRight: 4 }} />
-          {friend.isOnline ? 'Online' : 'Offline'}
-        </span>
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
-        <div style={{ fontSize: 40, width: 60, height: 60, background: 'var(--al)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {friend.avatar}
-        </div>
-        <div>
-          <h4 style={{ fontSize: 16, fontWeight: 800 }}>{friend.name}</h4>
-          <div style={{ fontSize: 13, color: 'var(--ts)', marginTop: 4 }}>
-            Nv. {friend.level} · 🔥 {friend.streak}d
+    <div className="c card-hover friend-card">
+      <div className="friend-card-header">
+        <div className="friend-avatar">{avatarLetter}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontWeight: 700, fontSize: 15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {name}
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--ts)', marginTop: 2 }}>
+            {xp.toLocaleString()} XP · 🔥 {streak}d
           </div>
         </div>
       </div>
 
-      <div style={{ marginBottom: 16 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--tm)', marginBottom: 4 }}>
-          <span>{cur} XP</span>
-          <span>{need} XP</span>
-        </div>
-        <div className="pb pb-sm">
-          <div className="fill" style={{ width: `${pct}%`, background: 'var(--tm)' }} />
-        </div>
-      </div>
-
-      <button className="bp" style={{ width: '100%', padding: '8px', fontSize: 13 }} onClick={() => onShare(friend)}>
-        📤 Compartir Recurs
+      <button
+        className="bs"
+        style={{ width: '100%', fontSize: 12, marginTop: 12, padding: '6px 0' }}
+        onClick={onUnfriend}
+      >
+        {t('social.removeFriend')}
       </button>
     </div>
   );
