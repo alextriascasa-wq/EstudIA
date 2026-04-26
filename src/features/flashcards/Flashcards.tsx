@@ -15,16 +15,13 @@ const renderText = (text: string) => {
   return parts.map((part, i) => {
     const match = part.match(/!\[(.*?)\]\((.*?)\)/);
     if (match) {
-      return (
-        <img
-          key={i}
-          src={match[2]}
-          alt={match[1]}
-          className="fc-img"
-        />
-      );
+      return <img key={i} src={match[2]} alt={match[1]} className="fc-img" />;
     }
-    return <span key={i} className="fc-text">{part}</span>;
+    return (
+      <span key={i} className="fc-text">
+        {part}
+      </span>
+    );
   });
 };
 
@@ -50,11 +47,11 @@ export function Flashcards(): JSX.Element {
   const [isAiLoading, setIsAiLoading] = useState(false);
 
   const deck = useMemo<Deck | null>(
-    () => (curDeck ? decks.find((d) => d.id === curDeck) ?? null : null),
+    () => (curDeck ? (decks.find((d) => d.id === curDeck) ?? null) : null),
     [curDeck, decks],
   );
   const card = useMemo<Flashcard | null>(
-    () => (deck && curCardId ? deck.cards.find((c) => c.id === curCardId) ?? null : null),
+    () => (deck && curCardId ? (deck.cards.find((c) => c.id === curCardId) ?? null) : null),
     [deck, curCardId],
   );
 
@@ -154,7 +151,10 @@ export function Flashcards(): JSX.Element {
       const newDeck = await importApkg(file);
       patch({ decks: [...useAppStore.getState().decks, newDeck] });
       save();
-      showToast({ title: 'Importació exitosa', desc: `S'han importat ${newDeck.cards.length} targetes.` });
+      showToast({
+        title: 'Importació exitosa',
+        desc: `S'han importat ${newDeck.cards.length} targetes.`,
+      });
     } catch (err: any) {
       showToast({ title: 'Error', desc: err.message, kind: 'info' });
     }
@@ -219,9 +219,7 @@ export function Flashcards(): JSX.Element {
     const due = filterDueFlashcards(d.cards);
     if (due.length === 0) return;
     const next = decks.map((x) =>
-      x.id === deckId
-        ? { ...x, cards: x.cards.map((c) => ({ ...c, sessionHits: 0 })) }
-        : x,
+      x.id === deckId ? { ...x, cards: x.cards.map((c) => ({ ...c, sessionHits: 0 })) } : x,
     );
     patch({ decks: next });
     setCurDeck(deckId);
@@ -237,9 +235,7 @@ export function Flashcards(): JSX.Element {
       d.id === deck.id
         ? {
             ...d,
-            cards: d.cards.map((c) =>
-              c.id === card.id ? gradeWithFSRS({ ...c }, rating) : c,
-            ),
+            cards: d.cards.map((c) => (c.id === card.id ? gradeWithFSRS({ ...c }, rating) : c)),
           }
         : d,
     );
@@ -312,9 +308,7 @@ export function Flashcards(): JSX.Element {
         >
           <div className="flip-card-inner">
             <div className="flip-card-front">
-              <div className="fc-card-subject">
-                {card.subject || t('cards.defaultSubject')}
-              </div>
+              <div className="fc-card-subject">{card.subject || t('cards.defaultSubject')}</div>
               <div className="fc-card-q">{renderText(card.q)}</div>
               <div className="fc-card-hint">{t('cards.tapReveal')}</div>
             </div>
@@ -373,7 +367,12 @@ export function Flashcards(): JSX.Element {
         </button>
         <label className="bs anki-import-btn">
           📦 Importar Anki
-          <input type="file" accept=".apkg" style={{ display: 'none' }} onChange={handleAnkiImport} />
+          <input
+            type="file"
+            accept=".apkg"
+            style={{ display: 'none' }}
+            onChange={handleAnkiImport}
+          />
         </label>
       </div>
 
@@ -382,33 +381,52 @@ export function Flashcards(): JSX.Element {
           <div className="fc-empty-icon">🧠</div>
           <h3 className="fc-empty-title">Comença a estudiar amb Flashcards</h3>
           <p className="fc-empty-desc">
-            Les targetes de memòria (flashcards) fan servir la repetició espaiada per garantir que no oblidis el que aprens. Tens diverses maneres de començar:
+            Les targetes de memòria (flashcards) fan servir la repetició espaiada per garantir que
+            no oblidis el que aprens. Tens diverses maneres de començar:
           </p>
           <div className="fc-empty-steps">
             <div className="fc-empty-step">
               <div className="fc-step-icon badge-a">✍️</div>
               <div>
                 <strong className="fc-ai-title">1. Crea targetes manualment</strong>
-                <span className="fc-ai-desc">Fes servir el formulari de dalt per crear un deck i anar afegint preguntes i respostes.</span>
+                <span className="fc-ai-desc">
+                  Fes servir el formulari de dalt per crear un deck i anar afegint preguntes i
+                  respostes.
+                </span>
               </div>
             </div>
             <div className="fc-empty-step">
-              <div className="fc-step-icon-lg" style={{ background: 'var(--s2)', color: 'var(--a)' }}>🧠</div>
+              <div
+                className="fc-step-icon-lg"
+                style={{ background: 'var(--s2)', color: 'var(--a)' }}
+              >
+                🧠
+              </div>
               <div className="fc-ai-section">
                 <strong className="fc-ai-title">2. Extracció de Conceptes (IA)</strong>
-                <span className="fc-ai-desc">Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les targetes clau.</span>
+                <span className="fc-ai-desc">
+                  Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les
+                  targetes clau.
+                </span>
                 <div className="fc-ai-inputs">
                   {aiFile ? (
                     <div className="fc-file-preview">
                       <div className="fc-file-name">📄 {aiFile.name}</div>
-                      <button className="bi" onClick={() => setAiFile(null)}>✕</button>
+                      <button className="bi" onClick={() => setAiFile(null)}>
+                        ✕
+                      </button>
                     </div>
                   ) : (
                     <label className="inp fc-upload-zone">
                       <span className="fc-upload-icon">📥</span>
                       <span className="fc-upload-label">Pujar fitxer (PDF o Imatge)</span>
                       <span className="fc-upload-limit">Fins a 5MB</span>
-                      <input type="file" accept="image/*,application/pdf" style={{ display: 'none' }} onChange={handleFileChange} />
+                      <input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                      />
                     </label>
                   )}
                   <textarea
@@ -444,7 +462,10 @@ export function Flashcards(): JSX.Element {
               <div className="fc-step-icon badge-ok">📦</div>
               <div>
                 <strong className="fc-ai-title">3. Importa un fitxer d'Anki (.apkg)</strong>
-                <span className="fc-ai-desc">Si ja fas servir Anki, pots importar els teus decks directament fent clic al botó "Importar Anki".</span>
+                <span className="fc-ai-desc">
+                  Si ja fas servir Anki, pots importar els teus decks directament fent clic al botó
+                  "Importar Anki".
+                </span>
               </div>
             </div>
           </div>
@@ -475,7 +496,11 @@ export function Flashcards(): JSX.Element {
                 ) : (
                   <span className="badge badge-ok">{t('cards.allClear')}</span>
                 )}
-                <button className="bs bs-sm" onClick={() => handleAnkiExport(dk)} title="Exportar a Anki (.apkg)">
+                <button
+                  className="bs bs-sm"
+                  onClick={() => handleAnkiExport(dk)}
+                  title="Exportar a Anki (.apkg)"
+                >
                   ⬇️ Exportar
                 </button>
                 <button className="bi" onClick={() => deleteDeck(dk.id)}>
@@ -511,7 +536,9 @@ export function Flashcards(): JSX.Element {
                 value={inp.s}
                 onChange={(e) => setInput(dk.id, 's', e.target.value)}
               />
-              <button className="bp" onClick={() => addCard(dk.id)}>+</button>
+              <button className="bp" onClick={() => addCard(dk.id)}>
+                +
+              </button>
             </div>
             {dk.cards.length > 0 && (
               <div className="card-list">

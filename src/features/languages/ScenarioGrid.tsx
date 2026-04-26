@@ -35,11 +35,7 @@ export function ScenarioGrid({ deck, onSelect }: Props): JSX.Element {
       </div>
       <div className="g2">
         {SCENARIOS.map((s) => (
-          <button
-            key={s.id}
-            className="c card-hover scenario-btn"
-            onClick={() => onSelect(s)}
-          >
+          <button key={s.id} className="c card-hover scenario-btn" onClick={() => onSelect(s)}>
             <div className="scenario-emoji">{s.emoji}</div>
             <h3 className="scenario-title">{t(s.titleKey)}</h3>
             <span

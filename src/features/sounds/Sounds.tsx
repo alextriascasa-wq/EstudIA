@@ -82,9 +82,9 @@ export function Sounds(): JSX.Element {
             <h4 className="info-title">Per què funciona?</h4>
             <p className="info-body">
               El soroll ambient constant (especialment soroll marró i pluja) actua com a
-              &quot;màscara acústica&quot;: neutralitza els sons imprevisibles de
-              l&apos;entorn que fragmenten la concentració. El nivell ideal és prou alt
-              per cobrir distraccions però prou baix per no molestar.
+              &quot;màscara acústica&quot;: neutralitza els sons imprevisibles de l&apos;entorn que
+              fragmenten la concentració. El nivell ideal és prou alt per cobrir distraccions però
+              prou baix per no molestar.
             </p>
           </div>
         </div>
