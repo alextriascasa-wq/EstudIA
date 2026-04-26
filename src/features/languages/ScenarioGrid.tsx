@@ -18,10 +18,8 @@ export function ScenarioGrid({ deck, onSelect }: Props): JSX.Element {
 
   if (!deck) {
     return (
-      <div className="c empty" style={{ padding: 48 }}>
-        <p style={{ fontSize: 16, fontWeight: 700, color: 'var(--t)', marginBottom: 8 }}>
-          {t('conv.noDecks')}
-        </p>
+      <div className="c empty lang-empty-msg">
+        <p className="lang-empty-title">{t('conv.noDecks')}</p>
         <p>{t('conv.vocabTab')}</p>
       </div>
     );
@@ -29,7 +27,7 @@ export function ScenarioGrid({ deck, onSelect }: Props): JSX.Element {
 
   return (
     <div>
-      <div className="sec-hdr" style={{ marginBottom: 20 }}>
+      <div className="sec-hdr mb-5">
         <h2>{t('conv.pickScenario')}</h2>
         <p>
           {deck.name} · {deck.lang}
@@ -39,22 +37,11 @@ export function ScenarioGrid({ deck, onSelect }: Props): JSX.Element {
         {SCENARIOS.map((s) => (
           <button
             key={s.id}
-            className="c card-hover"
-            style={{
-              textAlign: 'left',
-              cursor: 'pointer',
-              border: '1px solid var(--b)',
-              padding: 20,
-              background: 'var(--s)',
-              borderRadius: 'var(--radius)',
-              width: '100%',
-            }}
+            className="c card-hover scenario-btn"
             onClick={() => onSelect(s)}
           >
-            <div style={{ fontSize: 36, marginBottom: 10 }}>{s.emoji}</div>
-            <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 8, color: 'var(--t)' }}>
-              {t(s.titleKey)}
-            </h3>
+            <div className="scenario-emoji">{s.emoji}</div>
+            <h3 className="scenario-title">{t(s.titleKey)}</h3>
             <span
               className="tag"
               style={{

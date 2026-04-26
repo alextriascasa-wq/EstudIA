@@ -158,15 +158,8 @@ export function Exams(): JSX.Element {
                 const uc = d <= 2 ? 'var(--err)' : d <= 7 ? 'var(--w)' : 'var(--ok)';
                 const bg = d <= 2 ? 'var(--errl)' : d <= 7 ? 'var(--wl)' : 'var(--okl)';
                 return (
-                  <div
-                    key={e.id}
-                    className="exam-row"
-                    style={{ opacity: past ? 0.5 : 1 }}
-                  >
-                    <div
-                      className="exam-day-badge"
-                      style={{ background: bg, color: uc }}
-                    >
+                  <div key={e.id} className="exam-row" style={{ opacity: past ? 0.5 : 1 }}>
+                    <div className="exam-day-badge" style={{ background: bg, color: uc }}>
                       {past ? '✓' : d}
                     </div>
                     <div className="flex-1">
@@ -198,7 +191,11 @@ export function Exams(): JSX.Element {
                     <div
                       key={task.id}
                       className={`ti${done ? ' done' : ''}`}
-                      style={isToday ? { background: 'var(--al)', borderColor: 'rgba(99,102,241,.15)' } : undefined}
+                      style={
+                        isToday
+                          ? { background: 'var(--al)', borderColor: 'rgba(99,102,241,.15)' }
+                          : undefined
+                      }
                       onClick={() => toggleTask(task.id)}
                     >
                       <span>{done ? '✅' : '⭕'}</span>

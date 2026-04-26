@@ -11,15 +11,7 @@ export function Dashboard(): JSX.Element {
   const nav = useNavigate();
   const { t } = useTranslation();
 
-  const {
-    streak,
-    exams,
-    doneTasks,
-    weekly,
-    zNote,
-    level,
-    totalXp,
-  } = useAppStore();
+  const { streak, exams, doneTasks, weekly, zNote, level, totalXp } = useAppStore();
 
   const patch = useAppStore((s) => s.patch);
   const save = useAppStore((s) => s.save);
@@ -27,10 +19,7 @@ export function Dashboard(): JSX.Element {
 
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
   const todayTasks = useMemo(() => tasks.filter((t) => t.date === today()), [tasks]);
-  const upcoming = useMemo(
-    () => exams.filter((e) => daysUntil(e.date) >= 0).slice(0, 4),
-    [exams],
-  );
+  const upcoming = useMemo(() => exams.filter((e) => daysUntil(e.date) >= 0).slice(0, 4), [exams]);
   const doneToday = todayTasks.filter((t) => doneTasks.includes(t.id)).length;
   const { cur, need } = xpInLevel({ level, totalXp });
 
@@ -59,14 +48,29 @@ export function Dashboard(): JSX.Element {
         {/* PRIMARY: AI FLASHCARDS */}
         <div className="c glow hero-card">
           <div className="hero-card-bg">🧠</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
-            <div style={{ fontSize: 32, filter: 'drop-shadow(0 0 8px rgba(212,160,23,0.4))' }}>✨</div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 18,
+            }}
+          >
+            <div style={{ fontSize: 32, filter: 'drop-shadow(0 0 8px rgba(212,160,23,0.4))' }}>
+              ✨
+            </div>
             <span className="ai-power-tag">IA Power</span>
           </div>
-          <h3 className="t-h2" style={{ fontFamily: "'Fraunces', serif", marginBottom: 8, zIndex: 1 }}>
+          <h3
+            className="t-h2"
+            style={{ fontFamily: "'Fraunces', serif", marginBottom: 8, zIndex: 1 }}
+          >
             {t('dashboard.actionCardsTitle')}
           </h3>
-          <p className="t-sm" style={{ color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 28, zIndex: 1 }}>
+          <p
+            className="t-sm"
+            style={{ color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 28, zIndex: 1 }}
+          >
             {t('dashboard.actionCardsDesc')}
           </p>
           <button className="bp w-full" onClick={() => nav('/cards')}>
@@ -128,12 +132,19 @@ export function Dashboard(): JSX.Element {
         {/* LEFT COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {/* LEVEL BAR */}
-          <div className="c grad" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 24px' }}>
+          <div
+            className="c grad"
+            style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 24px' }}
+          >
             <div className="level-avatar t-mono">{level}</div>
             <div className="level-info">
               <div className="level-info-row">
-                <span>{t('sidebar.level')} {level}</span>
-                <span>{cur}/{need} XP</span>
+                <span>
+                  {t('sidebar.level')} {level}
+                </span>
+                <span>
+                  {cur}/{need} XP
+                </span>
               </div>
               <div className="pb pb-lg">
                 <div
@@ -158,7 +169,15 @@ export function Dashboard(): JSX.Element {
 
           {/* ZEIGARNIK */}
           <div className="c zeig">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, paddingLeft: 10 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                marginBottom: 10,
+                paddingLeft: 10,
+              }}
+            >
               <span style={{ fontSize: 17 }}>🧩</span>
               <h4 className="t-h3">{t('dashboard.zeigTitle')}</h4>
             </div>
@@ -199,14 +218,20 @@ export function Dashboard(): JSX.Element {
                   <div className="nm">{task.examName}</div>
                   <div className="ds">{task.session}</div>
                 </div>
-                <span className="tg">{task.daysBefore === 0 ? t('common.today') : `${task.daysBefore}d`}</span>
+                <span className="tg">
+                  {task.daysBefore === 0 ? t('common.today') : `${task.daysBefore}d`}
+                </span>
               </div>
             ))
           )}
 
           <div className="plan-hdr plan-hdr-b" style={{ marginTop: 24 }}>
             <h3>{t('dashboard.upcomingExams')}</h3>
-            <button className="bs" style={{ padding: '5px 12px', fontSize: 11 }} onClick={() => nav('/exams')}>
+            <button
+              className="bs"
+              style={{ padding: '5px 12px', fontSize: 11 }}
+              onClick={() => nav('/exams')}
+            >
               {t('dashboard.addShort')}
             </button>
           </div>
@@ -224,7 +249,9 @@ export function Dashboard(): JSX.Element {
                   <div className="exam-dot" style={{ background: uc }} />
                   <div className="exam-item-info">
                     <div className="exam-item-name">{e.name}</div>
-                    <div className="exam-item-sub">{e.subject} · {fmtDate(e.date)}</div>
+                    <div className="exam-item-sub">
+                      {e.subject} · {fmtDate(e.date)}
+                    </div>
                   </div>
                   <span className="badge" style={{ color: uc, background: `${uc}15` }}>
                     {d === 0 ? t('common.today') : d === 1 ? t('common.tomorrow') : `${d}d`}

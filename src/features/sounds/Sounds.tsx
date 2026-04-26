@@ -54,7 +54,7 @@ export function Sounds(): JSX.Element {
         <p>{t('headers.sounds.desc')}</p>
       </div>
       <div className="c glow">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="snd-list">
           {SOUND_ORDER.map((key) => {
             const snd = SOUNDS[key];
             const vol = soundPrefs[key] ?? 0;
@@ -69,29 +69,18 @@ export function Sounds(): JSX.Element {
                   value={vol}
                   onChange={(e) => setVolume(key, Number(e.target.value))}
                 />
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: 'var(--tm)',
-                    width: 30,
-                    textAlign: 'right',
-                  }}
-                >
-                  {vol}%
-                </span>
+                <span className="snd-vol">{vol}%</span>
               </div>
             );
           })}
         </div>
       </div>
-      <div className="c" style={{ background: 'var(--bg)', borderColor: 'var(--bl)' }}>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-          <span style={{ fontSize: 17, marginTop: 2 }}>🔬</span>
+      <div className="c c-subtle">
+        <div className="info-row">
+          <span className="info-icon">🔬</span>
           <div>
-            <h4 style={{ fontSize: 13, fontWeight: 700, marginBottom: 5 }}>
-              Per què funciona?
-            </h4>
-            <p style={{ fontSize: 12, color: 'var(--ts)', lineHeight: 1.6 }}>
+            <h4 className="info-title">Per què funciona?</h4>
+            <p className="info-body">
               El soroll ambient constant (especialment soroll marró i pluja) actua com a
               &quot;màscara acústica&quot;: neutralitza els sons imprevisibles de
               l&apos;entorn que fragmenten la concentració. El nivell ideal és prou alt

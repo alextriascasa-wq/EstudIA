@@ -61,9 +61,7 @@ export function Stats(): JSX.Element {
     { l: 'Total flashcards', v: state.quizTotal },
     {
       l: 'Precisió global',
-      v: state.quizTotal > 0
-        ? `${Math.round((state.quizCorrect / state.quizTotal) * 100)}%`
-        : '--',
+      v: state.quizTotal > 0 ? `${Math.round((state.quizCorrect / state.quizTotal) * 100)}%` : '--',
     },
     { l: 'Decks creats', v: state.decks.length + state.langDecks.length },
     { l: 'Nivell', v: state.level },

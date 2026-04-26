@@ -16,15 +16,15 @@ const renderText = (text: string) => {
     const match = part.match(/!\[(.*?)\]\((.*?)\)/);
     if (match) {
       return (
-        <img 
-          key={i} 
-          src={match[2]} 
-          alt={match[1]} 
-          style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 8, marginTop: 8, objectFit: 'contain' }} 
+        <img
+          key={i}
+          src={match[2]}
+          alt={match[1]}
+          className="fc-img"
         />
       );
     }
-    return <span key={i} style={{ whiteSpace: 'pre-wrap' }}>{part}</span>;
+    return <span key={i} className="fc-text">{part}</span>;
   });
 };
 
@@ -44,7 +44,6 @@ export function Flashcards(): JSX.Element {
     {},
   );
 
-  // AI Generation State
   const [aiTopic, setAiTopic] = useState('');
   const [aiFile, setAiFile] = useState<{ name: string; type: string; data: string } | null>(null);
   const [aiCount, setAiCount] = useState<number>(5);
@@ -95,7 +94,7 @@ export function Flashcards(): JSX.Element {
 
       if (!res.ok) throw new Error('Error de connexió amb la IA');
       const data: { q: string; a: string }[] = await res.json();
-      
+
       if (!Array.isArray(data) || data.length === 0) {
         throw new Error('La IA no ha generat cap targeta.');
       }
@@ -128,6 +127,7 @@ export function Flashcards(): JSX.Element {
       setIsAiLoading(false);
     }
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -146,6 +146,7 @@ export function Flashcards(): JSX.Element {
     reader.readAsDataURL(file);
     e.target.value = '';
   };
+
   const handleAnkiImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -232,7 +233,6 @@ export function Flashcards(): JSX.Element {
     if (!deck || !card) return;
     const correct = rating !== Rating.Again;
 
-    // Mutate the specific card through a fresh copy.
     const mutableDecks = decks.map((d) =>
       d.id === deck.id
         ? {
@@ -249,7 +249,6 @@ export function Flashcards(): JSX.Element {
     if (correct) addXP(5);
     save();
 
-    // Pick next due card (not yet graduated this session).
     const freshDeck = mutableDecks.find((d) => d.id === deck.id);
     if (!freshDeck) return;
     const due = filterDueFlashcards(freshDeck.cards).filter((c) => c.sessionHits < 3);
@@ -271,20 +270,17 @@ export function Flashcards(): JSX.Element {
     }));
   };
 
-  // Review mode
+  // ── REVIEW MODE ──────────────────────────────────────────────────
   if (deck && card) {
     const due = filterDueFlashcards(deck.cards);
     const remaining = due.filter((c) => c.sessionHits < 3).length;
+    const hits = card.sessionHits ?? 0;
     return (
       <div className="sec">
-        <div
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-        >
+        <div className="fc-review-hdr">
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 900 }}>{deck.name}</h2>
-            <p style={{ fontSize: 12, color: 'var(--ts)' }}>
-              {t('cards.rule3')}
-            </p>
+            <h2 className="fc-review-title">{deck.name}</h2>
+            <p className="fc-review-sub">{t('cards.rule3')}</p>
           </div>
           <button
             className="bs"
@@ -296,94 +292,56 @@ export function Flashcards(): JSX.Element {
             {t('cards.exit')}
           </button>
         </div>
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          <span className="badge" style={{ background: 'var(--al)', color: 'var(--a)' }}>
-            {t('cards.pending', { n: remaining })}
-          </span>
-          <span className="badge" style={{ background: 'var(--okl)', color: 'var(--ok)' }}>
-            {t('cards.session', { n: card.sessionHits ?? 0 })}
-          </span>
-          <span className="badge" style={{ background: 'var(--pl)', color: 'var(--p)' }}>
-            {t('cards.strength', { n: card.strength })}
-          </span>
+
+        <div className="fc-badges">
+          <span className="badge badge-a">{t('cards.pending', { n: remaining })}</span>
+          <span className="badge badge-ok">{t('cards.session', { n: hits })}</span>
+          <span className="badge badge-p">{t('cards.strength', { n: card.strength })}</span>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
+
+        <div className="fc-session-bars">
           {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              style={{
-                flex: 1,
-                height: 7,
-                borderRadius: 4,
-                background:
-                  (card.sessionHits ?? 0) > i
-                    ? 'linear-gradient(90deg,var(--ok),var(--okd))'
-                    : 'var(--bl)',
-                transition: '.3s',
-              }}
-            />
+            <div key={i} className={`fc-session-bar${hits > i ? ' done' : ''}`} />
           ))}
         </div>
-        <div 
-          className={`flip-card ${showAns ? 'flipped' : ''}`} 
+
+        <div
+          className={`flip-card fc-flip-wrap${showAns ? ' flipped' : ''}`}
           onClick={() => !showAns && setShowAns(true)}
-          style={{ cursor: showAns ? 'default' : 'pointer', margin: '24px 0' }}
+          style={{ cursor: showAns ? 'default' : 'pointer' }}
         >
           <div className="flip-card-inner">
             <div className="flip-card-front">
-              <div style={{ fontSize: 11, color: 'var(--tm)', position: 'absolute', top: 16, left: 16 }}>
+              <div className="fc-card-subject">
                 {card.subject || t('cards.defaultSubject')}
               </div>
-              <div className="q" style={{ fontSize: 24, fontWeight: 800, textAlign: 'center' }}>
-                {renderText(card.q)}
-              </div>
-              <div className="hint" style={{ position: 'absolute', bottom: 16, color: 'var(--ts)', fontSize: 13, animation: 'pulseGlow 2s infinite alternate' }}>
-                {t('cards.tapReveal')}
-              </div>
+              <div className="fc-card-q">{renderText(card.q)}</div>
+              <div className="fc-card-hint">{t('cards.tapReveal')}</div>
             </div>
             <div className="flip-card-back">
-              <div style={{ fontSize: 11, color: 'var(--ts)', position: 'absolute', top: 16, left: 16 }}>
-                Resposta
-              </div>
-              <div className="a" style={{ fontSize: 20, textAlign: 'center' }}>
-                {renderText(card.a)}
-              </div>
+              <div className="fc-card-ans-lbl">Resposta</div>
+              <div className="fc-card-a">{renderText(card.a)}</div>
             </div>
           </div>
         </div>
+
         {showAns && (
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button
-              className="bdanger"
-              style={{ flex: 1, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-              onClick={() => grade(Rating.Again)}
-            >
-              <span style={{ fontWeight: 800 }}>Tornar a veure</span>
-              <span style={{ fontSize: 10, opacity: 0.8 }}>(Again)</span>
+          <div className="fc-grade-btns">
+            <button className="bdanger grade-btn" onClick={() => grade(Rating.Again)}>
+              <span className="grade-btn-label">Tornar a veure</span>
+              <span className="grade-btn-sub">(Again)</span>
             </button>
-            <button
-              className="bs"
-              style={{ flex: 1, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', borderColor: 'var(--w)', color: 'var(--w)' }}
-              onClick={() => grade(Rating.Hard)}
-            >
-              <span style={{ fontWeight: 800 }}>Difícil</span>
-              <span style={{ fontSize: 10, opacity: 0.8 }}>(Hard)</span>
+            <button className="bs bs-warn grade-btn" onClick={() => grade(Rating.Hard)}>
+              <span className="grade-btn-label">Difícil</span>
+              <span className="grade-btn-sub">(Hard)</span>
             </button>
-            <button
-              className="bp"
-              style={{ flex: 1, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'linear-gradient(135deg,var(--ok),var(--okd))' }}
-              onClick={() => grade(Rating.Good)}
-            >
-              <span style={{ fontWeight: 800 }}>Bé</span>
-              <span style={{ fontSize: 10, opacity: 0.8 }}>(Good)</span>
+            <button className="bp bp-ok grade-btn" onClick={() => grade(Rating.Good)}>
+              <span className="grade-btn-label">Bé</span>
+              <span className="grade-btn-sub">(Good)</span>
             </button>
-            <button
-              className="bp"
-              style={{ flex: 1, padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'linear-gradient(135deg,#3b82f6,#2563eb)' }}
-              onClick={() => grade(Rating.Easy)}
-            >
-              <span style={{ fontWeight: 800 }}>Fàcil</span>
-              <span style={{ fontSize: 10, opacity: 0.8 }}>(Easy)</span>
+            <button className="bp bp-info grade-btn" onClick={() => grade(Rating.Easy)}>
+              <span className="grade-btn-label">Fàcil</span>
+              <span className="grade-btn-sub">(Easy)</span>
             </button>
           </div>
         )}
@@ -391,17 +349,16 @@ export function Flashcards(): JSX.Element {
     );
   }
 
+  // ── DECK LIST MODE ────────────────────────────────────────────────
   return (
     <div className="sec">
       <div className="sec-hdr">
         <h2>{t('headers.cards.title')}</h2>
         <p>{t('headers.cards.desc')}</p>
       </div>
-      <div
-        className="c"
-        style={{ display: 'flex', gap: 10, alignItems: 'end', flexWrap: 'wrap' }}
-      >
-        <div style={{ flex: 1, minWidth: 200 }}>
+
+      <div className="c deck-create-row">
+        <div className="deck-name-input">
           <label className="lbl">{t('cards.newDeck')}</label>
           <input
             className="inp"
@@ -414,78 +371,86 @@ export function Flashcards(): JSX.Element {
         <button className="bp" onClick={addDeck}>
           {t('cards.createDeck')}
         </button>
-        <label className="bs" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '12px 18px', gap: 6 }}>
+        <label className="bs anki-import-btn">
           📦 Importar Anki
           <input type="file" accept=".apkg" style={{ display: 'none' }} onChange={handleAnkiImport} />
         </label>
       </div>
+
       {decks.length === 0 && (
-        <div className="c glow empty" style={{ padding: 40, marginTop: 20, textAlign: 'left' }}>
-          <div style={{ fontSize: 40, marginBottom: 15 }}>🧠</div>
-          <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>Comença a estudiar amb Flashcards</h3>
-          <p style={{ color: 'var(--ts)', marginBottom: 20, lineHeight: 1.5 }}>
+        <div className="c glow fc-empty-body">
+          <div className="fc-empty-icon">🧠</div>
+          <h3 className="fc-empty-title">Comença a estudiar amb Flashcards</h3>
+          <p className="fc-empty-desc">
             Les targetes de memòria (flashcards) fan servir la repetició espaiada per garantir que no oblidis el que aprens. Tens diverses maneres de començar:
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ background: 'var(--al)', color: 'var(--a)', padding: 8, borderRadius: 8, fontSize: 16 }}>✍️</div>
+          <div className="fc-empty-steps">
+            <div className="fc-empty-step">
+              <div className="fc-step-icon badge-a">✍️</div>
               <div>
-                <strong style={{ display: 'block', marginBottom: 4 }}>1. Crea targetes manualment</strong>
-                <span style={{ fontSize: 13, color: 'var(--tm)' }}>Fes servir el formulari de dalt per crear un deck i anar afegint preguntes i respostes.</span>
+                <strong className="fc-ai-title">1. Crea targetes manualment</strong>
+                <span className="fc-ai-desc">Fes servir el formulari de dalt per crear un deck i anar afegint preguntes i respostes.</span>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ background: 'var(--s2)', color: 'var(--a)', padding: 12, borderRadius: 12, fontSize: 20 }}>🧠</div>
-              <div style={{ flex: 1 }}>
-                <strong style={{ display: 'block', marginBottom: 4, fontSize: 16 }}>2. Extracció de Conceptes (IA)</strong>
-                <span style={{ fontSize: 13, color: 'var(--tm)', display: 'block', marginBottom: 12 }}>Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les targetes clau.</span>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div className="fc-empty-step">
+              <div className="fc-step-icon-lg" style={{ background: 'var(--s2)', color: 'var(--a)' }}>🧠</div>
+              <div className="fc-ai-section">
+                <strong className="fc-ai-title">2. Extracció de Conceptes (IA)</strong>
+                <span className="fc-ai-desc">Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les targetes clau.</span>
+                <div className="fc-ai-inputs">
                   {aiFile ? (
-                    <div style={{ padding: 12, background: 'var(--sh)', borderRadius: 'var(--radius-sm)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div style={{ fontSize: 13, fontWeight: 600 }}>📄 {aiFile.name}</div>
+                    <div className="fc-file-preview">
+                      <div className="fc-file-name">📄 {aiFile.name}</div>
                       <button className="bi" onClick={() => setAiFile(null)}>✕</button>
                     </div>
                   ) : (
-                    <label className="inp" style={{ borderStyle: 'dashed', textAlign: 'center', padding: '24px 16px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 24 }}>📥</span>
-                      <span style={{ fontWeight: 600, fontSize: 13 }}>Pujar fitxer (PDF o Imatge)</span>
-                      <span style={{ fontSize: 11, color: 'var(--tm)' }}>Fins a 5MB</span>
+                    <label className="inp fc-upload-zone">
+                      <span className="fc-upload-icon">📥</span>
+                      <span className="fc-upload-label">Pujar fitxer (PDF o Imatge)</span>
+                      <span className="fc-upload-limit">Fins a 5MB</span>
                       <input type="file" accept="image/*,application/pdf" style={{ display: 'none' }} onChange={handleFileChange} />
                     </label>
                   )}
-                  
-                  <textarea 
-                    className="inp" 
+                  <textarea
+                    className="inp"
                     placeholder="O bé, enganxa els teus apunts aquí..."
-                    style={{ minHeight: 80 }}
                     value={aiTopic}
                     onChange={(e) => setAiTopic(e.target.value)}
                     disabled={isAiLoading}
                   />
-                  <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <select className="inp" style={{ flex: 1 }} value={aiCount} onChange={(e) => setAiCount(Number(e.target.value))} disabled={isAiLoading}>
+                  <div className="fc-ai-row">
+                    <select
+                      className="inp fc-ai-count"
+                      value={aiCount}
+                      onChange={(e) => setAiCount(Number(e.target.value))}
+                      disabled={isAiLoading}
+                    >
                       <option value="5">5 targetes</option>
                       <option value="10">10 targetes</option>
                       <option value="20">20 targetes</option>
                     </select>
-                    <button className="bp" style={{ flex: 2 }} onClick={handleAIGenerate} disabled={isAiLoading || (!aiTopic.trim() && !aiFile)}>
+                    <button
+                      className="bp fc-ai-generate"
+                      onClick={handleAIGenerate}
+                      disabled={isAiLoading || (!aiTopic.trim() && !aiFile)}
+                    >
                       {isAiLoading ? 'Analitzant i Generant...' : '✨ Extreure Conceptes'}
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ background: 'var(--okl)', color: 'var(--ok)', padding: 8, borderRadius: 8, fontSize: 16 }}>📦</div>
+            <div className="fc-empty-step">
+              <div className="fc-step-icon badge-ok">📦</div>
               <div>
-                <strong style={{ display: 'block', marginBottom: 4 }}>3. Importa un fitxer d'Anki (.apkg)</strong>
-                <span style={{ fontSize: 13, color: 'var(--tm)' }}>Si ja fas servir Anki, pots importar els teus decks directament fent clic al botó "Importar Anki".</span>
+                <strong className="fc-ai-title">3. Importa un fitxer d'Anki (.apkg)</strong>
+                <span className="fc-ai-desc">Si ja fas servir Anki, pots importar els teus decks directament fent clic al botó "Importar Anki".</span>
               </div>
             </div>
           </div>
         </div>
       )}
+
       {decks.map((dk) => {
         const due = filterDueFlashcards(dk.cards);
         const avgStr =
@@ -495,34 +460,22 @@ export function Flashcards(): JSX.Element {
         const inp = cardInputs[dk.id] ?? { q: '', a: '', s: '' };
         return (
           <div key={dk.id} className="c glow">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 14,
-              }}
-            >
+            <div className="deck-hdr">
               <div>
-                <h3 style={{ fontSize: 15, fontWeight: 800 }}>{dk.name}</h3>
-                <span style={{ fontSize: 11, color: 'var(--ts)' }}>
+                <h3 className="deck-title">{dk.name}</h3>
+                <span className="deck-sub">
                   {t('cards.deckSummary', { cards: dk.cards.length, due: due.length, avg: avgStr })}
                 </span>
               </div>
-              <div style={{ display: 'flex', gap: 6 }}>
+              <div className="deck-actions">
                 {due.length > 0 ? (
                   <button className="bp" onClick={() => startReview(dk.id)}>
                     {t('cards.study', { n: due.length })}
                   </button>
                 ) : (
-                  <span
-                    className="badge"
-                    style={{ background: 'var(--okl)', color: 'var(--ok)' }}
-                  >
-                    {t('cards.allClear')}
-                  </span>
+                  <span className="badge badge-ok">{t('cards.allClear')}</span>
                 )}
-                <button className="bs" style={{ padding: '8px 12px', fontSize: 12 }} onClick={() => handleAnkiExport(dk)} title="Exportar a Anki (.apkg)">
+                <button className="bs bs-sm" onClick={() => handleAnkiExport(dk)} title="Exportar a Anki (.apkg)">
                   ⬇️ Exportar
                 </button>
                 <button className="bi" onClick={() => deleteDeck(dk.id)}>
@@ -530,7 +483,7 @@ export function Flashcards(): JSX.Element {
                 </button>
               </div>
             </div>
-            <div className="pb" style={{ marginBottom: 14 }}>
+            <div className="pb mb-3.5">
               <div
                 className="fill"
                 style={{
@@ -539,102 +492,48 @@ export function Flashcards(): JSX.Element {
                 }}
               />
             </div>
-            <div
-              style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}
-            >
+            <div className="deck-inputs">
               <input
-                className="inp"
+                className="inp deck-input-q"
                 placeholder={t('cards.phQuestion')}
-                style={{ flex: 2, minWidth: 180 }}
                 value={inp.q}
                 onChange={(e) => setInput(dk.id, 'q', e.target.value)}
               />
               <input
-                className="inp"
+                className="inp deck-input-a"
                 placeholder={t('cards.phAnswer')}
-                style={{ flex: 2, minWidth: 180 }}
                 value={inp.a}
                 onChange={(e) => setInput(dk.id, 'a', e.target.value)}
               />
               <input
-                className="inp"
+                className="inp deck-input-s"
                 placeholder={t('cards.phSubject')}
-                style={{ flex: 1, minWidth: 80 }}
                 value={inp.s}
                 onChange={(e) => setInput(dk.id, 's', e.target.value)}
               />
-              <button className="bp" onClick={() => addCard(dk.id)}>
-                +
-              </button>
+              <button className="bp" onClick={() => addCard(dk.id)}>+</button>
             </div>
             {dk.cards.length > 0 && (
-              <div
-                style={{
-                  maxHeight: 180,
-                  overflowY: 'auto',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 4,
-                }}
-              >
-                {dk.cards.slice(0, 20).map((c) => (
-                  <div
-                    key={c.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 10,
-                      padding: '8px 10px',
-                      borderRadius: 'var(--radius-xs)',
-                      background: 'var(--bg)',
-                      fontSize: 12,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 7,
-                        height: 7,
-                        borderRadius: '50%',
-                        background:
-                          c.strength >= 70
-                            ? 'var(--ok)'
-                            : c.strength >= 30
-                              ? 'var(--w)'
-                              : 'var(--err)',
-                      }}
-                    />
-                    <span
-                      style={{
-                        flex: 1,
-                        fontWeight: 600,
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {c.q}
-                    </span>
-                    <span style={{ color: 'var(--ts)', fontSize: 10 }}>
-                      {c.sessionHits ?? 0}/3
-                    </span>
-                    <span
-                      className="tag"
-                      style={{
-                        background: c.strength >= 70 ? 'var(--okl)' : 'var(--bg)',
-                        color: c.strength >= 70 ? 'var(--ok)' : 'var(--tm)',
-                      }}
-                    >
-                      {c.strength}%
-                    </span>
-                    <button
-                      className="bi"
-                      style={{ fontSize: 10, padding: 3 }}
-                      onClick={() => deleteCard(dk.id, c.id)}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
+              <div className="card-list">
+                {dk.cards.slice(0, 20).map((c) => {
+                  const dotColor =
+                    c.strength >= 70 ? 'var(--ok)' : c.strength >= 30 ? 'var(--w)' : 'var(--err)';
+                  const tagBg = c.strength >= 70 ? 'var(--okl)' : 'var(--bg)';
+                  const tagColor = c.strength >= 70 ? 'var(--ok)' : 'var(--tm)';
+                  return (
+                    <div key={c.id} className="card-item">
+                      <div className="card-dot" style={{ background: dotColor }} />
+                      <span className="card-q">{c.q}</span>
+                      <span className="card-hits">{c.sessionHits ?? 0}/3</span>
+                      <span className="tag" style={{ background: tagBg, color: tagColor }}>
+                        {c.strength}%
+                      </span>
+                      <button className="bi bs-sm" onClick={() => deleteCard(dk.id, c.id)}>
+                        ✕
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

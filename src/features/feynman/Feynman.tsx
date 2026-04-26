@@ -278,11 +278,7 @@ export function Feynman(): JSX.Element {
               }}
               disabled={isAiLoading}
             />
-            <button
-              className="bp px-6"
-              onClick={send}
-              disabled={isAiLoading || !draft.trim()}
-            >
+            <button className="bp px-6" onClick={send} disabled={isAiLoading || !draft.trim()}>
               {isAiLoading ? '...' : t('feynman.send')}
             </button>
           </div>

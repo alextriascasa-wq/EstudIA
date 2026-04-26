@@ -22,6 +22,8 @@ function CorrectionPopover({ correction, onDismiss, onAddCard }: PopoverProps): 
     fluency: 'var(--i)',
   };
 
+  // Popover is absolutely positioned — border color is dynamic (typeColor[correction.type])
+  // so position/zIndex/border must stay inline
   return (
     <div
       style={{
@@ -43,13 +45,11 @@ function CorrectionPopover({ correction, onDismiss, onAddCard }: PopoverProps): 
         {t(`conv.correctionTypes.${correction.type}`)}
       </div>
       <div style={{ marginBottom: 6 }}>
-        <span style={{ color: 'var(--err)', textDecoration: 'line-through' }}>
-          {correction.original}
-        </span>
-        <span style={{ color: 'var(--tm)', margin: '0 6px' }}>→</span>
-        <span style={{ color: 'var(--ok)', fontWeight: 700 }}>{correction.corrected}</span>
+        <span className="conv-corr-original">{correction.original}</span>
+        <span className="conv-corr-arrow">→</span>
+        <span className="conv-corr-corrected">{correction.corrected}</span>
       </div>
-      <p style={{ color: 'var(--ts)', margin: '0 0 8px' }}>{correction.explanation}</p>
+      <p className="conv-corr-expl">{correction.explanation}</p>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         {correction.type === 'vocabulary' && (
           <button
@@ -106,11 +106,13 @@ function AnnotatedText({ text, corrections, onAddCard }: AnnotatedProps): JSX.El
       segments.push(<span key={key++}>{remaining.slice(0, pos)}</span>);
     }
 
+    // underlineColor is dynamic — must stay inline
     const underlineColor =
       c.type === 'grammar' ? 'var(--w)' : c.type === 'vocabulary' ? 'var(--err)' : 'var(--i)';
 
     const corrIdx = idx;
     segments.push(
+      // position:relative needed for the absolute CorrectionPopover child
       <span key={key++} style={{ position: 'relative', display: 'inline' }}>
         <span
           style={{
@@ -326,32 +328,20 @@ export function ConvIA({ sessionId, deck, scenario, onEnd }: Props): JSX.Element
   const messages = session.messages;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0, flex: 1 }}>
+    <div className="conv-root">
       {/* Header */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingBottom: 14,
-          marginBottom: 14,
-          borderBottom: '1px solid var(--b)',
-        }}
-      >
+      <div className="conv-hdr">
         <div>
-          <h3 style={{ fontSize: 15, fontWeight: 800 }}>
+          <h3 className="conv-hdr-title">
             {scenario.emoji} {t(scenario.titleKey)}
           </h3>
-          <span style={{ fontSize: 12, color: 'var(--ts)' }}>
+          <span className="conv-hdr-sub">
             {deck.name} · {deck.lang}
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="conv-hdr-right">
           {lastFluency > 0 && (
-            <span
-              className="badge"
-              style={{ background: 'var(--al)', color: 'var(--a)', fontWeight: 700 }}
-            >
+            <span className="badge badge-a" style={{ fontWeight: 700 }}>
               {lastFluency}% {t('conv.fluency')}
             </span>
           )}
@@ -362,43 +352,21 @@ export function ConvIA({ sessionId, deck, scenario, onEnd }: Props): JSX.Element
       </div>
 
       {/* Message list */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 12,
-          paddingBottom: 12,
-        }}
-      >
+      <div className="conv-messages">
         {messages.length === 0 && !pendingText && (
           <div className="empty">
-            <div style={{ fontSize: 32 }}>{scenario.emoji}</div>
-            <p style={{ marginTop: 8, fontSize: 13 }}>{t(scenario.titleKey)}</p>
+            <div className="conv-empty-icon">{scenario.emoji}</div>
+            <p className="conv-empty-p">{t(scenario.titleKey)}</p>
           </div>
         )}
 
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            style={{
-              display: 'flex',
-              justifyContent: msg.role === 'ai' ? 'flex-end' : 'flex-start',
-            }}
+            className={msg.role === 'ai' ? 'conv-msg-wrap-ai' : 'conv-msg-wrap-user'}
           >
-            <div
-              className="c"
-              style={{
-                maxWidth: '78%',
-                padding: '10px 14px',
-                borderRadius: msg.role === 'ai' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                border: msg.role === 'ai' ? '1px solid rgba(212,160,23,0.2)' : '1px solid var(--b)',
-                fontSize: 13,
-                lineHeight: 1.5,
-              }}
-            >
-              <div style={{ fontSize: 10, color: 'var(--tm)', marginBottom: 4 }}>
+            <div className={`c conv-msg ${msg.role === 'ai' ? 'conv-msg-ai' : 'conv-msg-user'}`}>
+              <div className="conv-msg-role">
                 {msg.role === 'ai' ? `${scenario.emoji} ${scenario.character}` : 'Tu'}
               </div>
               {msg.role === 'user' && msg.corrections.length > 0 ? (
@@ -415,38 +383,17 @@ export function ConvIA({ sessionId, deck, scenario, onEnd }: Props): JSX.Element
         ))}
 
         {pendingText && (
-          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <div
-              className="c"
-              style={{
-                maxWidth: '78%',
-                padding: '10px 14px',
-                borderRadius: '16px 16px 16px 4px',
-                border: '1px solid var(--b)',
-                fontSize: 13,
-                opacity: 0.7,
-              }}
-            >
-              <div style={{ fontSize: 10, color: 'var(--tm)', marginBottom: 4 }}>Tu</div>
+          <div className="conv-msg-wrap-user">
+            <div className="c conv-pending">
+              <div className="conv-msg-role">Tu</div>
               {pendingText}
             </div>
           </div>
         )}
 
         {loading && (
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <div
-              className="c"
-              style={{
-                padding: '10px 18px',
-                borderRadius: '16px 16px 4px 16px',
-                border: '1px solid rgba(212,160,23,0.2)',
-                fontSize: 18,
-                color: 'var(--tm)',
-              }}
-            >
-              ···
-            </div>
+          <div className="conv-msg-wrap-ai">
+            <div className="c conv-loading-bubble">···</div>
           </div>
         )}
 
@@ -454,18 +401,9 @@ export function ConvIA({ sessionId, deck, scenario, onEnd }: Props): JSX.Element
       </div>
 
       {/* Input bar */}
-      <div
-        style={{
-          display: 'flex',
-          gap: 10,
-          alignItems: 'center',
-          paddingTop: 12,
-          borderTop: '1px solid var(--b)',
-        }}
-      >
+      <div className="conv-input-bar">
         <input
-          className="inp"
-          style={{ flex: 1 }}
+          className="inp flex-1"
           placeholder={t('conv.holdToSpeak')}
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
@@ -475,23 +413,13 @@ export function ConvIA({ sessionId, deck, scenario, onEnd }: Props): JSX.Element
           disabled={loading || rateLimitHit}
         />
         <button
+          className="conv-mic-btn"
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: '50%',
             background: isRecording ? 'var(--err)' : 'var(--a)',
-            border: 'none',
-            cursor: loading || rateLimitHit ? 'not-allowed' : 'pointer',
-            fontSize: 18,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
             boxShadow: isRecording
               ? '0 0 12px rgba(239,68,68,0.5)'
               : '0 0 12px rgba(212,160,23,0.4)',
             opacity: rateLimitHit ? 0.5 : 1,
-            transition: 'var(--transition)',
-            flexShrink: 0,
           }}
           onPointerDown={() => {
             if (!loading && !rateLimitHit) startRecording();

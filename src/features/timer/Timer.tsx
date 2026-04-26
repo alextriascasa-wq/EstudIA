@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
 import { fmtTime, weeklyIndex } from '@/lib/date';
@@ -49,14 +49,14 @@ export function Timer(): JSX.Element {
     if (!resting) {
       const { incrementDailyLog, addXP } = useAppStore.getState();
       const mins = Math.round(mode.w / 60);
-      
+
       const s = useAppStore.getState();
       const weekly = s.weekly.map((w) => ({ ...w }));
       const mi = weeklyIndex(new Date().getDay());
       if (weekly[mi]) weekly[mi] = { ...weekly[mi]!, m: weekly[mi]!.m + mins };
 
       patch({ weekly });
-      
+
       incrementDailyLog({ minutes: mins, sessions: 1, pomodoros: 1 } as any);
       addXP(mins * 2);
       setResting(true);
@@ -124,22 +124,18 @@ export function Timer(): JSX.Element {
       </div>
 
       {/* TIMER CIRCLE */}
-      <div className="c glow" style={{ textAlign: 'center', padding: '44px 24px' }}>
+      <div className="c glow tmr-card">
         <span
-          className="badge"
+          className="badge tmr-phase-badge"
           style={{
-            fontSize: 12,
-            padding: '6px 18px',
-            borderRadius: 20,
             background: resting ? 'var(--okl)' : 'var(--al)',
             color: resting ? 'var(--ok)' : 'var(--a)',
-            letterSpacing: 1,
           }}
         >
           {resting ? t('timer.rest') : t('timer.focus')}
         </span>
         <div className="tmr-circle">
-          <svg width="240" height="240" viewBox="0 0 240 240" style={{ transform: 'rotate(-90deg)' }}>
+          <svg width="240" height="240" viewBox="0 0 240 240" className="tmr-svg">
             <circle cx="120" cy="120" r={r} fill="none" stroke="var(--bl)" strokeWidth="8" />
             <circle
               cx="120"
@@ -163,54 +159,23 @@ export function Timer(): JSX.Element {
           <div className="tmr-time">
             <div className="dig">{fmtTime(left)}</div>
             <div className="sub">
-              {resting
-                ? t('timer.restSub')
-                : t('timer.focusSub', { sess: todaySess + 1 })}
+              {resting ? t('timer.restSub') : t('timer.focusSub', { sess: todaySess + 1 })}
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 12 }}>
-          <button
-            className="bs"
-            style={{
-              borderRadius: '50%',
-              width: 48,
-              height: 48,
-              padding: 0,
-              justifyContent: 'center',
-            }}
-            onClick={onReset}
-          >
+        <div className="tmr-btns">
+          <button className="bs tmr-btn-round" onClick={onReset}>
             ↺
           </button>
           <button
-            className="bp"
-            style={{
-              borderRadius: 16,
-              width: 68,
-              height: 68,
-              padding: 0,
-              justifyContent: 'center',
-              fontSize: 26,
-              background: running
-                ? 'linear-gradient(135deg,var(--err),var(--errd))'
-                : undefined,
-            }}
+            className={`bp tmr-btn-play${running ? ' active' : ''}`}
             onClick={toggle}
           >
             {running ? '⏸' : '▶'}
           </button>
           {notificationsSupported() && (
             <button
-              className="bs"
-              style={{
-                borderRadius: '50%',
-                width: 48,
-                height: 48,
-                padding: 0,
-                justifyContent: 'center',
-                opacity: notifEnabled ? 1 : 0.45,
-              }}
+              className={`bs tmr-btn-round${!notifEnabled ? ' tmr-notif-off' : ''}`}
               title={notifEnabled ? t('timer.notifOn') : t('timer.notifOff')}
               onClick={async () => {
                 if (notifEnabled) {
@@ -224,43 +189,36 @@ export function Timer(): JSX.Element {
               {notifEnabled ? '🔔' : '🔕'}
             </button>
           )}
-          {!notificationsSupported() && <div style={{ width: 48 }} />}
+          {!notificationsSupported() && <div className="w-12" />}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 32, marginTop: 32 }}>
+        <div className="tmr-stats">
           {[
             { v: todaySess, l: t('timer.stats.sessions') },
             { v: `${totalMin}m`, l: t('timer.stats.total') },
             { v: pomCount, l: t('timer.stats.pomodoros') },
           ].map((x, i, arr) => (
-            <div key={x.l} style={{ display: 'contents' }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 22, fontWeight: 500, fontFamily: "'DM Mono', monospace" }}>{x.v}</div>
-                <div style={{ fontSize: 11, color: 'var(--tm)' }}>{x.l}</div>
+            <Fragment key={x.l}>
+              <div className="tmr-stat-item">
+                <div className="tmr-stat-val">{x.v}</div>
+                <div className="tmr-stat-lbl">{x.l}</div>
               </div>
-              {i < arr.length - 1 && <div style={{ width: 1, background: 'var(--b)' }} />}
-            </div>
+              {i < arr.length - 1 && <div className="tmr-divider" />}
+            </Fragment>
           ))}
         </div>
       </div>
 
-      <div
-        className="c"
-        style={{
-          display: 'flex',
-          gap: 12,
-          alignItems: 'flex-start',
-          background: 'var(--bg)',
-          borderColor: 'var(--bl)',
-        }}
-      >
-        <span style={{ fontSize: 17, marginTop: 2 }}>{resting ? '🌿' : '🔒'}</span>
-        <div>
-          <h4 style={{ fontSize: 13, fontWeight: 700, marginBottom: 5 }}>
-            {resting ? t('timer.duringRest') : t('timer.duringFocus')}
-          </h4>
-          <p style={{ fontSize: 12, color: 'var(--ts)', lineHeight: 1.6 }}>
-            {resting ? t('timer.duringRestDesc') : t('timer.duringFocusDesc')}
-          </p>
+      <div className="c c-subtle">
+        <div className="info-row">
+          <span className="info-icon">{resting ? '🌿' : '🔒'}</span>
+          <div>
+            <h4 className="info-title">
+              {resting ? t('timer.duringRest') : t('timer.duringFocus')}
+            </h4>
+            <p className="info-body">
+              {resting ? t('timer.duringRestDesc') : t('timer.duringFocusDesc')}
+            </p>
+          </div>
         </div>
       </div>
     </div>
