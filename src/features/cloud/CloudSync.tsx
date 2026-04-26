@@ -56,7 +56,7 @@ export function CloudSync(): JSX.Element {
     setLoading(true);
     setStatusMsg(t('cloud.pushing'));
 
-    // We omit methods and non-serializable fields from Zustand
+    // Omit methods and non-serializable fields from Zustand
     const stateToSave: Record<string, unknown> = { ...fullState };
     delete stateToSave.setState;
     delete stateToSave.patch;
@@ -91,7 +91,6 @@ export function CloudSync(): JSX.Element {
     if (error) {
       setStatusMsg(t('cloud.pullErr', { msg: error.message }));
     } else if (data && data.app_state) {
-      // Patch local state with cloud state
       const stateFromCloud = data.app_state;
       if (Object.keys(stateFromCloud).length > 0) {
         patch(stateFromCloud);
@@ -110,13 +109,13 @@ export function CloudSync(): JSX.Element {
         <p>{t('cloud.desc')}</p>
       </div>
 
-      <div className="c glass" style={{ maxWidth: 500, margin: '0 auto' }}>
+      <div className="c glass cloud-card">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 40 }}>{t('cloud.loading')}</div>
+          <div className="cloud-loading">{t('cloud.loading')}</div>
         ) : !session ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <h3 style={{ fontSize: 20, fontWeight: 800 }}>{t('cloud.loginTitle')}</h3>
-            <p style={{ fontSize: 13, color: 'var(--ts)' }}>{t('cloud.loginDesc')}</p>
+          <div className="cloud-login">
+            <h3 className="cloud-login-title">{t('cloud.loginTitle')}</h3>
+            <p className="cloud-login-desc">{t('cloud.loginDesc')}</p>
 
             <div>
               <label className="lbl">{t('cloud.emailLabel')}</label>
@@ -138,33 +137,27 @@ export function CloudSync(): JSX.Element {
               />
             </div>
 
-            <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
-              <button className="bp" style={{ flex: 1 }} onClick={handleLogin}>
+            <div className="cloud-login-btns">
+              <button className="bp flex-1" onClick={handleLogin}>
                 {t('cloud.login')}
               </button>
-              <button className="bs" style={{ flex: 1 }} onClick={handleSignUp}>
+              <button className="bs flex-1" onClick={handleSignUp}>
                 {t('cloud.signup')}
               </button>
             </div>
 
-            {statusMsg && (
-              <div style={{ marginTop: 16, fontSize: 13, color: 'var(--a)' }}>{statusMsg}</div>
-            )}
+            {statusMsg && <div className="cloud-status-msg">{statusMsg}</div>}
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20, textAlign: 'center' }}>
-            <div style={{ fontSize: 48 }}>☁️</div>
+          <div className="cloud-connected">
+            <div className="cloud-connected-icon">☁️</div>
             <div>
-              <h3 style={{ fontSize: 20, fontWeight: 800 }}>{t('cloud.connected')}</h3>
-              <p style={{ fontSize: 13, color: 'var(--ts)' }}>{session.user.email}</p>
+              <h3 className="cloud-connected-title">{t('cloud.connected')}</h3>
+              <p className="cloud-connected-email">{session.user.email}</p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-              <button
-                className="bp"
-                style={{ background: 'var(--w)', color: '#000' }}
-                onClick={pushToCloud}
-              >
+            <div className="cloud-sync-grid">
+              <button className="bp bp-warn" onClick={pushToCloud}>
                 {t('cloud.push')}
               </button>
               <button className="bp" onClick={pullFromCloud}>
@@ -172,15 +165,9 @@ export function CloudSync(): JSX.Element {
               </button>
             </div>
 
-            {statusMsg && (
-              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ok)' }}>{statusMsg}</div>
-            )}
+            {statusMsg && <div className="cloud-status-ok">{statusMsg}</div>}
 
-            <button
-              className="bs"
-              style={{ marginTop: 24, alignSelf: 'center', fontSize: 12, border: 'none' }}
-              onClick={handleLogout}
-            >
+            <button className="bs cloud-logout" onClick={handleLogout}>
               {t('cloud.logout')}
             </button>
           </div>
