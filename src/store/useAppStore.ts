@@ -41,10 +41,14 @@ export interface StoreActions {
   /** Mark a ConvIA session as ended with a final fluency score. */
   endConvSession: (sessionId: string, fluencyScore: number) => void;
   /** Add vocab cards from corrections to the linked lang deck. */
-  queueConvCards: (sessionId: string, cards: Pick<LangCard, 'word' | 'translation' | 'example'>[]) => void;
+  queueConvCards: (
+    sessionId: string,
+    cards: Pick<LangCard, 'word' | 'translation' | 'example'>[],
+  ) => void;
 }
 
-export type AppStore = AppState & StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean };
+export type AppStore = AppState &
+  StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean };
 
 /** Initial state, hydrated from legacy `sfpro` on first boot. */
 const initialState: AppState = mergeLegacy(readLegacyLocalStorage());
@@ -81,7 +85,7 @@ export const useAppStore = create<AppStore>()(
           let { xp, totalXp, level } = prev;
           xp += amount;
           totalXp += amount;
-          
+
           while (level < 50 && totalXp >= (XP_TABLE[level] ?? Infinity)) {
             level++;
             leveled.push(level);
@@ -137,32 +141,30 @@ export const useAppStore = create<AppStore>()(
         if (prev.lastDate && prev.lastDate !== t) {
           const lastDateObj = new Date(prev.lastDate);
           const todayObj = new Date(t);
-          const diffDays = Math.floor(
-            (todayObj.getTime() - lastDateObj.getTime()) / 864e5
-          );
+          const diffDays = Math.floor((todayObj.getTime() - lastDateObj.getTime()) / 864e5);
 
           set((s) => {
             let { streak, weekly, todaySess, cardsToday } = s;
-            
-            // Streak logic: 
+
+            // Streak logic:
             // If diff is 1 and we studied on lastDate (todaySess > 0 before reset), we increment.
-            // If diff > 1, we lost the streak (reset to 1 or 0). 
+            // If diff > 1, we lost the streak (reset to 1 or 0).
             if (diffDays === 1) {
-              if (s.todaySess === 0) streak = 1; 
+              if (s.todaySess === 0) streak = 1;
               else streak++;
             } else if (diffDays > 1) {
               streak = 1;
             }
-            
+
             todaySess = 0;
             cardsToday = 0;
-            
+
             // Weekly reset on Monday
             const dow = new Date().getDay(); // 0=Sun, 1=Mon
             if (dow === 1 && diffDays >= 1) {
               weekly = DEFAULT_STATE.weekly.map((w) => ({ ...w }));
             }
-            
+
             return { streak, weekly, todaySess, cardsToday, lastDate: t };
           });
           get().save();
@@ -183,24 +185,24 @@ export const useAppStore = create<AppStore>()(
           }
 
           let { heatmap, quizTotal, quizCorrect, cardsToday, totalMin, todaySess, pomCount } = prev;
-          
+
           if (data.minutes) {
             entry.minutes += data.minutes;
             totalMin += data.minutes;
-            heatmap = { ...heatmap, [t] : (heatmap[t] || 0) + data.minutes };
+            heatmap = { ...heatmap, [t]: (heatmap[t] || 0) + data.minutes };
           }
-          
+
           if (data.cards) {
             entry.cards += data.cards;
             quizTotal += data.cards;
             cardsToday += data.cards;
           }
-          
+
           if (data.correct) {
             entry.correct += data.correct;
             quizCorrect += data.correct;
           }
-          
+
           if (data.sessions) {
             entry.sessions += data.sessions;
             todaySess += data.sessions;
@@ -212,7 +214,17 @@ export const useAppStore = create<AppStore>()(
 
           const memStrength = quizTotal > 0 ? Math.round((quizCorrect / quizTotal) * 100) : 0;
 
-          return { dailyLog, heatmap, quizTotal, quizCorrect, cardsToday, memStrength, totalMin, todaySess, pomCount };
+          return {
+            dailyLog,
+            heatmap,
+            quizTotal,
+            quizCorrect,
+            cardsToday,
+            memStrength,
+            totalMin,
+            todaySess,
+            pomCount,
+          };
         });
         get().save();
       },
@@ -239,9 +251,7 @@ export const useAppStore = create<AppStore>()(
       addConvMessage: (sessionId, message) => {
         set((prev) => ({
           convSessions: prev.convSessions.map((s) =>
-            s.id === sessionId
-              ? { ...s, messages: [...s.messages, message] }
-              : s,
+            s.id === sessionId ? { ...s, messages: [...s.messages, message] } : s,
           ),
         }));
       },
@@ -249,9 +259,7 @@ export const useAppStore = create<AppStore>()(
       endConvSession: (sessionId, fluencyScore) => {
         set((prev) => ({
           convSessions: prev.convSessions.map((s) =>
-            s.id === sessionId
-              ? { ...s, fluencyScore, endedAt: new Date().toISOString() }
-              : s,
+            s.id === sessionId ? { ...s, fluencyScore, endedAt: new Date().toISOString() } : s,
           ),
         }));
         get().save();
@@ -272,16 +280,12 @@ export const useAppStore = create<AppStore>()(
           strength: 0,
         }));
         const newLangDecks = get().langDecks.map((d) =>
-          d.id === session.langDeckId
-            ? { ...d, cards: [...d.cards, ...newLangCards] }
-            : d,
+          d.id === session.langDeckId ? { ...d, cards: [...d.cards, ...newLangCards] } : d,
         );
         set((prev) => ({
           langDecks: newLangDecks,
           convSessions: prev.convSessions.map((s) =>
-            s.id === sessionId
-              ? { ...s, newCards: s.newCards + cards.length }
-              : s,
+            s.id === sessionId ? { ...s, newCards: s.newCards + cards.length } : s,
           ),
         }));
         get().save();
