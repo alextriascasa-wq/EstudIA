@@ -2247,3 +2247,93 @@
 .cloud-loading { text-align: center; padding: 40px; color: var(--tm); }
 .cloud-sync-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .bp-warn { background: var(--w); color: #000; }
+
+/* ═══════════════════════════════════════════
+   SOCIAL
+   ═══════════════════════════════════════════ */
+
+.social-tabs {
+  display: flex; gap: 6px; margin-bottom: 24px;
+  overflow-x: auto; padding-bottom: 2px; scrollbar-width: none;
+}
+.social-tabs::-webkit-scrollbar { display: none; }
+.social-tab-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 16px; border-radius: var(--radius-sm);
+  border: 1px solid var(--b); background: var(--s2);
+  color: var(--ts); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  white-space: nowrap; flex-shrink: 0;
+}
+.social-tab-btn:hover { background: var(--sh); color: var(--t); }
+.social-tab-btn.on { background: var(--al); color: var(--a); border-color: var(--a); }
+
+.friends-list { display: flex; flex-direction: column; gap: 0; }
+.friends-search-row { display: flex; gap: 8px; }
+.friends-search-results { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+.friends-search-result {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  background: var(--s2); border: 1px solid var(--bl);
+}
+
+.friend-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--al); color: var(--a);
+  font-size: 20px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; border: 1.5px solid var(--b);
+}
+.friend-avatar-sm {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--al); color: var(--a);
+  font-size: 13px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.friend-card { display: flex; flex-direction: column; gap: 0; }
+.friend-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+
+.social-feed { display: flex; flex-direction: column; gap: 2px; }
+.social-feed-empty { display: flex; align-items: center; justify-content: center; padding: 60px 0; }
+.activity-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: var(--radius-sm); transition: var(--transition);
+}
+.activity-item:hover { background: var(--s2); }
+.activity-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--al); color: var(--a);
+  font-size: 14px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.activity-body { flex: 1; min-width: 0; }
+.activity-line { font-size: 14px; line-height: 1.4; }
+.activity-user { font-weight: 700; margin-right: 4px; }
+.activity-desc { color: var(--ts); }
+.activity-meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--tm); margin-top: 3px; }
+.activity-icon { font-size: 13px; }
+
+.challenge-card { display: flex; flex-direction: column; gap: 0; }
+.challenge-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.challenge-icon { font-size: 24px; flex-shrink: 0; }
+.challenge-progress {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 12px; background: var(--s2); border-radius: var(--radius-sm);
+}
+.challenge-progress-row { display: flex; align-items: center; }
+.challenge-progress-label {
+  font-size: 12px; color: var(--ts); width: 60px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex-shrink: 0;
+}
+.challenge-score { font-size: 12px; font-weight: 700; width: 32px; text-align: right; flex-shrink: 0; }
+.challenge-winner {
+  margin-top: 10px; padding: 8px 12px; border-radius: var(--radius-sm);
+  background: var(--al); color: var(--a); font-weight: 700; font-size: 13px; text-align: center;
+}
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 16px;
+}
+.create-challenge-modal { width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }

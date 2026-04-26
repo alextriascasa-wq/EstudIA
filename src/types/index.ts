@@ -295,3 +295,56 @@ export type Tab =
   | 'techniques'
   | 'social'
   | 'cloud';
+
+// ─── Social / Friends ─────────────────────────────────────────────────────────
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  avatarUrl: string | null;
+  xp: number;
+  streak: number;
+  isPublic: boolean;
+}
+
+export interface Friendship {
+  id: string;
+  userId: string;
+  friendId: string;
+  status: 'pending' | 'accepted' | 'blocked';
+  friend?: UserProfile;
+  createdAt: string;
+}
+
+export type ActivityEventType =
+  | 'cards_completed'
+  | 'streak_milestone'
+  | 'exam_done'
+  | 'challenge_won'
+  | 'study_session';
+
+export interface ActivityEvent {
+  id: string;
+  userId: string;
+  type: ActivityEventType;
+  payload: Record<string, unknown>;
+  createdAt: string;
+  user?: UserProfile;
+}
+
+export type ChallengeType = 'flashcards' | 'study_time' | 'exam';
+export type ChallengeStatus = 'pending' | 'accepted' | 'active' | 'completed' | 'declined';
+
+export interface Challenge {
+  id: string;
+  creatorId: string;
+  opponentId: string;
+  type: ChallengeType;
+  params: { durationDays: number; targetCount: number; subject?: string };
+  status: ChallengeStatus;
+  result: { winnerId?: string; creatorScore: number; opponentScore: number } | null;
+  createdAt: string;
+  endsAt: string | null;
+  creator?: UserProfile;
+  opponent?: UserProfile;
+}
