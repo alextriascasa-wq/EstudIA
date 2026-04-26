@@ -106,10 +106,22 @@
     "duringFocusDesc": "Phone on airplane mode and OUT of sight. Every minute of Deep Work physically reinforces neural circuits.",
     "duringRestDesc": "Do NOT look at your phone. Walk, look out the window, or do NSDR. Rest must be MODALLY different from work.",
     "modes": {
-      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, review, vocabulary" },
-      "d52": { "nm": "Ultradian", "ideal": "Mixed study, active reading" },
-      "d90": { "nm": "Deep Work", "ideal": "Math, physics, programming" },
-      "d120": { "nm": "Hyper Focus", "ideal": "Complex projects, total flow" }
+      "pom": {
+        "nm": "Pomodoro",
+        "ideal": "Flashcards, review, vocabulary"
+      },
+      "d52": {
+        "nm": "Ultradian",
+        "ideal": "Mixed study, active reading"
+      },
+      "d90": {
+        "nm": "Deep Work",
+        "ideal": "Math, physics, programming"
+      },
+      "d120": {
+        "nm": "Hyper Focus",
+        "ideal": "Complex projects, total flow"
+      }
     },
     "notifOn": "Notifications enabled",
     "notifOff": "Enable notifications",
@@ -195,21 +207,66 @@
       "level": "Level"
     },
     "ach": {
-      "first_session": { "name": "First Step", "desc": "Complete the first focus session" },
-      "streak_3": { "name": "Consistent", "desc": "Get a 3-day streak" },
-      "streak_7": { "name": "Unstoppable", "desc": "Streak of 7 days in a row" },
-      "streak_30": { "name": "Legend", "desc": "30-day streak!" },
-      "cards_50": { "name": "Explorer", "desc": "Review 50 flashcards" },
-      "cards_500": { "name": "Scholar", "desc": "Review 500 flashcards" },
-      "mem_80": { "name": "Iron Memory", "desc": "Reach 80% memory strength" },
-      "hours_10": { "name": "Dedicated", "desc": "Accumulate 10 hours of study" },
-      "hours_50": { "name": "Master", "desc": "Accumulate 50 hours of study" },
-      "hours_100": { "name": "Elite Academic", "desc": "100 hours of total study" },
-      "level_10": { "name": "Veteran", "desc": "Reach level 10" },
-      "level_25": { "name": "Expert", "desc": "Reach level 25" },
-      "level_50": { "name": "Grand Master", "desc": "Reach level 50" },
-      "deep_work": { "name": "Deep Worker", "desc": "Complete a 90+ min session" },
-      "pom_10": { "name": "Pomodoro Master", "desc": "Complete 10 pomodoros" }
+      "first_session": {
+        "name": "First Step",
+        "desc": "Complete the first focus session"
+      },
+      "streak_3": {
+        "name": "Consistent",
+        "desc": "Get a 3-day streak"
+      },
+      "streak_7": {
+        "name": "Unstoppable",
+        "desc": "Streak of 7 days in a row"
+      },
+      "streak_30": {
+        "name": "Legend",
+        "desc": "30-day streak!"
+      },
+      "cards_50": {
+        "name": "Explorer",
+        "desc": "Review 50 flashcards"
+      },
+      "cards_500": {
+        "name": "Scholar",
+        "desc": "Review 500 flashcards"
+      },
+      "mem_80": {
+        "name": "Iron Memory",
+        "desc": "Reach 80% memory strength"
+      },
+      "hours_10": {
+        "name": "Dedicated",
+        "desc": "Accumulate 10 hours of study"
+      },
+      "hours_50": {
+        "name": "Master",
+        "desc": "Accumulate 50 hours of study"
+      },
+      "hours_100": {
+        "name": "Elite Academic",
+        "desc": "100 hours of total study"
+      },
+      "level_10": {
+        "name": "Veteran",
+        "desc": "Reach level 10"
+      },
+      "level_25": {
+        "name": "Expert",
+        "desc": "Reach level 25"
+      },
+      "level_50": {
+        "name": "Grand Master",
+        "desc": "Reach level 50"
+      },
+      "deep_work": {
+        "name": "Deep Worker",
+        "desc": "Complete a 90+ min session"
+      },
+      "pom_10": {
+        "name": "Pomodoro Master",
+        "desc": "Complete 10 pomodoros"
+      }
     }
   },
   "cards": {
@@ -304,7 +361,19 @@
     "pullErr": "Download error: {{msg}}",
     "pullOk": "✅ Data synced successfully! Progress restored.",
     "pullEmpty": "Cloud is empty. Push your data first.",
-    "errorGeneric": "Error: {{msg}}"
+    "errorGeneric": "Error: {{msg}}",
+    "magicLinkSent": "Email sent! Check your inbox and click the link.",
+    "sendMagicLink": "Send magic link",
+    "authMagic": "Magic link",
+    "authPassword": "Password",
+    "statusIdle": "Synced",
+    "syncing": "Syncing...",
+    "syncError": "Sync error",
+    "offline": "Offline",
+    "syncStatusLabel": "Status",
+    "lastSyncLabel": "Last sync",
+    "syncAuto": "Data syncs automatically whenever you make changes.",
+    "never": "Never"
   },
   "recovery": {
     "nsdr": {
@@ -334,24 +403,69 @@
       "desc": "Phone, social media, YouTube. Rest must be MODALLY different: walk, breathe, stretch."
     },
     "stretches": {
-      "neck": { "name": "Neck rotation", "desc": "Slowly rotate your head in circles: 5 times each side." },
-      "arms": { "name": "Arm stretch", "desc": "Interlace fingers and stretch upward 15s. Repeat 3 times." },
-      "twist": { "name": "Spinal twist", "desc": "Seated, twist torso left 15s, right 15s. Repeat twice." },
-      "forward": { "name": "Forward fold", "desc": "Standing, bend forward letting arms dangle. 20 seconds." },
-      "cervical": { "name": "Cervical stretch", "desc": "Tilt head to one side 15s, then the other. Repeat." }
+      "neck": {
+        "name": "Neck rotation",
+        "desc": "Slowly rotate your head in circles: 5 times each side."
+      },
+      "arms": {
+        "name": "Arm stretch",
+        "desc": "Interlace fingers and stretch upward 15s. Repeat 3 times."
+      },
+      "twist": {
+        "name": "Spinal twist",
+        "desc": "Seated, twist torso left 15s, right 15s. Repeat twice."
+      },
+      "forward": {
+        "name": "Forward fold",
+        "desc": "Standing, bend forward letting arms dangle. 20 seconds."
+      },
+      "cervical": {
+        "name": "Cervical stretch",
+        "desc": "Tilt head to one side 15s, then the other. Repeat."
+      }
     }
   },
   "headers": {
-    "timer": { "title": "⏱ Scientific Timer", "desc": "Deep Work, Pomodoro and Ultradian" },
-    "cards": { "title": "📇 Flashcards — Successive Relearning", "desc": "Rule of 3 + automatic Spaced Repetition (SRS)" },
-    "feynman": { "title": "🧒 AI Tutor — Illusion Destroyer", "desc": "Enhanced Feynman technique. Explain concepts without jargon and the AI detects fake understanding." },
-    "zero": { "title": "🧭 From Scratch", "desc": "Learn from zero with worked examples and AI-guided active recall" },
-    "languages": { "title": "🌍 Languages — Vocabulary + SRS", "desc": "Learn new words with spaced repetition" },
-    "sounds": { "title": "🎵 Ambient Sound Mixer", "desc": "Craft your perfect soundscape to focus" },
-    "recovery": { "title": "🌙 Recovery Station", "desc": "NSDR, breathing and stretches. REAL rest for the brain." },
-    "exams": { "title": "📅 Exams & Study Plan", "desc": "Automatic SRS based on difficulty" },
-    "stats": { "title": "📊 Advanced Stats", "desc": "Real data on your academic performance" },
-    "techniques": { "title": "📚 Scientific Techniques", "desc": "Based on Dunlosky et al. (2013)" }
+    "timer": {
+      "title": "⏱ Scientific Timer",
+      "desc": "Deep Work, Pomodoro and Ultradian"
+    },
+    "cards": {
+      "title": "📇 Flashcards — Successive Relearning",
+      "desc": "Rule of 3 + automatic Spaced Repetition (SRS)"
+    },
+    "feynman": {
+      "title": "🧒 AI Tutor — Illusion Destroyer",
+      "desc": "Enhanced Feynman technique. Explain concepts without jargon and the AI detects fake understanding."
+    },
+    "zero": {
+      "title": "🧭 From Scratch",
+      "desc": "Learn from zero with worked examples and AI-guided active recall"
+    },
+    "languages": {
+      "title": "🌍 Languages — Vocabulary + SRS",
+      "desc": "Learn new words with spaced repetition"
+    },
+    "sounds": {
+      "title": "🎵 Ambient Sound Mixer",
+      "desc": "Craft your perfect soundscape to focus"
+    },
+    "recovery": {
+      "title": "🌙 Recovery Station",
+      "desc": "NSDR, breathing and stretches. REAL rest for the brain."
+    },
+    "exams": {
+      "title": "📅 Exams & Study Plan",
+      "desc": "Automatic SRS based on difficulty"
+    },
+    "stats": {
+      "title": "📊 Advanced Stats",
+      "desc": "Real data on your academic performance"
+    },
+    "techniques": {
+      "title": "📚 Scientific Techniques",
+      "desc": "Based on Dunlosky et al. (2013)"
+    }
   },
   "conv": {
     "tab": "Converse",

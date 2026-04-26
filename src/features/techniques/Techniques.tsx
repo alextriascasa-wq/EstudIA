@@ -6,8 +6,7 @@ export function Techniques(): JSX.Element {
   const { t } = useTranslation();
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
-  const toggle = (name: string): void =>
-    setOpen((prev) => ({ ...prev, [name]: !prev[name] }));
+  const toggle = (name: string): void => setOpen((prev) => ({ ...prev, [name]: !prev[name] }));
 
   return (
     <div className="sec">
@@ -20,12 +19,9 @@ export function Techniques(): JSX.Element {
         <div className="info-row">
           <span className="info-icon">⛔</span>
           <div>
-            <h4 className="danger-title">
-              NO funcionen: Rellegir, Subratllar, Resums passius
-            </h4>
+            <h4 className="danger-title">NO funcionen: Rellegir, Subratllar, Resums passius</h4>
             <p className="info-body">
-              Impacte NUL demostrat. El cervell confon familiaritat visual amb
-              aprenentatge.
+              Impacte NUL demostrat. El cervell confon familiaritat visual amb aprenentatge.
             </p>
           </div>
         </div>
@@ -34,11 +30,7 @@ export function Techniques(): JSX.Element {
       {TECHNIQUES.map((tech) => {
         const isOpen = open[tech.nm] ?? false;
         return (
-          <div
-            key={tech.nm}
-            className="c glow tech-card"
-            onClick={() => toggle(tech.nm)}
-          >
+          <div key={tech.nm} className="c glow tech-card" onClick={() => toggle(tech.nm)}>
             <div className="tech-card-row">
               <div className="tech-icon" style={{ background: tech.bg }}>
                 {tech.ico}

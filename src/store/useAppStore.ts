@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AppState, DailyLogEntry, ConvMessage, LangCard, ConvSession } from '@/types';
+import type { User, Session } from '@supabase/supabase-js';
+import type { AppState, AuthState, DailyLogEntry, ConvMessage, LangCard, ConvSession, SyncStatus } from '@/types';
 import { DEFAULT_STATE, STATE_KEY } from './defaults';
 import { createIdbStorage } from './persist';
 import { mergeLegacy, readLegacyLocalStorage } from './migration';
@@ -45,10 +46,21 @@ export interface StoreActions {
     sessionId: string,
     cards: Pick<LangCard, 'word' | 'translation' | 'example'>[],
   ) => void;
+  /** Set authenticated user + session. Called by useCloudSync on auth state change. */
+  setAuth: (user: User | null, session: Session | null) => void;
+  /** Update sync status + optionally record lastSyncedAt timestamp. */
+  setSyncStatus: (status: SyncStatus, lastSyncedAt?: string) => void;
 }
 
+const DEFAULT_AUTH_STATE: AuthState = {
+  user: null,
+  session: null,
+  syncStatus: 'idle',
+  lastSyncedAt: null,
+};
+
 export type AppStore = AppState &
-  StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean };
+  StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean; authState: AuthState };
 
 /** Initial state, hydrated from legacy `sfpro` on first boot. */
 const initialState: AppState = mergeLegacy(readLegacyLocalStorage());
@@ -59,6 +71,7 @@ export const useAppStore = create<AppStore>()(
       ...initialState,
       _toastQueue: [],
       _hasHydrated: false,
+      authState: DEFAULT_AUTH_STATE,
 
       setState: (s) => set({ ...s }),
 
@@ -263,6 +276,22 @@ export const useAppStore = create<AppStore>()(
           ),
         }));
         get().save();
+      },
+
+      setAuth: (user, session) => {
+        set((prev) => ({
+          authState: { ...prev.authState, user, session },
+        }));
+      },
+
+      setSyncStatus: (status, lastSyncedAt) => {
+        set((prev) => ({
+          authState: {
+            ...prev.authState,
+            syncStatus: status,
+            ...(lastSyncedAt !== undefined ? { lastSyncedAt } : {}),
+          },
+        }));
       },
 
       queueConvCards: (sessionId, cards) => {

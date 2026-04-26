@@ -19,10 +19,12 @@ const Techniques = lazy(() => import('@/features/techniques/Techniques').then(m 
 const Social     = lazy(() => import('@/features/social/Social').then(m => ({ default: m.Social })));
 const CloudSync  = lazy(() => import('@/features/cloud/CloudSync').then(m => ({ default: m.CloudSync })));
 import { useAppStore } from '@/store/useAppStore';
+import { useCloudSync } from '@/hooks/useCloudSync';
 import { filterDueFlashcards } from '@/lib/srs';
 import { updateAppBadge } from '@/lib/notifications';
 
 export default function App(): JSX.Element {
+  useCloudSync();
   const rolloverIfNeeded = useAppStore((s) => s.rolloverIfNeeded);
   const checkAchievements = useAppStore((s) => s.checkAchievements);
   const save = useAppStore((s) => s.save);

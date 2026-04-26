@@ -167,10 +167,7 @@ export function Timer(): JSX.Element {
           <button className="bs tmr-btn-round" onClick={onReset}>
             ↺
           </button>
-          <button
-            className={`bp tmr-btn-play${running ? ' active' : ''}`}
-            onClick={toggle}
-          >
+          <button className={`bp tmr-btn-play${running ? ' active' : ''}`} onClick={toggle}>
             {running ? '⏸' : '▶'}
           </button>
           {notificationsSupported() && (

@@ -222,10 +222,7 @@ export function Languages(): JSX.Element {
         </div>
         <div className="lang-prog-bars">
           {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className={`lang-prog-bar${(card.sessionHits ?? 0) > i ? ' done' : ''}`}
-            />
+            <div key={i} className={`lang-prog-bar${(card.sessionHits ?? 0) > i ? ' done' : ''}`} />
           ))}
         </div>
         <div className="c fc glow" onClick={() => !showAns && setShowAns(true)}>
@@ -234,9 +231,7 @@ export function Languages(): JSX.Element {
           {showAns ? (
             <>
               <div className="a">✅ {card.translation}</div>
-              {card.example && (
-                <div className="lang-card-example">&quot;{card.example}&quot;</div>
-              )}
+              {card.example && <div className="lang-card-example">&quot;{card.example}&quot;</div>}
             </>
           ) : (
             <div className="hint">Toca per veure la traducció</div>

@@ -5,6 +5,19 @@
  * Names are kept in English; user-facing strings in Catalan live in the UI layer.
  */
 import type { Card as FSRSCard } from 'ts-fsrs';
+import type { User, Session } from '@supabase/supabase-js';
+
+// ─── Auth / Cloud Sync ────────────────────────────────────────────────────────
+
+export type SyncStatus = 'idle' | 'syncing' | 'error' | 'offline';
+
+/** Ephemeral auth state — stored in AppStore but NOT persisted to IndexedDB. */
+export interface AuthState {
+  user: User | null;
+  session: Session | null;
+  syncStatus: SyncStatus;
+  lastSyncedAt: string | null; // ISO 8601
+}
 
 export type Weekday = 'Dl' | 'Dt' | 'Dc' | 'Dj' | 'Dv' | 'Ds' | 'Dg';
 

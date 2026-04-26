@@ -361,10 +361,7 @@ export function ConvIA({ sessionId, deck, scenario, onEnd }: Props): JSX.Element
         )}
 
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={msg.role === 'ai' ? 'conv-msg-wrap-ai' : 'conv-msg-wrap-user'}
-          >
+          <div key={idx} className={msg.role === 'ai' ? 'conv-msg-wrap-ai' : 'conv-msg-wrap-user'}>
             <div className={`c conv-msg ${msg.role === 'ai' ? 'conv-msg-ai' : 'conv-msg-user'}`}>
               <div className="conv-msg-role">
                 {msg.role === 'ai' ? `${scenario.emoji} ${scenario.character}` : 'Tu'}
