@@ -1214,8 +1214,10 @@
   .badge-ok  { background: var(--okl);  color: var(--ok); }
   .badge-p   { background: var(--pl);   color: var(--p);  }
   .badge-w   { background: var(--wl);   color: var(--w);  }
-  .badge-err { background: var(--errl); color: var(--err);}
-  .badge-i   { background: var(--il);   color: var(--i);  }
+  .badge-err  { background: var(--errl); color: var(--err); }
+  .badge-i    { background: var(--il);   color: var(--i);  }
+  .badge-warn { background: var(--wl);   color: var(--w);  }
+  .badge-muted{ background: var(--al);   color: var(--tm); }
 
   /* BUTTON VARIANTS */
   .bs-warn { border-color: var(--w); color: var(--w); }
@@ -2214,18 +2216,34 @@
 /* ═══════════════════════════════════════════
    CLOUD SYNC
    ═══════════════════════════════════════════ */
-.cloud-card { max-width: 500px; margin: 0 auto; }
-.cloud-loading { text-align: center; padding: 40px; }
-.cloud-login { display: flex; flex-direction: column; gap: 16px; }
-.cloud-login-title { font-size: 20px; font-weight: 800; }
-.cloud-login-desc { font-size: 13px; color: var(--ts); }
-.cloud-login-btns { display: flex; gap: 12px; margin-top: 12px; }
-.cloud-status-msg { margin-top: 16px; font-size: 13px; color: var(--a); }
-.cloud-connected { display: flex; flex-direction: column; gap: 20px; text-align: center; }
-.cloud-connected-icon { font-size: 48px; }
-.cloud-connected-title { font-size: 20px; font-weight: 800; }
-.cloud-connected-email { font-size: 13px; color: var(--ts); }
+.cloud-card { max-width: 520px; margin: 0 auto; }
+
+/* Login state */
+.cloud-login { display: flex; flex-direction: column; gap: 20px; }
+.cloud-login-header { display: flex; flex-direction: column; gap: 6px; }
+.cloud-auth-tabs { display: flex; gap: 8px; }
+.cloud-form { display: flex; flex-direction: column; gap: 10px; }
+.cloud-msg-ok  { padding: 10px 14px; border-radius: var(--radius-sm); background: var(--okl); color: var(--ok); font-size: 13px; }
+.cloud-msg-err { padding: 10px 14px; border-radius: var(--radius-sm); background: var(--errl); color: var(--err); font-size: 13px; }
+
+/* Connected state */
+.cloud-connected { display: flex; flex-direction: column; gap: 20px; }
+.cloud-connected-header { display: flex; align-items: center; gap: 14px; }
+.cloud-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--al);
+  color: var(--a);
+  font-size: 18px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border: 1.5px solid var(--b);
+}
+.cloud-sync-info { display: flex; flex-direction: column; gap: 10px; padding: 14px; background: var(--s2); border-radius: var(--radius-sm); border: 1px solid var(--bl); }
+.cloud-sync-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cloud-logout { align-self: flex-start; }
+
+/* Legacy compat */
+.cloud-loading { text-align: center; padding: 40px; color: var(--tm); }
 .cloud-sync-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.cloud-status-ok { font-size: 14px; font-weight: 600; color: var(--ok); }
 .bp-warn { background: var(--w); color: #000; }
-.cloud-logout { margin-top: 24px; align-self: center; font-size: 12px; border: none; }

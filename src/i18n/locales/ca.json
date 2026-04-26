@@ -106,10 +106,22 @@
     "duringFocusDesc": "Mòbil en mode avió i FORA de la vista. Cada minut de Deep Work reforça físicament els circuits neuronals.",
     "duringRestDesc": "NO miris el mòbil. Camina, mira per la finestra, o fes NSDR. El descans ha de ser MODALMENT diferent del treball.",
     "modes": {
-      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repàs, vocabulari" },
-      "d52": { "nm": "Ultradian", "ideal": "Estudi mixt, lectura activa" },
-      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programació" },
-      "d120": { "nm": "Hyper Focus", "ideal": "Projectes complexos, flux total" }
+      "pom": {
+        "nm": "Pomodoro",
+        "ideal": "Flashcards, repàs, vocabulari"
+      },
+      "d52": {
+        "nm": "Ultradian",
+        "ideal": "Estudi mixt, lectura activa"
+      },
+      "d90": {
+        "nm": "Deep Work",
+        "ideal": "Mates, física, programació"
+      },
+      "d120": {
+        "nm": "Hyper Focus",
+        "ideal": "Projectes complexos, flux total"
+      }
     },
     "notifOn": "Notificacions activades",
     "notifOff": "Activa notificacions",
@@ -195,21 +207,66 @@
       "level": "Nivell"
     },
     "ach": {
-      "first_session": { "name": "Primer Pas", "desc": "Completa la primera sessió de focus" },
-      "streak_3": { "name": "Constant", "desc": "Aconsegueix una ratxa de 3 dies" },
-      "streak_7": { "name": "Imparable", "desc": "Ratxa de 7 dies seguits" },
-      "streak_30": { "name": "Llegenda", "desc": "Ratxa de 30 dies!" },
-      "cards_50": { "name": "Explorador", "desc": "Revisa 50 flashcards" },
-      "cards_500": { "name": "Erudit", "desc": "Revisa 500 flashcards" },
-      "mem_80": { "name": "Memòria d'Acer", "desc": "Arriba al 80% de força de memòria" },
-      "hours_10": { "name": "Dedicat", "desc": "Acumula 10 hores d'estudi" },
-      "hours_50": { "name": "Mestre", "desc": "Acumula 50 hores d'estudi" },
-      "hours_100": { "name": "Acadèmic d'Elit", "desc": "100 hores d'estudi total" },
-      "level_10": { "name": "Veterà", "desc": "Arriba al nivell 10" },
-      "level_25": { "name": "Expert", "desc": "Arriba al nivell 25" },
-      "level_50": { "name": "Gran Mestre", "desc": "Arriba al nivell 50" },
-      "deep_work": { "name": "Deep Worker", "desc": "Completa una sessió de 90+ min" },
-      "pom_10": { "name": "Pomodoro Master", "desc": "Completa 10 pomodoros" }
+      "first_session": {
+        "name": "Primer Pas",
+        "desc": "Completa la primera sessió de focus"
+      },
+      "streak_3": {
+        "name": "Constant",
+        "desc": "Aconsegueix una ratxa de 3 dies"
+      },
+      "streak_7": {
+        "name": "Imparable",
+        "desc": "Ratxa de 7 dies seguits"
+      },
+      "streak_30": {
+        "name": "Llegenda",
+        "desc": "Ratxa de 30 dies!"
+      },
+      "cards_50": {
+        "name": "Explorador",
+        "desc": "Revisa 50 flashcards"
+      },
+      "cards_500": {
+        "name": "Erudit",
+        "desc": "Revisa 500 flashcards"
+      },
+      "mem_80": {
+        "name": "Memòria d'Acer",
+        "desc": "Arriba al 80% de força de memòria"
+      },
+      "hours_10": {
+        "name": "Dedicat",
+        "desc": "Acumula 10 hores d'estudi"
+      },
+      "hours_50": {
+        "name": "Mestre",
+        "desc": "Acumula 50 hores d'estudi"
+      },
+      "hours_100": {
+        "name": "Acadèmic d'Elit",
+        "desc": "100 hores d'estudi total"
+      },
+      "level_10": {
+        "name": "Veterà",
+        "desc": "Arriba al nivell 10"
+      },
+      "level_25": {
+        "name": "Expert",
+        "desc": "Arriba al nivell 25"
+      },
+      "level_50": {
+        "name": "Gran Mestre",
+        "desc": "Arriba al nivell 50"
+      },
+      "deep_work": {
+        "name": "Deep Worker",
+        "desc": "Completa una sessió de 90+ min"
+      },
+      "pom_10": {
+        "name": "Pomodoro Master",
+        "desc": "Completa 10 pomodoros"
+      }
     }
   },
   "cards": {
@@ -304,7 +361,19 @@
     "pullErr": "Error baixant dades: {{msg}}",
     "pullOk": "✅ Dades sincronitzades correctament! Has recuperat el teu progrés.",
     "pullEmpty": "El núvol està buit. Puja les dades primer.",
-    "errorGeneric": "Error: {{msg}}"
+    "errorGeneric": "Error: {{msg}}",
+    "magicLinkSent": "Correu enviat! Revisa la teva bústia i fes clic a l'enllaç.",
+    "sendMagicLink": "Enviar enllaç màgic",
+    "authMagic": "Enllaç màgic",
+    "authPassword": "Contrasenya",
+    "statusIdle": "Sincronitzat",
+    "syncing": "Sincronitzant...",
+    "syncError": "Error de sync",
+    "offline": "Sense connexió",
+    "syncStatusLabel": "Estat",
+    "lastSyncLabel": "Última sync",
+    "syncAuto": "Les dades es sincronitzen automàticament cada vegada que fas canvis.",
+    "never": "Mai"
   },
   "recovery": {
     "nsdr": {
@@ -334,24 +403,69 @@
       "desc": "Mòbil, xarxes socials, YouTube. El descans ha de ser MODALMENT diferent: caminar, respirar, estirar."
     },
     "stretches": {
-      "neck": { "name": "Rotació de coll", "desc": "Gira el cap lentament en cercles: 5 vegades a cada costat." },
-      "arms": { "name": "Estirament de braços", "desc": "Entrellaça els dits i estira cap amunt 15s. Repeteix 3 cops." },
-      "twist": { "name": "Torsió espinal", "desc": "Assegut, gira el tors esquerra 15s, dreta 15s. Repeteix 2 cops." },
-      "forward": { "name": "Flexió endavant", "desc": "De peu, inclina't endavant deixant caure els braços. 20 segons." },
-      "cervical": { "name": "Estirament cervical", "desc": "Inclina el cap cap a un costat 15s, després l'altre. Repeteix." }
+      "neck": {
+        "name": "Rotació de coll",
+        "desc": "Gira el cap lentament en cercles: 5 vegades a cada costat."
+      },
+      "arms": {
+        "name": "Estirament de braços",
+        "desc": "Entrellaça els dits i estira cap amunt 15s. Repeteix 3 cops."
+      },
+      "twist": {
+        "name": "Torsió espinal",
+        "desc": "Assegut, gira el tors esquerra 15s, dreta 15s. Repeteix 2 cops."
+      },
+      "forward": {
+        "name": "Flexió endavant",
+        "desc": "De peu, inclina't endavant deixant caure els braços. 20 segons."
+      },
+      "cervical": {
+        "name": "Estirament cervical",
+        "desc": "Inclina el cap cap a un costat 15s, després l'altre. Repeteix."
+      }
     }
   },
   "headers": {
-    "timer": { "title": "⏱ Temporitzador Científic", "desc": "Deep Work, Pomodoro i Ultradian" },
-    "cards": { "title": "📇 Flashcards — Reaprenentatge Successiu", "desc": "Regla del 3 + Repetició Espaïada automàtica (SRS)" },
-    "feynman": { "title": "🧒 Tutor IA — Destructor d'Il·lusions", "desc": "Tècnica Feynman potenciada. Explica conceptes sense jerga i l'IA detecta comprensió falsa." },
-    "zero": { "title": "🧭 Des de Zero", "desc": "Aprèn des de zero amb exemples resolts i recuperació activa guiada per IA" },
-    "languages": { "title": "🌍 Idiomes — Vocabulari + SRS", "desc": "Aprèn paraules noves amb el sistema de repetició espaïada" },
-    "sounds": { "title": "🎵 Mixer de Sons Ambientals", "desc": "Crea el teu paisatge sonor perfecte per concentrar-te" },
-    "recovery": { "title": "🌙 Estació de Recuperació", "desc": "NSDR, respiració i estiraments. Descans REAL per al cervell." },
-    "exams": { "title": "📅 Exàmens i Pla d'Estudi", "desc": "SRS automàtic basat en la dificultat" },
-    "stats": { "title": "📊 Estadístiques Avançades", "desc": "Dades reals del teu rendiment acadèmic" },
-    "techniques": { "title": "📚 Tècniques Científiques", "desc": "Basades en Dunlosky et al. (2013)" }
+    "timer": {
+      "title": "⏱ Temporitzador Científic",
+      "desc": "Deep Work, Pomodoro i Ultradian"
+    },
+    "cards": {
+      "title": "📇 Flashcards — Reaprenentatge Successiu",
+      "desc": "Regla del 3 + Repetició Espaïada automàtica (SRS)"
+    },
+    "feynman": {
+      "title": "🧒 Tutor IA — Destructor d'Il·lusions",
+      "desc": "Tècnica Feynman potenciada. Explica conceptes sense jerga i l'IA detecta comprensió falsa."
+    },
+    "zero": {
+      "title": "🧭 Des de Zero",
+      "desc": "Aprèn des de zero amb exemples resolts i recuperació activa guiada per IA"
+    },
+    "languages": {
+      "title": "🌍 Idiomes — Vocabulari + SRS",
+      "desc": "Aprèn paraules noves amb el sistema de repetició espaïada"
+    },
+    "sounds": {
+      "title": "🎵 Mixer de Sons Ambientals",
+      "desc": "Crea el teu paisatge sonor perfecte per concentrar-te"
+    },
+    "recovery": {
+      "title": "🌙 Estació de Recuperació",
+      "desc": "NSDR, respiració i estiraments. Descans REAL per al cervell."
+    },
+    "exams": {
+      "title": "📅 Exàmens i Pla d'Estudi",
+      "desc": "SRS automàtic basat en la dificultat"
+    },
+    "stats": {
+      "title": "📊 Estadístiques Avançades",
+      "desc": "Dades reals del teu rendiment acadèmic"
+    },
+    "techniques": {
+      "title": "📚 Tècniques Científiques",
+      "desc": "Basades en Dunlosky et al. (2013)"
+    }
   },
   "conv": {
     "tab": "Conversa",

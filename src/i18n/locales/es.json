@@ -106,10 +106,22 @@
     "duringFocusDesc": "Móvil en modo avión y FUERA de la vista. Cada minuto de Deep Work refuerza físicamente los circuitos neuronales.",
     "duringRestDesc": "NO mires el móvil. Camina, mira por la ventana o haz NSDR. El descanso debe ser MODALMENTE distinto del trabajo.",
     "modes": {
-      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repaso, vocabulario" },
-      "d52": { "nm": "Ultradiano", "ideal": "Estudio mixto, lectura activa" },
-      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programación" },
-      "d120": { "nm": "Hyper Focus", "ideal": "Proyectos complejos, flujo total" }
+      "pom": {
+        "nm": "Pomodoro",
+        "ideal": "Flashcards, repaso, vocabulario"
+      },
+      "d52": {
+        "nm": "Ultradiano",
+        "ideal": "Estudio mixto, lectura activa"
+      },
+      "d90": {
+        "nm": "Deep Work",
+        "ideal": "Mates, física, programación"
+      },
+      "d120": {
+        "nm": "Hyper Focus",
+        "ideal": "Proyectos complejos, flujo total"
+      }
     },
     "notifOn": "Notificaciones activadas",
     "notifOff": "Activar notificaciones",
@@ -195,21 +207,66 @@
       "level": "Nivel"
     },
     "ach": {
-      "first_session": { "name": "Primer Paso", "desc": "Completa la primera sesión de focus" },
-      "streak_3": { "name": "Constante", "desc": "Consigue una racha de 3 días" },
-      "streak_7": { "name": "Imparable", "desc": "Racha de 7 días seguidos" },
-      "streak_30": { "name": "Leyenda", "desc": "¡Racha de 30 días!" },
-      "cards_50": { "name": "Explorador", "desc": "Revisa 50 flashcards" },
-      "cards_500": { "name": "Erudito", "desc": "Revisa 500 flashcards" },
-      "mem_80": { "name": "Memoria de Acero", "desc": "Llega al 80% de fuerza de memoria" },
-      "hours_10": { "name": "Dedicado", "desc": "Acumula 10 horas de estudio" },
-      "hours_50": { "name": "Maestro", "desc": "Acumula 50 horas de estudio" },
-      "hours_100": { "name": "Académico de Élite", "desc": "100 horas de estudio total" },
-      "level_10": { "name": "Veterano", "desc": "Llega al nivel 10" },
-      "level_25": { "name": "Experto", "desc": "Llega al nivel 25" },
-      "level_50": { "name": "Gran Maestro", "desc": "Llega al nivel 50" },
-      "deep_work": { "name": "Deep Worker", "desc": "Completa una sesión de 90+ min" },
-      "pom_10": { "name": "Pomodoro Master", "desc": "Completa 10 pomodoros" }
+      "first_session": {
+        "name": "Primer Paso",
+        "desc": "Completa la primera sesión de focus"
+      },
+      "streak_3": {
+        "name": "Constante",
+        "desc": "Consigue una racha de 3 días"
+      },
+      "streak_7": {
+        "name": "Imparable",
+        "desc": "Racha de 7 días seguidos"
+      },
+      "streak_30": {
+        "name": "Leyenda",
+        "desc": "¡Racha de 30 días!"
+      },
+      "cards_50": {
+        "name": "Explorador",
+        "desc": "Revisa 50 flashcards"
+      },
+      "cards_500": {
+        "name": "Erudito",
+        "desc": "Revisa 500 flashcards"
+      },
+      "mem_80": {
+        "name": "Memoria de Acero",
+        "desc": "Llega al 80% de fuerza de memoria"
+      },
+      "hours_10": {
+        "name": "Dedicado",
+        "desc": "Acumula 10 horas de estudio"
+      },
+      "hours_50": {
+        "name": "Maestro",
+        "desc": "Acumula 50 horas de estudio"
+      },
+      "hours_100": {
+        "name": "Académico de Élite",
+        "desc": "100 horas de estudio total"
+      },
+      "level_10": {
+        "name": "Veterano",
+        "desc": "Llega al nivel 10"
+      },
+      "level_25": {
+        "name": "Experto",
+        "desc": "Llega al nivel 25"
+      },
+      "level_50": {
+        "name": "Gran Maestro",
+        "desc": "Llega al nivel 50"
+      },
+      "deep_work": {
+        "name": "Deep Worker",
+        "desc": "Completa una sesión de 90+ min"
+      },
+      "pom_10": {
+        "name": "Pomodoro Master",
+        "desc": "Completa 10 pomodoros"
+      }
     }
   },
   "cards": {
@@ -304,7 +361,19 @@
     "pullErr": "Error bajando datos: {{msg}}",
     "pullOk": "✅ ¡Datos sincronizados correctamente! Has recuperado tu progreso.",
     "pullEmpty": "La nube está vacía. Sube los datos primero.",
-    "errorGeneric": "Error: {{msg}}"
+    "errorGeneric": "Error: {{msg}}",
+    "magicLinkSent": "Email enviado. Revisa tu bandeja y haz clic en el enlace.",
+    "sendMagicLink": "Enviar enlace mágico",
+    "authMagic": "Enlace mágico",
+    "authPassword": "Contraseña",
+    "statusIdle": "Sincronizado",
+    "syncing": "Sincronizando...",
+    "syncError": "Error de sync",
+    "offline": "Sin conexión",
+    "syncStatusLabel": "Estado",
+    "lastSyncLabel": "Última sync",
+    "syncAuto": "Los datos se sincronizan automáticamente con cada cambio.",
+    "never": "Nunca"
   },
   "recovery": {
     "nsdr": {
@@ -334,24 +403,69 @@
       "desc": "Móvil, redes sociales, YouTube. El descanso debe ser MODALMENTE distinto: caminar, respirar, estirar."
     },
     "stretches": {
-      "neck": { "name": "Rotación de cuello", "desc": "Gira la cabeza lentamente en círculos: 5 veces a cada lado." },
-      "arms": { "name": "Estiramiento de brazos", "desc": "Entrelaza los dedos y estira hacia arriba 15s. Repite 3 veces." },
-      "twist": { "name": "Torsión espinal", "desc": "Sentado, gira el torso izquierda 15s, derecha 15s. Repite 2 veces." },
-      "forward": { "name": "Flexión adelante", "desc": "De pie, inclínate adelante dejando caer los brazos. 20 segundos." },
-      "cervical": { "name": "Estiramiento cervical", "desc": "Inclina la cabeza a un lado 15s, después al otro. Repite." }
+      "neck": {
+        "name": "Rotación de cuello",
+        "desc": "Gira la cabeza lentamente en círculos: 5 veces a cada lado."
+      },
+      "arms": {
+        "name": "Estiramiento de brazos",
+        "desc": "Entrelaza los dedos y estira hacia arriba 15s. Repite 3 veces."
+      },
+      "twist": {
+        "name": "Torsión espinal",
+        "desc": "Sentado, gira el torso izquierda 15s, derecha 15s. Repite 2 veces."
+      },
+      "forward": {
+        "name": "Flexión adelante",
+        "desc": "De pie, inclínate adelante dejando caer los brazos. 20 segundos."
+      },
+      "cervical": {
+        "name": "Estiramiento cervical",
+        "desc": "Inclina la cabeza a un lado 15s, después al otro. Repite."
+      }
     }
   },
   "headers": {
-    "timer": { "title": "⏱ Temporizador Científico", "desc": "Deep Work, Pomodoro y Ultradiano" },
-    "cards": { "title": "📇 Flashcards — Reaprendizaje Sucesivo", "desc": "Regla del 3 + Repetición Espaciada automática (SRS)" },
-    "feynman": { "title": "🧒 Tutor IA — Destructor de Ilusiones", "desc": "Técnica Feynman potenciada. Explica conceptos sin jerga y la IA detecta comprensión falsa." },
-    "zero": { "title": "🧭 Desde Cero", "desc": "Aprende desde cero con ejemplos resueltos y recuperación activa guiada por IA" },
-    "languages": { "title": "🌍 Idiomas — Vocabulario + SRS", "desc": "Aprende palabras nuevas con repetición espaciada" },
-    "sounds": { "title": "🎵 Mixer de Sonidos Ambientales", "desc": "Crea tu paisaje sonoro perfecto para concentrarte" },
-    "recovery": { "title": "🌙 Estación de Recuperación", "desc": "NSDR, respiración y estiramientos. Descanso REAL para el cerebro." },
-    "exams": { "title": "📅 Exámenes y Plan de Estudio", "desc": "SRS automático basado en la dificultad" },
-    "stats": { "title": "📊 Estadísticas Avanzadas", "desc": "Datos reales de tu rendimiento académico" },
-    "techniques": { "title": "📚 Técnicas Científicas", "desc": "Basadas en Dunlosky et al. (2013)" }
+    "timer": {
+      "title": "⏱ Temporizador Científico",
+      "desc": "Deep Work, Pomodoro y Ultradiano"
+    },
+    "cards": {
+      "title": "📇 Flashcards — Reaprendizaje Sucesivo",
+      "desc": "Regla del 3 + Repetición Espaciada automática (SRS)"
+    },
+    "feynman": {
+      "title": "🧒 Tutor IA — Destructor de Ilusiones",
+      "desc": "Técnica Feynman potenciada. Explica conceptos sin jerga y la IA detecta comprensión falsa."
+    },
+    "zero": {
+      "title": "🧭 Desde Cero",
+      "desc": "Aprende desde cero con ejemplos resueltos y recuperación activa guiada por IA"
+    },
+    "languages": {
+      "title": "🌍 Idiomas — Vocabulario + SRS",
+      "desc": "Aprende palabras nuevas con repetición espaciada"
+    },
+    "sounds": {
+      "title": "🎵 Mixer de Sonidos Ambientales",
+      "desc": "Crea tu paisaje sonoro perfecto para concentrarte"
+    },
+    "recovery": {
+      "title": "🌙 Estación de Recuperación",
+      "desc": "NSDR, respiración y estiramientos. Descanso REAL para el cerebro."
+    },
+    "exams": {
+      "title": "📅 Exámenes y Plan de Estudio",
+      "desc": "SRS automático basado en la dificultad"
+    },
+    "stats": {
+      "title": "📊 Estadísticas Avanzadas",
+      "desc": "Datos reales de tu rendimiento académico"
+    },
+    "techniques": {
+      "title": "📚 Técnicas Científicas",
+      "desc": "Basadas en Dunlosky et al. (2013)"
+    }
   },
   "conv": {
     "tab": "Conversar",
