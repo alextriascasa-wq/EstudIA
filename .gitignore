@@ -43,6 +43,7 @@ worker/.dev.vars
 .agent/
 .agents/
 .superpowers/
+.worktrees/
 memory/
 scratch/
 
