@@ -8,6 +8,7 @@ import type {
   ConvMessage,
   LangCard,
   ConvSession,
+  StudyProfile,
   SyncStatus,
 } from '@/types';
 import { DEFAULT_STATE, STATE_KEY } from './defaults';
@@ -64,6 +65,14 @@ export interface StoreActions {
   updateActiveExam: (patch: Partial<import('@/types').ActiveExamState>) => void;
   /** Clear the in-progress exam (call on submit or explicit cancel). */
   clearActiveExam: () => void;
+  /** Replace the entire study profile (full wizard submission). */
+  setStudyProfile: (p: StudyProfile) => void;
+  /** Patch existing study profile (used by /perfil edit). No-op if null. */
+  updateStudyProfile: (patch: Partial<StudyProfile>) => void;
+  /** Mark the "complete your profile" banner as dismissed. */
+  dismissProfileBanner: () => void;
+  /** Persist AI-generated narrative for the plan page. */
+  setPlanNarrative: (text: string | null) => void;
 }
 
 const DEFAULT_AUTH_STATE: AuthState = {
@@ -348,6 +357,30 @@ export const useAppStore = create<AppStore>()(
 
       clearActiveExam: () => {
         set({ activeExam: null });
+      },
+
+      setStudyProfile: (p) => {
+        set({ studyProfile: p, hasCompletedOnboarding: true });
+        get().save();
+      },
+
+      updateStudyProfile: (patch) => {
+        set((prev) => ({
+          studyProfile: prev.studyProfile
+            ? { ...prev.studyProfile, ...patch, completedAt: new Date().toISOString() }
+            : prev.studyProfile,
+        }));
+        get().save();
+      },
+
+      dismissProfileBanner: () => {
+        set({ profileBannerDismissed: true });
+        get().save();
+      },
+
+      setPlanNarrative: (text) => {
+        set({ planNarrative: text });
+        get().save();
       },
     }),
     {
