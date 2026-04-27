@@ -6,18 +6,32 @@ import { XPPopupHost } from '@/components/ui/XPPopup';
 import { OnboardingModal } from '@/components/ui/OnboardingModal';
 import { BottomNav } from '@/components/Layout/BottomNav';
 
-const Dashboard  = lazy(() => import('@/features/dashboard/Dashboard').then(m => ({ default: m.Dashboard })));
-const Timer      = lazy(() => import('@/features/timer/Timer').then(m => ({ default: m.Timer })));
-const Flashcards = lazy(() => import('@/features/flashcards/Flashcards').then(m => ({ default: m.Flashcards })));
-const Feynman    = lazy(() => import('@/features/feynman/Feynman').then(m => ({ default: m.Feynman })));
-const Languages  = lazy(() => import('@/features/languages/Languages').then(m => ({ default: m.Languages })));
-const Sounds     = lazy(() => import('@/features/sounds/Sounds').then(m => ({ default: m.Sounds })));
-const Recovery   = lazy(() => import('@/features/recovery/Recovery').then(m => ({ default: m.Recovery })));
-const Exams      = lazy(() => import('@/features/exams/Exams').then(m => ({ default: m.Exams })));
-const Stats      = lazy(() => import('@/features/stats/Stats').then(m => ({ default: m.Stats })));
-const Techniques = lazy(() => import('@/features/techniques/Techniques').then(m => ({ default: m.Techniques })));
-const Social     = lazy(() => import('@/features/social/Social').then(m => ({ default: m.Social })));
-const CloudSync  = lazy(() => import('@/features/cloud/CloudSync').then(m => ({ default: m.CloudSync })));
+const Dashboard = lazy(() =>
+  import('@/features/dashboard/Dashboard').then((m) => ({ default: m.Dashboard })),
+);
+const Timer = lazy(() => import('@/features/timer/Timer').then((m) => ({ default: m.Timer })));
+const Flashcards = lazy(() =>
+  import('@/features/flashcards/Flashcards').then((m) => ({ default: m.Flashcards })),
+);
+const Feynman = lazy(() =>
+  import('@/features/feynman/Feynman').then((m) => ({ default: m.Feynman })),
+);
+const Languages = lazy(() =>
+  import('@/features/languages/Languages').then((m) => ({ default: m.Languages })),
+);
+const Sounds = lazy(() => import('@/features/sounds/Sounds').then((m) => ({ default: m.Sounds })));
+const Recovery = lazy(() =>
+  import('@/features/recovery/Recovery').then((m) => ({ default: m.Recovery })),
+);
+const Exams = lazy(() => import('@/features/exams/Exams').then((m) => ({ default: m.Exams })));
+const Stats = lazy(() => import('@/features/stats/Stats').then((m) => ({ default: m.Stats })));
+const Techniques = lazy(() =>
+  import('@/features/techniques/Techniques').then((m) => ({ default: m.Techniques })),
+);
+const Social = lazy(() => import('@/features/social/Social').then((m) => ({ default: m.Social })));
+const CloudSync = lazy(() =>
+  import('@/features/cloud/CloudSync').then((m) => ({ default: m.CloudSync })),
+);
 import { useAppStore } from '@/store/useAppStore';
 import { useCloudSync } from '@/hooks/useCloudSync';
 import { filterDueFlashcards } from '@/lib/srs';

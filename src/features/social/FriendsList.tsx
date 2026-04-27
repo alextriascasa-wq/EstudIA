@@ -7,10 +7,17 @@ import type { UserProfile } from '@/types';
 export function FriendsList(): JSX.Element {
   const { t } = useTranslation();
   const {
-    accepted, pending,
-    loading, error,
-    searchResults, searching,
-    search, sendRequest, acceptRequest, declineRequest, unfriend,
+    accepted,
+    pending,
+    loading,
+    error,
+    searchResults,
+    searching,
+    search,
+    sendRequest,
+    acceptRequest,
+    declineRequest,
+    unfriend,
   } = useFriends();
 
   const [query, setQuery] = useState('');
@@ -24,7 +31,9 @@ export function FriendsList(): JSX.Element {
     <div className="friends-list">
       {/* Add friend search */}
       <div className="c" style={{ marginBottom: 24 }}>
-        <h4 className="lbl" style={{ marginBottom: 12 }}>{t('social.addFriend')}</h4>
+        <h4 className="lbl" style={{ marginBottom: 12 }}>
+          {t('social.addFriend')}
+        </h4>
         <form className="friends-search-row" onSubmit={handleSearch}>
           <input
             type="email"
@@ -66,17 +75,27 @@ export function FriendsList(): JSX.Element {
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {pending.map((f) => (
-              <div key={f.id} className="c" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div
+                key={f.id}
+                className="c"
+                style={{ display: 'flex', alignItems: 'center', gap: 12 }}
+              >
                 <div className="friend-avatar-sm">
                   {(f.friend?.username?.[0] ?? '?').toUpperCase()}
                 </div>
-                <span style={{ flex: 1, fontWeight: 600 }}>
-                  {f.friend?.username ?? f.userId}
-                </span>
-                <button className="bs" style={{ fontSize: 13 }} onClick={() => void declineRequest(f.id)}>
+                <span style={{ flex: 1, fontWeight: 600 }}>{f.friend?.username ?? f.userId}</span>
+                <button
+                  className="bs"
+                  style={{ fontSize: 13 }}
+                  onClick={() => void declineRequest(f.id)}
+                >
                   {t('social.decline')}
                 </button>
-                <button className="bp" style={{ fontSize: 13 }} onClick={() => void acceptRequest(f.id)}>
+                <button
+                  className="bp"
+                  style={{ fontSize: 13 }}
+                  onClick={() => void acceptRequest(f.id)}
+                >
                   {t('social.accept')}
                 </button>
               </div>
@@ -86,8 +105,16 @@ export function FriendsList(): JSX.Element {
       )}
 
       {/* Loading / error */}
-      {loading && <div className="c empty"><p style={{ color: 'var(--ts)' }}>…</p></div>}
-      {!loading && error && <div className="c empty"><p style={{ color: 'var(--err)' }}>{error}</p></div>}
+      {loading && (
+        <div className="c empty">
+          <p style={{ color: 'var(--ts)' }}>…</p>
+        </div>
+      )}
+      {!loading && error && (
+        <div className="c empty">
+          <p style={{ color: 'var(--err)' }}>{error}</p>
+        </div>
+      )}
 
       {/* Empty state */}
       {!loading && !error && accepted.length === 0 && (

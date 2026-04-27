@@ -14,9 +14,9 @@ import { MOCK_FRIENDS } from '@/lib/mockFriends';
 type SocialTab = 'friends' | 'feed' | 'challenges' | 'leaderboard';
 
 const TABS: { id: SocialTab; icon: string; labelKey: string }[] = [
-  { id: 'friends',     icon: '👥', labelKey: 'social.friends' },
-  { id: 'feed',        icon: '📡', labelKey: 'social.feed.title' },
-  { id: 'challenges',  icon: '⚔️', labelKey: 'social.challenges' },
+  { id: 'friends', icon: '👥', labelKey: 'social.friends' },
+  { id: 'feed', icon: '📡', labelKey: 'social.feed.title' },
+  { id: 'challenges', icon: '⚔️', labelKey: 'social.challenges' },
   { id: 'leaderboard', icon: '🏆', labelKey: 'social.leaderboard' },
 ];
 
@@ -56,22 +56,28 @@ export function Social(): JSX.Element {
       </div>
 
       {/* Friends */}
-      {activeTab === 'friends' && (
-        user
-          ? <FriendsList />
-          : <div className="c empty"><p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p></div>
-      )}
+      {activeTab === 'friends' &&
+        (user ? (
+          <FriendsList />
+        ) : (
+          <div className="c empty">
+            <p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p>
+          </div>
+        ))}
 
       {/* Activity feed */}
-      {activeTab === 'feed' && (
-        user
-          ? <ActivityFeed accepted={accepted} />
-          : <div className="c empty"><p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p></div>
-      )}
+      {activeTab === 'feed' &&
+        (user ? (
+          <ActivityFeed accepted={accepted} />
+        ) : (
+          <div className="c empty">
+            <p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p>
+          </div>
+        ))}
 
       {/* Challenges */}
-      {activeTab === 'challenges' && (
-        user ? (
+      {activeTab === 'challenges' &&
+        (user ? (
           <>
             {accepted.length > 0 && (
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
@@ -83,9 +89,10 @@ export function Social(): JSX.Element {
             <ChallengeList />
           </>
         ) : (
-          <div className="c empty"><p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p></div>
-        )
-      )}
+          <div className="c empty">
+            <p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p>
+          </div>
+        ))}
 
       {/* Leaderboard */}
       {activeTab === 'leaderboard' && (
@@ -113,9 +120,7 @@ export function Social(): JSX.Element {
       )}
 
       {/* Legacy share modal */}
-      {shareTarget && (
-        <ShareModal friend={shareTarget} onClose={() => setShareTarget(null)} />
-      )}
+      {shareTarget && <ShareModal friend={shareTarget} onClose={() => setShareTarget(null)} />}
     </div>
   );
 }

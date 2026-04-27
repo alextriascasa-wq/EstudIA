@@ -8,10 +8,10 @@ type AuthTab = 'magic' | 'password';
 function SyncStatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
   const map: Record<string, { cls: string; label: string }> = {
-    idle:    { cls: 'badge-ok',   label: t('cloud.statusIdle') },
+    idle: { cls: 'badge-ok', label: t('cloud.statusIdle') },
     syncing: { cls: 'badge-warn', label: t('cloud.syncing') },
-    error:   { cls: 'badge-err',  label: t('cloud.syncError') },
-    offline: { cls: 'badge-muted',label: t('cloud.offline') },
+    error: { cls: 'badge-err', label: t('cloud.syncError') },
+    offline: { cls: 'badge-muted', label: t('cloud.offline') },
   };
   const { cls, label } = map[status] ?? map.idle;
   return <span className={`badge ${cls}`}>{label}</span>;
@@ -72,7 +72,9 @@ export function CloudSync(): JSX.Element {
           <div className="cloud-login">
             <div className="cloud-login-header">
               <h3 className="t-h2">{t('cloud.loginTitle')}</h3>
-              <p className="t-body" style={{ color: 'var(--ts)' }}>{t('cloud.loginDesc')}</p>
+              <p className="t-body" style={{ color: 'var(--ts)' }}>
+                {t('cloud.loginDesc')}
+              </p>
             </div>
 
             <div className="cloud-auth-tabs">
@@ -129,19 +131,17 @@ export function CloudSync(): JSX.Element {
               </button>
             </div>
 
-            {msg && (
-              <div className={msg.ok ? 'cloud-msg-ok' : 'cloud-msg-err'}>{msg.text}</div>
-            )}
+            {msg && <div className={msg.ok ? 'cloud-msg-ok' : 'cloud-msg-err'}>{msg.text}</div>}
           </div>
         ) : (
           <div className="cloud-connected">
             <div className="cloud-connected-header">
-              <div className="cloud-avatar">
-                {authState.user.email?.[0]?.toUpperCase() ?? '?'}
-              </div>
+              <div className="cloud-avatar">{authState.user.email?.[0]?.toUpperCase() ?? '?'}</div>
               <div>
                 <h3 className="t-h3">{t('cloud.connected')}</h3>
-                <p className="t-sm" style={{ color: 'var(--ts)' }}>{authState.user.email}</p>
+                <p className="t-sm" style={{ color: 'var(--ts)' }}>
+                  {authState.user.email}
+                </p>
               </div>
             </div>
 

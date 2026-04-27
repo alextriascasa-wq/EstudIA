@@ -1,7 +1,15 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User, Session } from '@supabase/supabase-js';
-import type { AppState, AuthState, DailyLogEntry, ConvMessage, LangCard, ConvSession, SyncStatus } from '@/types';
+import type {
+  AppState,
+  AuthState,
+  DailyLogEntry,
+  ConvMessage,
+  LangCard,
+  ConvSession,
+  SyncStatus,
+} from '@/types';
 import { DEFAULT_STATE, STATE_KEY } from './defaults';
 import { createIdbStorage } from './persist';
 import { mergeLegacy, readLegacyLocalStorage } from './migration';

@@ -82,7 +82,10 @@ export function useChallenges(): UseChallengesReturn {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (!user) { setChallenges([]); return; }
+    if (!user) {
+      setChallenges([]);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -96,7 +99,9 @@ export function useChallenges(): UseChallengesReturn {
     }
   }, [user]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const create = useCallback(
     async (
@@ -105,30 +110,28 @@ export function useChallenges(): UseChallengesReturn {
       params: { durationDays: number; targetCount: number; subject?: string },
     ) => {
       if (!user) return;
-      const endsAt = new Date(
-        Date.now() + params.durationDays * 24 * 60 * 60 * 1000,
-      ).toISOString();
-      await createChallenge(
-        user.id,
-        opponentId,
-        type,
-        params as Record<string, unknown>,
-        endsAt,
-      );
+      const endsAt = new Date(Date.now() + params.durationDays * 24 * 60 * 60 * 1000).toISOString();
+      await createChallenge(user.id, opponentId, type, params as Record<string, unknown>, endsAt);
       await load();
     },
     [user, load],
   );
 
-  const accept = useCallback(async (id: string) => {
-    await respondChallenge(id, 'accepted');
-    await load();
-  }, [load]);
+  const accept = useCallback(
+    async (id: string) => {
+      await respondChallenge(id, 'accepted');
+      await load();
+    },
+    [load],
+  );
 
-  const decline = useCallback(async (id: string) => {
-    await respondChallenge(id, 'declined');
-    await load();
-  }, [load]);
+  const decline = useCallback(
+    async (id: string) => {
+      await respondChallenge(id, 'declined');
+      await load();
+    },
+    [load],
+  );
 
   const complete = useCallback(
     async (
@@ -141,20 +144,21 @@ export function useChallenges(): UseChallengesReturn {
     [load],
   );
 
-  const active = challenges.filter(
-    (c) => c.status === 'active' || c.status === 'accepted',
-  );
-  const pending = challenges.filter(
-    (c) => c.status === 'pending' && c.creatorId !== user?.id,
-  );
-  const completed = challenges.filter(
-    (c) => c.status === 'completed' || c.status === 'declined',
-  );
+  const active = challenges.filter((c) => c.status === 'active' || c.status === 'accepted');
+  const pending = challenges.filter((c) => c.status === 'pending' && c.creatorId !== user?.id);
+  const completed = challenges.filter((c) => c.status === 'completed' || c.status === 'declined');
 
   return {
-    challenges, active, pending, completed,
-    loading, error,
-    create, accept, decline, complete,
+    challenges,
+    active,
+    pending,
+    completed,
+    loading,
+    error,
+    create,
+    accept,
+    decline,
+    complete,
     refresh: load,
   };
 }

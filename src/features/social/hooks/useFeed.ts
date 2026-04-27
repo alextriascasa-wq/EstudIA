@@ -56,7 +56,10 @@ export function useFeed(friendIds: string[]): UseFeedReturn {
   const idsKey = friendIds.join(',');
 
   const load = useCallback(async () => {
-    if (!user || friendIds.length === 0) { setEvents([]); return; }
+    if (!user || friendIds.length === 0) {
+      setEvents([]);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -68,10 +71,12 @@ export function useFeed(friendIds: string[]): UseFeedReturn {
     } finally {
       setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, idsKey]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   // Realtime: subscribe to new activity events from friends
   useEffect(() => {
@@ -97,8 +102,10 @@ export function useFeed(friendIds: string[]): UseFeedReturn {
       .subscribe();
 
     channelRef.current = channel;
-    return () => { void channel.unsubscribe(); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      void channel.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, idsKey]);
 
   return { events, loading, error, refresh: load };

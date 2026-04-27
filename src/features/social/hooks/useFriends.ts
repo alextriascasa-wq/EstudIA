@@ -81,7 +81,10 @@ export function useFriends(): UseFriendsReturn {
   const [searching, setSearching] = useState(false);
 
   const load = useCallback(async () => {
-    if (!user) { setFriendships([]); return; }
+    if (!user) {
+      setFriendships([]);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -98,55 +101,70 @@ export function useFriends(): UseFriendsReturn {
     }
   }, [user]);
 
-  useEffect(() => { void load(); }, [load]);
-
-  const search = useCallback(async (email: string) => {
-    if (!email.trim() || !user) return;
-    setSearching(true);
-    try {
-      const { data } = await searchUserByEmail(email.trim());
-      const results: UserProfile[] = ((data ?? []) as RawProfile[])
-        .filter((p) => p.id !== user.id)
-        .map((p) => ({
-          id: p.id,
-          username: p.username,
-          avatarUrl: p.avatar_url,
-          xp: p.xp ?? 0,
-          streak: p.streak ?? 0,
-          isPublic: p.is_public ?? false,
-        }));
-      setSearchResults(results);
-    } finally {
-      setSearching(false);
-    }
-  }, [user]);
-
-  const sendRequest = useCallback(async (friendId: string) => {
-    if (!user) return;
-    await sendFriendRequest(user.id, friendId);
-    setSearchResults([]);
-    await load();
-  }, [user, load]);
-
-  const acceptRequest = useCallback(async (friendshipId: string) => {
-    await respondFriendRequest(friendshipId, 'accepted');
-    await load();
+  useEffect(() => {
+    void load();
   }, [load]);
 
-  const declineRequest = useCallback(async (friendshipId: string) => {
-    await respondFriendRequest(friendshipId, 'blocked');
-    await load();
-  }, [load]);
+  const search = useCallback(
+    async (email: string) => {
+      if (!email.trim() || !user) return;
+      setSearching(true);
+      try {
+        const { data } = await searchUserByEmail(email.trim());
+        const results: UserProfile[] = ((data ?? []) as RawProfile[])
+          .filter((p) => p.id !== user.id)
+          .map((p) => ({
+            id: p.id,
+            username: p.username,
+            avatarUrl: p.avatar_url,
+            xp: p.xp ?? 0,
+            streak: p.streak ?? 0,
+            isPublic: p.is_public ?? false,
+          }));
+        setSearchResults(results);
+      } finally {
+        setSearching(false);
+      }
+    },
+    [user],
+  );
 
-  const unfriend = useCallback(async (friendshipId: string) => {
-    await removeFriend(friendshipId);
-    await load();
-  }, [load]);
+  const sendRequest = useCallback(
+    async (friendId: string) => {
+      if (!user) return;
+      await sendFriendRequest(user.id, friendId);
+      setSearchResults([]);
+      await load();
+    },
+    [user, load],
+  );
+
+  const acceptRequest = useCallback(
+    async (friendshipId: string) => {
+      await respondFriendRequest(friendshipId, 'accepted');
+      await load();
+    },
+    [load],
+  );
+
+  const declineRequest = useCallback(
+    async (friendshipId: string) => {
+      await respondFriendRequest(friendshipId, 'blocked');
+      await load();
+    },
+    [load],
+  );
+
+  const unfriend = useCallback(
+    async (friendshipId: string) => {
+      await removeFriend(friendshipId);
+      await load();
+    },
+    [load],
+  );
 
   const accepted = friendships.filter((f) => f.status === 'accepted');
-  const pending = friendships.filter(
-    (f) => f.status === 'pending' && f.userId !== user?.id,
-  );
+  const pending = friendships.filter((f) => f.status === 'pending' && f.userId !== user?.id);
 
   return {
     friendships,

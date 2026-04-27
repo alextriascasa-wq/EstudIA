@@ -19,7 +19,15 @@ export function FriendCard({ friendship, onUnfriend }: Props): JSX.Element {
       <div className="friend-card-header">
         <div className="friend-avatar">{avatarLetter}</div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 700, fontSize: 15, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <div
+            style={{
+              fontWeight: 700,
+              fontSize: 15,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {name}
           </div>
           <div style={{ fontSize: 12, color: 'var(--ts)', marginTop: 2 }}>

@@ -60,14 +60,18 @@ export function ChallengeCard({ challenge, myId, onAccept, onDecline }: Props): 
         </span>
       </div>
 
-      {(challenge.status === 'active' || challenge.status === 'accepted' || challenge.status === 'completed') && (
+      {(challenge.status === 'active' ||
+        challenge.status === 'accepted' ||
+        challenge.status === 'completed') && (
         <div className="challenge-progress">
           <div className="challenge-progress-row">
             <span className="challenge-progress-label">{t('social.you')}</span>
             <div className="pb" style={{ flex: 1, margin: '0 8px' }}>
               <div className="fill" style={{ width: `${myPct}%`, background: 'var(--a)' }} />
             </div>
-            <span className="challenge-score" style={{ color: 'var(--a)' }}>{myScore}</span>
+            <span className="challenge-score" style={{ color: 'var(--a)' }}>
+              {myScore}
+            </span>
           </div>
           <div className="challenge-progress-row">
             <span className="challenge-progress-label">
@@ -76,7 +80,9 @@ export function ChallengeCard({ challenge, myId, onAccept, onDecline }: Props): 
             <div className="pb" style={{ flex: 1, margin: '0 8px' }}>
               <div className="fill" style={{ width: `${theirPct}%`, background: 'var(--p)' }} />
             </div>
-            <span className="challenge-score" style={{ color: 'var(--p)' }}>{theirScore}</span>
+            <span className="challenge-score" style={{ color: 'var(--p)' }}>
+              {theirScore}
+            </span>
           </div>
           <div style={{ fontSize: 11, color: 'var(--tm)', marginTop: 6 }}>
             {t('social.target')}: {total}

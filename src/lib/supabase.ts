@@ -28,11 +28,25 @@ export const signOut = () => supabase.auth.signOut();
  * - Auth state itself (would be circular + insecure)
  */
 const LOCAL_ONLY_KEYS = new Set([
-  'setState', 'patch', 'save', 'addXP', 'checkAchievements',
-  'rolloverIfNeeded', 'incrementDailyLog', 'setAuth', 'setSyncStatus',
-  'startConvSession', 'addConvMessage', 'endConvSession', 'queueConvCards',
-  '_toastQueue', '_hasHydrated',
-  'authState', 'soundPrefs', 'theme', 'language',
+  'setState',
+  'patch',
+  'save',
+  'addXP',
+  'checkAchievements',
+  'rolloverIfNeeded',
+  'incrementDailyLog',
+  'setAuth',
+  'setSyncStatus',
+  'startConvSession',
+  'addConvMessage',
+  'endConvSession',
+  'queueConvCards',
+  '_toastQueue',
+  '_hasHydrated',
+  'authState',
+  'soundPrefs',
+  'theme',
+  'language',
 ]);
 
 export const buildSyncPayload = (state: Record<string, unknown>): Record<string, unknown> => {
@@ -55,11 +69,7 @@ export const pushState = (userId: string, payload: Record<string, unknown>) =>
     .eq('id', userId);
 
 export const pullState = (userId: string) =>
-  supabase
-    .from('profiles')
-    .select('app_state, state_updated_at')
-    .eq('id', userId)
-    .single();
+  supabase.from('profiles').select('app_state, state_updated_at').eq('id', userId).single();
 
 // ─── Social helpers ───────────────────────────────────────────────────────────
 
@@ -75,10 +85,12 @@ export const searchUserByEmail = (email: string) =>
 export const fetchFriendships = (userId: string) =>
   supabase
     .from('friendships')
-    .select(`
+    .select(
+      `
       id, user_id, friend_id, status, created_at,
       friend:profiles!friend_id(id, username, avatar_url, xp, streak, is_public)
-    `)
+    `,
+    )
     .or(`user_id.eq.${userId},friend_id.eq.${userId}`)
     .order('created_at', { ascending: false });
 
@@ -91,16 +103,8 @@ export const sendFriendRequest = (userId: string, friendId: string) =>
     .single();
 
 /** Accept or block a friendship. */
-export const respondFriendRequest = (
-  friendshipId: string,
-  status: 'accepted' | 'blocked',
-) =>
-  supabase
-    .from('friendships')
-    .update({ status })
-    .eq('id', friendshipId)
-    .select()
-    .single();
+export const respondFriendRequest = (friendshipId: string, status: 'accepted' | 'blocked') =>
+  supabase.from('friendships').update({ status }).eq('id', friendshipId).select().single();
 
 /** Delete a friendship row. */
 export const removeFriend = (friendshipId: string) =>
@@ -111,32 +115,32 @@ export const fetchFeed = (friendIds: string[]) => {
   if (friendIds.length === 0) return Promise.resolve({ data: [] as unknown[], error: null });
   return supabase
     .from('activity_events')
-    .select(`
+    .select(
+      `
       id, user_id, type, payload, created_at,
       user:profiles!user_id(id, username, avatar_url, xp, streak, is_public)
-    `)
+    `,
+    )
     .in('user_id', friendIds)
     .order('created_at', { ascending: false })
     .limit(50);
 };
 
 /** Publish an activity event for the current user. */
-export const publishActivity = (
-  userId: string,
-  type: string,
-  payload: Record<string, unknown>,
-) =>
+export const publishActivity = (userId: string, type: string, payload: Record<string, unknown>) =>
   supabase.from('activity_events').insert({ user_id: userId, type, payload });
 
 /** Fetch all challenges involving the current user. */
 export const fetchChallenges = (userId: string) =>
   supabase
     .from('challenges')
-    .select(`
+    .select(
+      `
       id, creator_id, opponent_id, type, params, status, result, created_at, ends_at,
       creator:profiles!creator_id(id, username, avatar_url, xp, streak, is_public),
       opponent:profiles!opponent_id(id, username, avatar_url, xp, streak, is_public)
-    `)
+    `,
+    )
     .or(`creator_id.eq.${userId},opponent_id.eq.${userId}`)
     .order('created_at', { ascending: false });
 

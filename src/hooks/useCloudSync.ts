@@ -68,10 +68,9 @@ export function useCloudSync(): void {
         s.setSyncStatus('syncing');
         const payload = buildSyncPayload(s as unknown as Record<string, unknown>);
         const { error } = await pushState(s.authState.user.id, payload);
-        useAppStore.getState().setSyncStatus(
-          error ? 'error' : 'idle',
-          error ? undefined : new Date().toISOString(),
-        );
+        useAppStore
+          .getState()
+          .setSyncStatus(error ? 'error' : 'idle', error ? undefined : new Date().toISOString());
       }, DEBOUNCE_MS);
     });
 

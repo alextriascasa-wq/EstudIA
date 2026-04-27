@@ -40,15 +40,31 @@ export function CreateChallenge({ friends, onClose }: Props): JSX.Element {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="c create-challenge-modal" onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 20,
+          }}
+        >
           <h3 style={{ fontWeight: 800, fontSize: 18 }}>{t('social.createChallenge')}</h3>
-          <button className="bi" onClick={onClose}>✕</button>
+          <button className="bi" onClick={onClose}>
+            ✕
+          </button>
         </div>
 
-        <form onSubmit={(e) => void handleSubmit(e)} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <form
+          onSubmit={(e) => void handleSubmit(e)}
+          style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+        >
           <div>
             <label className="lbl">{t('social.opponent')}</label>
-            <select className="inp" value={opponentId} onChange={(e) => setOpponentId(e.target.value)}>
+            <select
+              className="inp"
+              value={opponentId}
+              onChange={(e) => setOpponentId(e.target.value)}
+            >
               {friends.map((f) => (
                 <option key={f.id} value={f.friendId}>
                   {f.friend?.username ?? f.friendId}
@@ -101,7 +117,9 @@ export function CreateChallenge({ friends, onClose }: Props): JSX.Element {
           </div>
 
           <div>
-            <label className="lbl">{t('social.subject')} ({t('common.optional')})</label>
+            <label className="lbl">
+              {t('social.subject')} ({t('common.optional')})
+            </label>
             <input
               type="text"
               className="inp"
@@ -115,7 +133,12 @@ export function CreateChallenge({ friends, onClose }: Props): JSX.Element {
             <button type="button" className="bs" style={{ flex: 1 }} onClick={onClose}>
               {t('common.cancel')}
             </button>
-            <button type="submit" className="bp" style={{ flex: 1 }} disabled={submitting || !opponentId}>
+            <button
+              type="submit"
+              className="bp"
+              style={{ flex: 1 }}
+              disabled={submitting || !opponentId}
+            >
               {submitting ? '…' : t('social.sendChallenge')}
             </button>
           </div>

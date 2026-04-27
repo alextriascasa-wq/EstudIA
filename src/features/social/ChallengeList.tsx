@@ -9,11 +9,19 @@ export function ChallengeList(): JSX.Element {
   const { active, pending, completed, loading, error, accept, decline } = useChallenges();
 
   if (loading) {
-    return <div className="c empty"><p style={{ color: 'var(--ts)' }}>…</p></div>;
+    return (
+      <div className="c empty">
+        <p style={{ color: 'var(--ts)' }}>…</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="c empty"><p style={{ color: 'var(--err)' }}>{error}</p></div>;
+    return (
+      <div className="c empty">
+        <p style={{ color: 'var(--err)' }}>{error}</p>
+      </div>
+    );
   }
 
   const hasAny = active.length > 0 || pending.length > 0 || completed.length > 0;

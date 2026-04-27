@@ -15,7 +15,10 @@ export function ActivityFeed({ accepted }: Props): JSX.Element {
   if (loading) {
     return (
       <div className="social-feed-empty">
-        <div className="pulse-glow" style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--al)' }} />
+        <div
+          className="pulse-glow"
+          style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--al)' }}
+        />
       </div>
     );
   }

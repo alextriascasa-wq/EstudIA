@@ -147,8 +147,8 @@ export interface LangDeck {
 export interface Scenario {
   id: string;
   emoji: string;
-  titleKey: string;        // i18n key, e.g. 'conv.scenarios.cafe'
-  character: string;       // e.g. 'barista'
+  titleKey: string; // i18n key, e.g. 'conv.scenarios.cafe'
+  character: string; // e.g. 'barista'
   difficulty: 'easy' | 'medium' | 'hard';
 }
 
@@ -162,18 +162,18 @@ export interface ConvCorrection {
 export interface ConvMessage {
   role: 'user' | 'ai';
   text: string;
-  corrections: ConvCorrection[];   // empty array for AI messages
+  corrections: ConvCorrection[]; // empty array for AI messages
 }
 
 export interface ConvSession {
   id: string;
-  langDeckId: string;              // links to existing LangDeck
+  langDeckId: string; // links to existing LangDeck
   scenarioId: string;
-  language: string;                // e.g. 'en', 'fr'
+  language: string; // e.g. 'en', 'fr'
   messages: ConvMessage[];
-  fluencyScore: number;            // 0–100, updated each turn
-  newCards: number;                // total vocab cards queued this session
-  startedAt: string;               // ISO date string
+  fluencyScore: number; // 0–100, updated each turn
+  newCards: number; // total vocab cards queued this session
+  startedAt: string; // ISO date string
   endedAt: string | null;
 }
 
