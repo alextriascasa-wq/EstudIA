@@ -261,6 +261,12 @@ export interface AppState {
   convSessions: ConvSession[];
   /** Active exam in progress. null when none running. Persisted across reload/tab switch. */
   activeExam: ActiveExamState | null;
+  /** Personalized study profile captured in onboarding. null until completed. */
+  studyProfile: StudyProfile | null;
+  /** True after user dismisses the "complete your profile" banner once. */
+  profileBannerDismissed: boolean;
+  /** Optional AI-generated motivational narrative for /plan page. null until refined. */
+  planNarrative: string | null;
 }
 
 export interface StudyTask {
@@ -305,7 +311,9 @@ export type Tab =
   | 'stats'
   | 'techniques'
   | 'social'
-  | 'cloud';
+  | 'cloud'
+  | 'plan'
+  | 'profile';
 
 // ─── Social / Friends ─────────────────────────────────────────────────────────
 
@@ -358,4 +366,77 @@ export interface Challenge {
   endsAt: string | null;
   creator?: UserProfile;
   opponent?: UserProfile;
+}
+
+// ─── Study Profile / Personalized Plan ────────────────────────────────────────
+
+export type StudyGoal = 'exam' | 'language' | 'cert' | 'university' | 'other';
+export type StudyMethod = 'read' | 'manual' | 'digital' | 'mixed';
+export type Obstacle = 'memory' | 'time' | 'focus' | 'motivation' | 'comprehension';
+export type SessionLength = 15 | 30 | 60 | 90;
+export type AcademicLevel = 'eso' | 'batx' | 'uni' | 'oposicio' | 'other';
+export type PreferredStudyTime = 'morning' | 'afternoon' | 'evening' | 'night' | 'flexible';
+export type SelfRetention = 1 | 2 | 3 | 4 | 5;
+
+export interface StudyProfile {
+  goal: StudyGoal;
+  level: AcademicLevel;
+  subjects: string[]; // free-text tags, max 5
+  method: StudyMethod;
+  obstacle: Obstacle;
+  dailyMinutes: SessionLength;
+  preferredTime: PreferredStudyTime;
+  selfRetention: SelfRetention;
+  examDate: string | null; // ISO yyyy-mm-dd; only when goal ∈ {exam,cert,university}
+  completedAt: string; // ISO timestamp
+  version: 1;
+}
+
+export type RecommendedModule =
+  | 'cards'
+  | 'feynman'
+  | 'timer'
+  | 'exams'
+  | 'languages'
+  | 'sounds'
+  | 'recovery';
+
+export interface ImprovementFactor {
+  key: 'srs' | 'feynman' | 'spacing' | 'consistency' | 'focus' | 'memory';
+  labelKey: string; // i18n key under improvement.factors.*
+  delta: number; // percentage points
+  reasonKey: string; // i18n key under improvement.reasons.*
+}
+
+export interface ImprovementBreakdown {
+  baseline: number; // 0..100
+  factors: ImprovementFactor[];
+  projected: number; // capped at 95
+  delta: number; // projected - baseline
+}
+
+export interface ModuleRecommendation {
+  module: RecommendedModule;
+  priority: 'essential' | 'recommended' | 'optional';
+  reasonKey: string; // i18n key under plan.reasons.*
+}
+
+export interface DailyBlock {
+  order: number;
+  module: RecommendedModule;
+  minutes: number;
+}
+
+export interface PlanMilestone {
+  whenISO: string; // ISO yyyy-mm-dd
+  goalKey: string; // i18n key under plan.milestones.*
+  metric: 'cards_reviewed' | 'feynman_sessions' | 'exam_score' | 'streak_days';
+  target: number;
+}
+
+export interface StudyPlan {
+  weeklyMinutes: number;
+  modules: ModuleRecommendation[]; // sorted essential → recommended → optional
+  dailyTemplate: DailyBlock[];
+  milestones: PlanMilestone[];
 }

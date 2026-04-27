@@ -49,4 +49,7 @@ export const DEFAULT_STATE: AppState = {
   zeroSessions: [],
   convSessions: [],
   activeExam: null,
+  studyProfile: null,
+  profileBannerDismissed: false,
+  planNarrative: null,
 };
