@@ -58,6 +58,12 @@ export interface StoreActions {
   setAuth: (user: User | null, session: Session | null) => void;
   /** Update sync status + optionally record lastSyncedAt timestamp. */
   setSyncStatus: (status: SyncStatus, lastSyncedAt?: string) => void;
+  /** Start an active exam — replaces any prior in-progress exam. */
+  startActiveExam: (exam: import('@/types').ActiveExamState) => void;
+  /** Patch the running exam (answers, index, questions after correction). No-op if none. */
+  updateActiveExam: (patch: Partial<import('@/types').ActiveExamState>) => void;
+  /** Clear the in-progress exam (call on submit or explicit cancel). */
+  clearActiveExam: () => void;
 }
 
 const DEFAULT_AUTH_STATE: AuthState = {
@@ -327,6 +333,22 @@ export const useAppStore = create<AppStore>()(
         }));
         get().save();
       },
+
+      startActiveExam: (exam) => {
+        set({ activeExam: exam });
+      },
+
+      updateActiveExam: (patch) => {
+        set((prev) => ({
+          activeExam: prev.activeExam
+            ? { ...prev.activeExam, ...patch }
+            : prev.activeExam,
+        }));
+      },
+
+      clearActiveExam: () => {
+        set({ activeExam: null });
+      },
     }),
     {
       name: STATE_KEY,
@@ -367,6 +389,7 @@ export const useAppStore = create<AppStore>()(
         league: s.league,
         zeroSessions: s.zeroSessions,
         convSessions: s.convSessions,
+        activeExam: s.activeExam,
       }),
     },
   ),

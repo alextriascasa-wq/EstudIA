@@ -292,7 +292,12 @@
     "gradeBad": "❌ No lo sabía",
     "gradeGood": "✅ ¡Lo sabía!",
     "sessionDone": "🎉 ¡Sesión completa!",
-    "sessionDoneDesc": "Todos los conceptos repasados"
+    "sessionDoneDesc": "Todos los conceptos repasados",
+    "aiTarget": {
+      "label": "¿Dónde quieres añadir las tarjetas?",
+      "new": "Nuevo deck",
+      "existing": "Deck existente"
+    }
   },
   "exams": {
     "newExam": "+ Nuevo examen",
