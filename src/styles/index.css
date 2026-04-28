@@ -2337,3 +2337,129 @@
   z-index: 200; padding: 16px;
 }
 .create-challenge-modal { width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+
+/* ─── Onboarding Wizard ─────────────────────────────────────────────────── */
+.ob-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.ob-modal {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  padding: 36px 28px;
+  position: relative;
+}
+.ob-progress {
+  margin-bottom: 28px;
+}
+.ob-phase-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tm);
+  margin-bottom: 8px;
+}
+
+.ob-step h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--t);
+}
+.ob-step > p {
+  font-size: 15px;
+  color: var(--ts);
+  margin-bottom: 24px;
+}
+.ob-back {
+  margin-top: 20px;
+}
+.ob-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+  min-height: 32px;
+}
+.ob-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.ob-retention-slider {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.ob-ret-btn {
+  padding: 18px 0;
+  font-size: 22px;
+}
+.ob-retention-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.ob-processing {
+  text-align: center;
+}
+.ob-spinner {
+  font-size: 60px;
+  margin-bottom: 24px;
+  display: inline-block;
+}
+.ob-results .ob-result-stat {
+  margin: 16px 0;
+  padding: 24px;
+  text-align: center;
+}
+.ob-stat-big {
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--ok);
+  font-family: 'Fraunces', serif;
+}
+.ob-breakdown {
+  margin: 16px 0;
+  padding: 18px;
+  text-align: left;
+}
+.ob-breakdown ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+.ob-breakdown li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bl);
+  color: var(--ts);
+  font-size: 14px;
+}
+.ob-breakdown li.ob-breakdown-total {
+  border-bottom: none;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 2px solid var(--b);
+  color: var(--t);
+  font-weight: 700;
+}
+.ob-breakdown li strong.ok {
+  color: var(--ok);
+}
+.ob-modules {
+  margin: 16px 0;
+}
