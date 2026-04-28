@@ -160,6 +160,28 @@ export default {
         return new Response(JSON.stringify({ reply }), { headers: defaultHeaders });
       }
 
+      if (url.pathname === '/generate-plan' && request.method === 'POST') {
+        const body = await request.json() as { profile: any; plan: any; locale: string };
+        const lang = body.locale === 'ca' ? 'català' : body.locale === 'es' ? 'castellà' : 'English';
+        const prompt = `You are a friendly study coach. Write a 2-3 paragraph motivational and actionable narrative in ${lang} for this learner's plan.
+Be concrete, reference their goal, obstacle, and the top recommended modules. Don't repeat raw numbers — focus on what to do next.
+
+Profile: ${JSON.stringify(body.profile)}
+Plan: ${JSON.stringify(body.plan)}
+
+Return plain text only, no markdown headings.`;
+
+        const payload = {
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        };
+
+        const geminiResponse: any = await callGemini(env, payload);
+        const narrative = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text
+          || 'Comença pas a pas. Cada sessió compta.';
+
+        return new Response(JSON.stringify({ narrative }), { headers: defaultHeaders });
+      }
+
       if (url.pathname === '/generate-cards' && request.method === 'POST') {
         const body = await request.json() as { text?: string; fileData?: string; mimeType?: string; count: number; language: string };
         const prompt = `Ets un expert creador de flashcards. A partir de la informació proporcionada, genera exactament ${body.count} flashcards en ${body.language === 'ca' ? 'català' : 'castellà'}.
