@@ -60,13 +60,14 @@ export const buildSyncPayload = (state: Record<string, unknown>): Record<string,
 };
 
 export const pushState = (userId: string, payload: Record<string, unknown>) =>
-  supabase
-    .from('profiles')
-    .update({
+  supabase.from('profiles').upsert(
+    {
+      id: userId,
       app_state: payload,
       state_updated_at: new Date().toISOString(),
-    })
-    .eq('id', userId);
+    },
+    { onConflict: 'id' },
+  );
 
 export const pullState = (userId: string) =>
   supabase.from('profiles').select('app_state, state_updated_at').eq('id', userId).single();

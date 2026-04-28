@@ -3,6 +3,21 @@
     "name": "EstudIA",
     "tagline": "Ciència del rendiment acadèmic"
   },
+  "auth": {
+    "signIn": "Iniciar sessió",
+    "signInDesc": "Accedeix al teu compte per sincronitzar dades entre dispositius.",
+    "signOut": "Tancar sessió",
+    "signedIn": "Compte actiu",
+    "signedOut": "Sessió tancada",
+    "magicLink": "Enllaç màgic",
+    "password": "Contrasenya",
+    "email": "Correu electrònic",
+    "sendLink": "Envia enllaç",
+    "magicLinkSent": "Enllaç enviat a {{email}}. Comprova el correu.",
+    "noAccount": "Si no tens compte, en crearem un automàticament.",
+    "profile": "El meu perfil",
+    "settings": "Configuració"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "timer": "Timer",
@@ -493,6 +508,10 @@
     "sessionDone": "Sessió completada",
     "newConv": "Nova conversa",
     "noDecks": "Selecciona un deck primer",
+    "noDecksHint": "Crea un deck a la pestanya Vocabulari per començar",
+    "pickDeck": "Tria un deck",
+    "pickDeckDesc": "Tria el deck d'idioma per la conversa",
+    "changeDeck": "Canviar deck",
     "emptyTranscript": "No s'ha detectat veu",
     "correctionTypes": {
       "grammar": "Gramàtica",

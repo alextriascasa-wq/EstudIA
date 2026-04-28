@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Sidebar } from '@/components/Layout/Sidebar';
+import { TopBar } from '@/components/Layout/TopBar';
 import { ToastHost } from '@/components/ui/Toast';
 import { XPPopupHost } from '@/components/ui/XPPopup';
 import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard';
@@ -67,27 +68,30 @@ export default function App(): JSX.Element {
     <>
       <OnboardingWizard />
       <Sidebar />
-      <main className="mn">
-        <Suspense fallback={<div className="route-loading" />}>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/timer" element={<Timer />} />
-            <Route path="/cards" element={<Flashcards />} />
-            <Route path="/feynman" element={<Feynman />} />
-            <Route path="/languages" element={<Languages />} />
-            <Route path="/sounds" element={<Sounds />} />
-            <Route path="/recovery" element={<Recovery />} />
-            <Route path="/exams" element={<Exams />} />
-            <Route path="/stats" element={<Stats />} />
-            <Route path="/social" element={<Social />} />
-            <Route path="/techniques" element={<Techniques />} />
-            <Route path="/cloud" element={<CloudSync />} />
-            <Route path="/plan" element={<Plan />} />
-            <Route path="/perfil" element={<Profile />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
-      </main>
+      <div className="app-main">
+        <TopBar />
+        <main className="mn">
+          <Suspense fallback={<div className="route-loading" />}>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/timer" element={<Timer />} />
+              <Route path="/cards" element={<Flashcards />} />
+              <Route path="/feynman" element={<Feynman />} />
+              <Route path="/languages" element={<Languages />} />
+              <Route path="/sounds" element={<Sounds />} />
+              <Route path="/recovery" element={<Recovery />} />
+              <Route path="/exams" element={<Exams />} />
+              <Route path="/stats" element={<Stats />} />
+              <Route path="/social" element={<Social />} />
+              <Route path="/techniques" element={<Techniques />} />
+              <Route path="/cloud" element={<CloudSync />} />
+              <Route path="/plan" element={<Plan />} />
+              <Route path="/perfil" element={<Profile />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        </main>
+      </div>
       <ToastHost />
       <XPPopupHost />
       <BottomNav />

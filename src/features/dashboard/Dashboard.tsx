@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+import { Flame, Zap, Play, Sparkles, BookOpen, Brain, FileText, ListChecks } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { useStudyProfile, usePlan } from '@/hooks/usePlan';
 import { xpInLevel } from '@/lib/xp';
@@ -8,11 +10,46 @@ import { genStudyTasks } from '@/lib/exams';
 import { daysUntil, fmtDate, today } from '@/lib/date';
 import { DAILY_TIPS } from '@/lib/tips';
 
+const HEATMAP_DAYS = 90;
+
+function buildHeatmapCells(
+  heatmap: Record<string, number>,
+  days: number,
+): Array<{ key: string; lvl: 0 | 1 | 2 | 3 | 4; min: number }> {
+  const cells: Array<{ key: string; lvl: 0 | 1 | 2 | 3 | 4; min: number }> = [];
+  const now = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().split('T')[0]!;
+    const min = heatmap[key] ?? 0;
+    let lvl: 0 | 1 | 2 | 3 | 4 = 0;
+    if (min > 0 && min < 15) lvl = 1;
+    else if (min < 30) lvl = 2;
+    else if (min < 60) lvl = 3;
+    else if (min >= 60) lvl = 4;
+    cells.push({ key, lvl, min });
+  }
+  return cells;
+}
+
 export function Dashboard(): JSX.Element {
   const nav = useNavigate();
   const { t } = useTranslation();
 
-  const { streak, exams, doneTasks, weekly, zNote, level, totalXp } = useAppStore();
+  const {
+    streak,
+    exams,
+    doneTasks,
+    zNote,
+    level,
+    totalXp,
+    todaySess,
+    totalMin,
+    memStrength,
+    cardsToday,
+    heatmap,
+  } = useAppStore();
 
   const patch = useAppStore((s) => s.patch);
   const save = useAppStore((s) => s.save);
@@ -26,10 +63,16 @@ export function Dashboard(): JSX.Element {
   const showProfileBanner = hasCompletedOnboarding && !studyProfile && !profileBannerDismissed;
 
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
-  const todayTasks = useMemo(() => tasks.filter((t) => t.date === today()), [tasks]);
+  const todayTasks = useMemo(() => tasks.filter((tk) => tk.date === today()), [tasks]);
   const upcoming = useMemo(() => exams.filter((e) => daysUntil(e.date) >= 0).slice(0, 4), [exams]);
-  const doneToday = todayTasks.filter((t) => doneTasks.includes(t.id)).length;
+  const doneToday = todayTasks.filter((tk) => doneTasks.includes(tk.id)).length;
   const { cur, need } = xpInLevel({ level, totalXp });
+  const xpPct = Math.min(100, (cur / Math.max(need, 1)) * 100);
+  const cells = useMemo(() => buildHeatmapCells(heatmap, HEATMAP_DAYS), [heatmap]);
+  const tip = DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length] ?? DAILY_TIPS[0]!;
+
+  const nextExam = upcoming[0];
+  const daysToExam = nextExam ? daysUntil(nextExam.date) : null;
 
   const onToggle = (taskId: string): void => {
     const i = doneTasks.indexOf(taskId);
@@ -39,10 +82,8 @@ export function Dashboard(): JSX.Element {
     save();
   };
 
-  const tip = DAILY_TIPS[new Date().getDate() % DAILY_TIPS.length] ?? DAILY_TIPS[0]!;
-
   return (
-    <div className="sec">
+    <section className="sec">
       {showProfileBanner && (
         <div className="c zeig dash-banner">
           <div>
@@ -87,233 +128,229 @@ export function Dashboard(): JSX.Element {
         </div>
       )}
 
-      {/* HERO */}
-      <div>
-        <h1 className="t-hero">{t('dashboard.heroTitle')}</h1>
-        <p className="t-body" style={{ color: 'var(--ts)', marginTop: 8 }}>
-          {t('dashboard.heroDesc')}
-        </p>
-      </div>
-
-      {/* BENTO ROW 1: 2fr 1fr */}
-      <div className="bento">
-        {/* PRIMARY: AI FLASHCARDS */}
-        <div className="c glow hero-card">
-          <div className="hero-card-bg">🧠</div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              marginBottom: 18,
-            }}
-          >
-            <div style={{ fontSize: 32, filter: 'drop-shadow(0 0 8px rgba(212,160,23,0.4))' }}>
-              ✨
-            </div>
-            <span className="ai-power-tag">IA Power</span>
-          </div>
-          <h3
-            className="t-h2"
-            style={{ fontFamily: "'Fraunces', serif", marginBottom: 8, zIndex: 1 }}
-          >
-            {t('dashboard.actionCardsTitle')}
-          </h3>
-          <p
-            className="t-sm"
-            style={{ color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 28, zIndex: 1 }}
-          >
-            {t('dashboard.actionCardsDesc')}
-          </p>
-          <button className="bp w-full" onClick={() => nav('/cards')}>
-            {t('dashboard.actionCardsBtn')}
-          </button>
-        </div>
-
-        {/* TIMER */}
-        <div className="c glow feat-card">
-          <div className="feat-card-icon">⏱️</div>
-          <h3>{t('dashboard.actionTimerTitle')}</h3>
-          <p>{t('dashboard.actionTimerDesc')}</p>
-          <button className="bs w-full" onClick={() => nav('/timer')}>
-            {t('dashboard.actionTimerBtn')}
-          </button>
-        </div>
-      </div>
-
-      {/* BENTO ROW 2: 1fr 2fr */}
-      <div className="bento-r">
-        {/* EXAMS */}
-        <div className="c glow feat-card">
-          <div className="feat-card-icon">📝</div>
-          <h3>{t('dashboard.actionExamsTitle')}</h3>
-          <p>{t('dashboard.actionExamsDesc')}</p>
-          <button className="bp w-full" onClick={() => nav('/exams')}>
-            {t('dashboard.actionExamsBtn')}
-          </button>
-        </div>
-
-        {/* 7-DAY STREAK */}
-        <div className="c grad glow streak-wrap">
-          <div className="streak-count">
-            <div className={`streak-fire${streak > 0 ? ' active' : ''}`}>🔥</div>
-            <div className={`streak-num t-mono${streak > 0 ? ' active' : ' inactive'}`}>
-              {streak}
-            </div>
-          </div>
-          <div className="streak-days">
-            <div className="streak-days-title">{t('dashboard.streakTitle')}</div>
-            <div className="streak-discs">
-              {weekly.map((d, i) => {
-                const isActive = d.m > 0;
-                return (
-                  <div key={d.d + i} className="streak-day">
-                    <div className={`streak-disc${isActive ? ' act' : ''}`}>
-                      {isActive ? '✓' : ''}
-                    </div>
-                    <div className={`streak-disc-lbl${isActive ? ' act' : ' off'}`}>{d.d}</div>
-                  </div>
-                );
-              })}
-            </div>
+      {/* HERO + HUD STRIP */}
+      <div className="dash-hero">
+        <div className="dash-hero-left">
+          <span className="lbl">{t('common.today')}</span>
+          <h1 className="display-xl">
+            <span className="accent-gradient">EstudIA</span>
+          </h1>
+          <p className="body-l muted">{t('dashboard.heroDesc')}</p>
+          <div className="dash-hero-ctas">
+            <button className="bp bp-hero bp-exams" onClick={() => nav('/exams')}>
+              <BookOpen size={20} />
+              {t('dashboard.actionExamsBtn')}
+            </button>
+            <button className="bs" onClick={() => nav('/timer')}>
+              <Play size={18} />
+              {t('dashboard.actionTimerBtn')}
+            </button>
           </div>
         </div>
-      </div>
 
-      <div className="g2">
-        {/* LEFT COLUMN */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {/* LEVEL BAR */}
-          <div
-            className="c grad"
-            style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 24px' }}
-          >
-            <div className="level-avatar t-mono">{level}</div>
-            <div className="level-info">
-              <div className="level-info-row">
-                <span>
-                  {t('sidebar.level')} {level}
-                </span>
-                <span>
-                  {cur}/{need} XP
-                </span>
-              </div>
-              <div className="pb pb-lg">
-                <div
-                  className="fill"
-                  style={{
-                    width: `${(cur / Math.max(need, 1)) * 100}%`,
-                    background: 'linear-gradient(90deg, var(--a), var(--a2))',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* DAILY TIP */}
-          <div className="c grad2" style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-            <div className="dash-tip-icon">💡</div>
+        <motion.aside
+          className="hud-strip"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="hud-block streak">
+            <motion.div
+              className="streak-flame"
+              animate={streak > 0 ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <Flame size={28} />
+            </motion.div>
             <div>
-              <div className="dash-tip-title">{t('dashboard.tipTitle')}</div>
-              <div className="dash-tip-body">{tip}</div>
+              <div className="hud-num">{streak}</div>
+              <div className="lbl">{t('dashboard.streakTitle')}</div>
             </div>
           </div>
 
-          {/* ZEIGARNIK */}
-          <div className="c zeig">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                marginBottom: 10,
-                paddingLeft: 10,
-              }}
-            >
-              <span style={{ fontSize: 17 }}>🧩</span>
-              <h4 className="t-h3">{t('dashboard.zeigTitle')}</h4>
-            </div>
-            <textarea
-              className="inp"
-              placeholder={t('dashboard.zeigPlaceholder')}
-              defaultValue={zNote}
-              onBlur={(e) => {
-                patch({ zNote: e.target.value });
-                save();
-              }}
-            />
-          </div>
-        </div>
+          <div className="hud-divider" />
 
-        {/* TODAY'S PLAN */}
-        <div className="c">
-          <div className="plan-hdr">
-            <h3>{t('dashboard.todayPlan')}</h3>
-            <span className="badge" style={{ background: 'var(--al)', color: 'var(--a)' }}>
-              {doneToday}/{todayTasks.length}
-            </span>
-          </div>
-          {todayTasks.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">📋</div>
-              <p>{t('dashboard.noTasks')}</p>
+          <div className="hud-block xp">
+            <div className="hud-num">
+              <Zap size={20} />
+              Lv {level}
             </div>
-          ) : (
-            todayTasks.map((task) => (
-              <div
-                key={task.id}
-                className={`ti${doneTasks.includes(task.id) ? ' done' : ''}`}
-                onClick={() => onToggle(task.id)}
-              >
-                <span style={{ fontSize: 15 }}>{doneTasks.includes(task.id) ? '✅' : '⭕'}</span>
-                <div className="info">
-                  <div className="nm">{task.examName}</div>
-                  <div className="ds">{task.session}</div>
-                </div>
-                <span className="tg">
-                  {task.daysBefore === 0 ? t('common.today') : `${task.daysBefore}d`}
-                </span>
-              </div>
-            ))
+            <div className="pb pb-lg xp">
+              <motion.div
+                className="fill"
+                initial={{ width: 0 }}
+                animate={{ width: `${xpPct}%` }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              />
+            </div>
+            <div className="body-s muted">
+              {cur}/{need} XP
+            </div>
+          </div>
+        </motion.aside>
+      </div>
+
+      {/* EXAMS — most important feature, prominent right after hero */}
+      <div className="c glow exams-hero" data-feat="exams">
+        <div className="card-hdr">
+          <h2 className="h2-card feat-exams-title">
+            <BookOpen size={22} />
+            {t('dashboard.upcomingExams')}
+          </h2>
+          {nextExam && daysToExam !== null && daysToExam < 7 && (
+            <span className="badge coral">{daysToExam}d</span>
           )}
-
-          <div className="plan-hdr plan-hdr-b" style={{ marginTop: 24 }}>
-            <h3>{t('dashboard.upcomingExams')}</h3>
-            <button
-              className="bs"
-              style={{ padding: '5px 12px', fontSize: 11 }}
-              onClick={() => nav('/exams')}
-            >
+        </div>
+        {upcoming.length === 0 ? (
+          <div className="empty-state">
+            <p>{t('dashboard.noExams')}</p>
+            <button className="bp bp-exams" onClick={() => nav('/exams')} style={{ marginTop: 14 }}>
               {t('dashboard.addShort')}
             </button>
           </div>
-          {upcoming.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">📅</div>
-              <p>{t('dashboard.noExams')}</p>
-            </div>
-          ) : (
-            upcoming.map((e) => {
+        ) : (
+          <>
+            {upcoming.map((e) => {
               const d = daysUntil(e.date);
-              const uc = d <= 2 ? 'var(--err)' : d <= 7 ? 'var(--w)' : 'var(--ok)';
+              const tone = d <= 2 ? 'coral' : d <= 7 ? 'amber' : 'ok';
               return (
                 <div key={e.id} className="exam-item">
-                  <div className="exam-dot" style={{ background: uc }} />
                   <div className="exam-item-info">
                     <div className="exam-item-name">{e.name}</div>
                     <div className="exam-item-sub">
                       {e.subject} · {fmtDate(e.date)}
                     </div>
                   </div>
-                  <span className="badge" style={{ color: uc, background: `${uc}15` }}>
+                  <span className={`badge ${tone}`}>
                     {d === 0 ? t('common.today') : d === 1 ? t('common.tomorrow') : `${d}d`}
                   </span>
                 </div>
               );
-            })
-          )}
+            })}
+            <button
+              className="bs"
+              onClick={() => nav('/exams')}
+              style={{ marginTop: 12, width: '100%' }}
+            >
+              {t('dashboard.addShort')}
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* TODAY'S PLAN */}
+      <div className="c glow today-plan">
+        <div className="card-hdr">
+          <h2 className="h2-card">
+            <ListChecks size={20} />
+            {t('dashboard.todayPlan')}
+          </h2>
+          <span className="badge indigo">
+            {doneToday}/{todayTasks.length}
+          </span>
+        </div>
+        {todayTasks.length === 0 ? (
+          <div className="empty-state">
+            <p>{t('dashboard.noTasks')}</p>
+          </div>
+        ) : (
+          todayTasks.map((task) => (
+            <div
+              key={task.id}
+              className={`ti${doneTasks.includes(task.id) ? ' done' : ''}`}
+              onClick={() => onToggle(task.id)}
+            >
+              <div className="info">
+                <div className="nm">{task.examName}</div>
+                <div className="ds">{task.session}</div>
+              </div>
+              <span className="tg">
+                {task.daysBefore === 0 ? t('common.today') : `${task.daysBefore}d`}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* STATS ROW — 4 compact cards, each w/ feature accent */}
+      <div className="g4 stats-row">
+        <div className="c stat-card" data-feat="timer">
+          <div className="stat-hdr">
+            <Play size={16} /> <span className="lbl">{t('dashboard.stats.sessions')}</span>
+          </div>
+          <div className="stat-value feat-timer">{todaySess}</div>
+          <div className="body-s muted">{t('dashboard.stats.sessionsSub', { min: totalMin })}</div>
+        </div>
+        <div className="c stat-card" data-feat="cards">
+          <div className="stat-hdr">
+            <Brain size={16} /> <span className="lbl">{t('dashboard.stats.memStrength')}</span>
+          </div>
+          <div className="stat-value feat-cards">{memStrength}%</div>
+          <div className="body-s muted">{t('dashboard.memStrength')}</div>
+        </div>
+        <div className="c stat-card" data-feat="streak">
+          <div className="stat-hdr">
+            <Flame size={16} /> <span className="lbl">{t('dashboard.stats.streak')}</span>
+          </div>
+          <div className={`stat-value${streak >= 3 ? ' feat-streak' : ' muted'}`}>{streak}d</div>
+          <div className="body-s muted">
+            {streak >= 3 ? t('dashboard.stats.streakGood') : t('dashboard.stats.streakBad')}
+          </div>
+        </div>
+        <div className="c stat-card" data-feat="feynman">
+          <div className="stat-hdr">
+            <Sparkles size={16} /> <span className="lbl">{t('dashboard.stats.cards')}</span>
+          </div>
+          <div className="stat-value feat-feynman">{cardsToday}</div>
+          <div className="body-s muted">{t('dashboard.stats.cardsSub', { total: cardsToday })}</div>
         </div>
       </div>
-    </div>
+
+      {/* HEATMAP */}
+      <div className="c">
+        <h2 className="h2-card">
+          <FileText size={20} />
+          {t('dashboard.heatmap')}
+        </h2>
+        <div className="heatmap" style={{ marginTop: 14 }}>
+          {cells.map((c) => (
+            <div key={c.key} className="hm-cell" data-lvl={c.lvl} title={`${c.key}: ${c.min}m`} />
+          ))}
+        </div>
+        <div className="heatmap-legend">
+          <span className="body-s muted">{t('dashboard.heatmapLess')}</span>
+          {[0, 1, 2, 3, 4].map((l) => (
+            <div key={l} className="hm-cell" data-lvl={l} />
+          ))}
+          <span className="body-s muted">{t('dashboard.heatmapMore')}</span>
+        </div>
+      </div>
+
+      {/* ZEIGARNIK + DAILY TIP */}
+      <div className="g2">
+        <div className="c zeig">
+          <h3 className="h2-card">{t('dashboard.zeigTitle')}</h3>
+          <p className="body-s muted" style={{ margin: '6px 0 12px' }}>
+            {t('dashboard.zeigDesc')}
+          </p>
+          <textarea
+            className="inp"
+            placeholder={t('dashboard.zeigPlaceholder')}
+            defaultValue={zNote}
+            onBlur={(e) => {
+              patch({ zNote: e.target.value });
+              save();
+            }}
+          />
+        </div>
+
+        <div className="c">
+          <h3 className="h2-card">{t('dashboard.tipTitle')}</h3>
+          <p className="body-l" style={{ marginTop: 10, color: 'var(--ts)' }}>
+            {tip}
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }

@@ -3,6 +3,21 @@
     "name": "EstudIA",
     "tagline": "Ciencia del rendimiento académico"
   },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signInDesc": "Inicia sesión para sincronizar tus datos entre dispositivos.",
+    "signOut": "Cerrar sesión",
+    "signedIn": "Cuenta activa",
+    "signedOut": "Sesión cerrada",
+    "magicLink": "Enlace mágico",
+    "password": "Contraseña",
+    "email": "Correo electrónico",
+    "sendLink": "Enviar enlace",
+    "magicLinkSent": "Enlace enviado a {{email}}. Revisa tu correo.",
+    "noAccount": "¿Sin cuenta? Crearemos una automáticamente.",
+    "profile": "Mi perfil",
+    "settings": "Configuración"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "timer": "Timer",
@@ -493,6 +508,10 @@
     "sessionDone": "Sesión completada",
     "newConv": "Nueva conversación",
     "noDecks": "Selecciona un deck primero",
+    "noDecksHint": "Crea un deck en la pestaña Vocabulario para empezar",
+    "pickDeck": "Elige un deck",
+    "pickDeckDesc": "Elige el deck de idioma para la conversación",
+    "changeDeck": "Cambiar deck",
     "emptyTranscript": "No se detectó voz",
     "correctionTypes": {
       "grammar": "Gramática",

@@ -209,8 +209,7 @@ export function OnboardingWizard(): JSX.Element | null {
           <div className="ob-progress">
             <div className="ob-phase-dots">
               {[1, 2, 3].map((p) => {
-                const cls =
-                  p === phase ? 'active' : p < phase ? 'done' : '';
+                const cls = p === phase ? 'active' : p < phase ? 'done' : '';
                 return <span key={p} className={`ob-phase-dot ${cls}`} />;
               })}
             </div>

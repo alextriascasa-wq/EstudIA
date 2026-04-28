@@ -3,6 +3,23 @@ import { supabase, pullState, pushState, buildSyncPayload } from '@/lib/supabase
 import { useAppStore } from '@/store/useAppStore';
 
 const DEBOUNCE_MS = 2000;
+const SYNC_TIMEOUT_MS = 15000;
+
+function withTimeout<T>(p: PromiseLike<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error('sync-timeout')), ms);
+    Promise.resolve(p).then(
+      (v) => {
+        clearTimeout(t);
+        resolve(v);
+      },
+      (e) => {
+        clearTimeout(t);
+        reject(e);
+      },
+    );
+  });
+}
 
 /**
  * Mounts at App root. Handles:
@@ -35,15 +52,19 @@ export function useCloudSync(): void {
       if (event === 'SIGNED_IN' && session) {
         setSyncStatus('syncing');
         try {
-          const { data, error } = await pullState(session.user.id);
-          if (!error && data?.app_state) {
+          const { data, error } = await withTimeout(pullState(session.user.id), SYNC_TIMEOUT_MS);
+          if (error && (error as { code?: string }).code !== 'PGRST116') {
+            throw error;
+          }
+          if (data?.app_state) {
             const remote = data.app_state as Record<string, unknown>;
             if (Object.keys(remote).length > 0) {
               patch(remote as Parameters<typeof patch>[0]);
             }
           }
           setSyncStatus('idle', new Date().toISOString());
-        } catch {
+        } catch (e) {
+          console.error('[cloud-sync] pull failed:', e);
           setSyncStatus('error');
         }
         initializedRef.current = true;
@@ -67,10 +88,17 @@ export function useCloudSync(): void {
         if (!s.authState.user) return;
         s.setSyncStatus('syncing');
         const payload = buildSyncPayload(s as unknown as Record<string, unknown>);
-        const { error } = await pushState(s.authState.user.id, payload);
-        useAppStore
-          .getState()
-          .setSyncStatus(error ? 'error' : 'idle', error ? undefined : new Date().toISOString());
+        try {
+          const { error } = await withTimeout(
+            pushState(s.authState.user.id, payload),
+            SYNC_TIMEOUT_MS,
+          );
+          if (error) throw error;
+          useAppStore.getState().setSyncStatus('idle', new Date().toISOString());
+        } catch (e) {
+          console.error('[cloud-sync] push failed:', e);
+          useAppStore.getState().setSyncStatus('error');
+        }
       }, DEBOUNCE_MS);
     });
 

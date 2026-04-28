@@ -3,6 +3,21 @@
     "name": "EstudIA",
     "tagline": "The science of academic performance"
   },
+  "auth": {
+    "signIn": "Sign in",
+    "signInDesc": "Sign in to sync your data across devices.",
+    "signOut": "Sign out",
+    "signedIn": "Account active",
+    "signedOut": "Signed out",
+    "magicLink": "Magic link",
+    "password": "Password",
+    "email": "Email",
+    "sendLink": "Send link",
+    "magicLinkSent": "Link sent to {{email}}. Check your inbox.",
+    "noAccount": "No account? We'll create one for you automatically.",
+    "profile": "My profile",
+    "settings": "Settings"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "timer": "Timer",
@@ -493,6 +508,10 @@
     "sessionDone": "Session complete",
     "newConv": "New conversation",
     "noDecks": "Select a deck first",
+    "noDecksHint": "Create a deck in the Vocabulary tab to start",
+    "pickDeck": "Pick a deck",
+    "pickDeckDesc": "Choose the language deck for the conversation",
+    "changeDeck": "Change deck",
     "emptyTranscript": "No speech detected",
     "correctionTypes": {
       "grammar": "Grammar",

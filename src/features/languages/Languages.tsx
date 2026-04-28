@@ -425,7 +425,49 @@ export function Languages(): JSX.Element {
       )}
 
       {/* ── Conversa tab content ── */}
-      {tab === 'converse' && <ScenarioGrid deck={deck} onSelect={handleSelectScenario} />}
+      {tab === 'converse' &&
+        (deck ? (
+          <>
+            <button className="bs" style={{ marginBottom: 16 }} onClick={() => setCurDeck(null)}>
+              ← {t('conv.changeDeck')}
+            </button>
+            <ScenarioGrid deck={deck} onSelect={handleSelectScenario} />
+          </>
+        ) : langDecks.length === 0 ? (
+          <div className="c empty lang-empty-msg">
+            <p className="lang-empty-title">{t('conv.noDecks')}</p>
+            <p>{t('conv.noDecksHint')}</p>
+          </div>
+        ) : (
+          <div>
+            <div className="sec-hdr mb-5">
+              <h2>{t('conv.pickDeck')}</h2>
+              <p>{t('conv.pickDeckDesc')}</p>
+            </div>
+            <div className="g2">
+              {langDecks.map((dk) => (
+                <button
+                  key={dk.id}
+                  className="c card-hover scenario-btn"
+                  onClick={() => setCurDeck(dk.id)}
+                >
+                  <div className="scenario-emoji">📚</div>
+                  <h3 className="scenario-title">{dk.name}</h3>
+                  <span
+                    className="tag"
+                    style={{
+                      background: 'var(--al)',
+                      color: 'var(--a)',
+                      border: '1px solid var(--b)',
+                    }}
+                  >
+                    {dk.lang} · {dk.cards.length}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
     </div>
   );
 }

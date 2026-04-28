@@ -42,7 +42,9 @@ export function StepObstacle({
           >
             <span className="ob-mc-icon">{ICONS[opt]}</span>
             <div className="ob-mc-body">
-              <strong className="ob-mc-title">{t(`onboarding.options.obstacle.${opt}.title`)}</strong>
+              <strong className="ob-mc-title">
+                {t(`onboarding.options.obstacle.${opt}.title`)}
+              </strong>
               <span className="ob-mc-desc">{t(`onboarding.options.obstacle.${opt}.desc`)}</span>
             </div>
             {value === opt && <span className="ob-mc-check">✓</span>}

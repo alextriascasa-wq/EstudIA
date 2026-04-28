@@ -81,7 +81,13 @@ export function Flashcards(): JSX.Element {
     if (Array.isArray(aiTarget) && aiTarget.length === 0) return;
     setIsAiLoading(true);
     try {
-      const payload: { count: number; language: string; text?: string; fileData?: string; mimeType?: string } = {
+      const payload: {
+        count: number;
+        language: string;
+        text?: string;
+        fileData?: string;
+        mimeType?: string;
+      } = {
         count: aiCount,
         language: 'ca',
       };
@@ -91,14 +97,37 @@ export function Flashcards(): JSX.Element {
         payload.mimeType = aiFile.type;
       }
 
-      const res = await fetch(`${WORKER_URL}/generate-cards`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const fetchWithRetry = async (attempt = 0): Promise<Response> => {
+        const r = await fetch(`${WORKER_URL}/generate-cards`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!r.ok && (r.status === 503 || r.status === 500) && attempt < 2) {
+          await new Promise((res) => setTimeout(res, 1500 * (attempt + 1)));
+          return fetchWithRetry(attempt + 1);
+        }
+        return r;
+      };
 
-      if (!res.ok) throw new Error('Error de connexió amb la IA');
+      const res = await fetchWithRetry();
+
+      if (!res.ok) {
+        const errBody = (await res.json().catch(() => ({}))) as { error?: string };
+        const reason = errBody.error || `${res.status}`;
+        if (res.status === 429) {
+          throw new Error("Has superat el límit diari d'ús de la IA (30 peticions).");
+        }
+        if (/high demand|overloaded|503/i.test(reason)) {
+          throw new Error('La IA està saturada ara mateix. Torna-ho a provar en uns segons.');
+        }
+        throw new Error(`No s'ha pogut generar: ${reason}`);
+      }
       const data: { q: string; a: string }[] = await res.json();
+
+      if (data && typeof data === 'object' && !Array.isArray(data) && 'error' in data) {
+        throw new Error(`No s'ha pogut generar: ${(data as { error: string }).error}`);
+      }
 
       if (!Array.isArray(data) || data.length === 0) {
         throw new Error('La IA no ha generat cap targeta.');
@@ -123,9 +152,7 @@ export function Flashcards(): JSX.Element {
         }));
 
       const targetIds = Array.isArray(aiTarget) ? new Set(aiTarget) : null;
-      const validTargets = targetIds
-        ? freshDecks.filter((d) => targetIds.has(d.id))
-        : [];
+      const validTargets = targetIds ? freshDecks.filter((d) => targetIds.has(d.id)) : [];
 
       if (aiTarget === 'new') {
         const newDeck: Deck = {
@@ -197,9 +224,16 @@ export function Flashcards(): JSX.Element {
       const newDeck = await importApkg(file);
       patch({ decks: [...useAppStore.getState().decks, newDeck] });
       save();
-      showToast({ title: 'Importació exitosa', desc: `S'han importat ${newDeck.cards.length} targetes.` });
+      showToast({
+        title: 'Importació exitosa',
+        desc: `S'han importat ${newDeck.cards.length} targetes.`,
+      });
     } catch (err: unknown) {
-      showToast({ title: 'Error', desc: err instanceof Error ? err.message : 'Error desconegut', kind: 'info' });
+      showToast({
+        title: 'Error',
+        desc: err instanceof Error ? err.message : 'Error desconegut',
+        kind: 'info',
+      });
     }
     e.target.value = '';
   };
@@ -214,7 +248,11 @@ export function Flashcards(): JSX.Element {
       a.click();
       URL.revokeObjectURL(url);
     } catch (err: unknown) {
-      showToast({ title: 'Error', desc: err instanceof Error ? err.message : 'Error desconegut', kind: 'info' });
+      showToast({
+        title: 'Error',
+        desc: err instanceof Error ? err.message : 'Error desconegut',
+        kind: 'info',
+      });
     }
   };
 
@@ -422,23 +460,67 @@ export function Flashcards(): JSX.Element {
       {/* Always-visible AI generation panel */}
       <div className="c" style={{ marginTop: 16 }}>
         <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-          <div style={{ background: 'var(--s2)', color: 'var(--a)', padding: 12, borderRadius: 12, fontSize: 20, flexShrink: 0 }}>🧠</div>
+          <div
+            style={{
+              background: 'var(--s2)',
+              color: 'var(--a)',
+              padding: 12,
+              borderRadius: 12,
+              fontSize: 20,
+              flexShrink: 0,
+            }}
+          >
+            🧠
+          </div>
           <div style={{ flex: 1 }}>
-            <strong style={{ display: 'block', marginBottom: 4, fontSize: 15 }}>Extracció de Conceptes (IA)</strong>
-            <span style={{ fontSize: 13, color: 'var(--tm)', display: 'block', marginBottom: 12 }}>Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les targetes clau.</span>
+            <strong style={{ display: 'block', marginBottom: 4, fontSize: 15 }}>
+              Extracció de Conceptes (IA)
+            </strong>
+            <span style={{ fontSize: 13, color: 'var(--tm)', display: 'block', marginBottom: 12 }}>
+              Pots escriure el text o pujar els teus apunts en imatge o PDF per extreure les
+              targetes clau.
+            </span>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {aiFile ? (
-                <div style={{ padding: 12, background: 'var(--sh)', borderRadius: 'var(--radius-sm)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div
+                  style={{
+                    padding: 12,
+                    background: 'var(--sh)',
+                    borderRadius: 'var(--radius-sm)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
                   <div style={{ fontSize: 13, fontWeight: 600 }}>📄 {aiFile.name}</div>
-                  <button className="bi" onClick={() => setAiFile(null)}>✕</button>
+                  <button className="bi" onClick={() => setAiFile(null)}>
+                    ✕
+                  </button>
                 </div>
               ) : (
-                <label className="inp" style={{ borderStyle: 'dashed', textAlign: 'center', padding: '24px 16px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                <label
+                  className="inp"
+                  style={{
+                    borderStyle: 'dashed',
+                    textAlign: 'center',
+                    padding: '24px 16px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 8,
+                  }}
+                >
                   <span style={{ fontSize: 24 }}>📥</span>
                   <span style={{ fontWeight: 600, fontSize: 13 }}>Pujar fitxer (PDF o Imatge)</span>
                   <span style={{ fontSize: 11, color: 'var(--tm)' }}>Fins a 5MB</span>
-                  <input type="file" accept="image/*,application/pdf" style={{ display: 'none' }} onChange={handleFileChange} />
+                  <input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                  />
                 </label>
               )}
 
@@ -455,7 +537,15 @@ export function Flashcards(): JSX.Element {
               <div>
                 <div className="lbl">{t('cards.aiTarget.label')}</div>
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
-                  <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      gap: 6,
+                      cursor: 'pointer',
+                      alignItems: 'center',
+                      fontSize: 13,
+                    }}
+                  >
                     <input
                       type="radio"
                       name="ai-target"
@@ -464,7 +554,15 @@ export function Flashcards(): JSX.Element {
                     />
                     {t('cards.aiTarget.new')}
                   </label>
-                  <label style={{ display: 'flex', gap: 6, cursor: 'pointer', alignItems: 'center', fontSize: 13 }}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      gap: 6,
+                      cursor: 'pointer',
+                      alignItems: 'center',
+                      fontSize: 13,
+                    }}
+                  >
                     <input
                       type="radio"
                       name="ai-target"
@@ -476,9 +574,24 @@ export function Flashcards(): JSX.Element {
                   </label>
                 </div>
                 {Array.isArray(aiTarget) && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8, maxHeight: 140, overflowY: 'auto', padding: 8, background: 'var(--bg)', borderRadius: 'var(--radius-sm)' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 4,
+                      marginBottom: 8,
+                      maxHeight: 140,
+                      overflowY: 'auto',
+                      padding: 8,
+                      background: 'var(--bg)',
+                      borderRadius: 'var(--radius-sm)',
+                    }}
+                  >
                     {decks.map((d) => (
-                      <label key={d.id} style={{ display: 'flex', gap: 8, cursor: 'pointer', fontSize: 13 }}>
+                      <label
+                        key={d.id}
+                        style={{ display: 'flex', gap: 8, cursor: 'pointer', fontSize: 13 }}
+                      >
                         <input
                           type="checkbox"
                           checked={aiTarget.includes(d.id)}
@@ -499,7 +612,13 @@ export function Flashcards(): JSX.Element {
               </div>
 
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <select className="inp" style={{ flex: 1 }} value={aiCount} onChange={(e) => setAiCount(Number(e.target.value))} disabled={isAiLoading}>
+                <select
+                  className="inp"
+                  style={{ flex: 1 }}
+                  value={aiCount}
+                  onChange={(e) => setAiCount(Number(e.target.value))}
+                  disabled={isAiLoading}
+                >
                   <option value="5">5 targetes</option>
                   <option value="10">10 targetes</option>
                   <option value="20">20 targetes</option>
@@ -508,7 +627,11 @@ export function Flashcards(): JSX.Element {
                   className="bp"
                   style={{ flex: 2 }}
                   onClick={handleAIGenerate}
-                  disabled={isAiLoading || (!aiTopic.trim() && !aiFile) || (Array.isArray(aiTarget) && aiTarget.length === 0)}
+                  disabled={
+                    isAiLoading ||
+                    (!aiTopic.trim() && !aiFile) ||
+                    (Array.isArray(aiTarget) && aiTarget.length === 0)
+                  }
                 >
                   {isAiLoading ? 'Analitzant i Generant...' : '✨ Extreure Conceptes'}
                 </button>
@@ -538,10 +661,25 @@ export function Flashcards(): JSX.Element {
               </div>
             </div>
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ background: 'var(--s2)', color: 'var(--a)', padding: 8, borderRadius: 8, fontSize: 16 }}>🧠</div>
+              <div
+                style={{
+                  background: 'var(--s2)',
+                  color: 'var(--a)',
+                  padding: 8,
+                  borderRadius: 8,
+                  fontSize: 16,
+                }}
+              >
+                🧠
+              </div>
               <div>
-                <strong style={{ display: 'block', marginBottom: 4 }}>2. Extracció de Conceptes (IA)</strong>
-                <span style={{ fontSize: 13, color: 'var(--tm)' }}>Fes servir el panell de dalt per extreure targetes des de text o fitxers PDF/imatge.</span>
+                <strong style={{ display: 'block', marginBottom: 4 }}>
+                  2. Extracció de Conceptes (IA)
+                </strong>
+                <span style={{ fontSize: 13, color: 'var(--tm)' }}>
+                  Fes servir el panell de dalt per extreure targetes des de text o fitxers
+                  PDF/imatge.
+                </span>
               </div>
             </div>
             <div className="fc-empty-step">
