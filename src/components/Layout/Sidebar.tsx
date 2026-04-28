@@ -99,6 +99,12 @@ const Icon = {
       <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
     </svg>
   ),
+  Plan: (p: IconProps) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} {...p}>
+      <path d="M12 3l1.9 5.7L19.5 10l-5.6 1.3L12 17l-1.9-5.7L4.5 10l5.6-1.3z" />
+      <path d="M19 14l.7 2.1L21.8 17l-2.1.7L19 19.8l-.7-2.1L16.2 17l2.1-.9z" />
+    </svg>
+  ),
 };
 
 interface NavItem {
@@ -114,6 +120,7 @@ const PRIMARY_NAV: readonly NavItem[] = [
 ];
 
 const SECONDARY_NAV: readonly NavItem[] = [
+  { tab: 'plan', icon: Icon.Plan },
   { tab: 'stats', icon: Icon.Stats },
   { tab: 'feynman', icon: Icon.Feynman },
   { tab: 'techniques', icon: Icon.Techniques },

@@ -2503,3 +2503,52 @@
 .dash-recs {
   margin-bottom: 16px;
 }
+
+.profile-form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.profile-form .lbl {
+  margin-top: 12px;
+}
+
+.plan-improvement,
+.plan-modules,
+.plan-daily,
+.plan-milestones,
+.plan-narrative {
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.plan-module-group { margin-bottom: 16px; }
+.plan-milestones ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+}
+.plan-milestones li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bl);
+  color: var(--ts);
+}
+.plan-milestones li:last-child { border-bottom: none; }
+.ob-breakdown-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+.ob-breakdown-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bl);
+  color: var(--ts);
+  font-size: 14px;
+}
+.plan-narrative-text {
+  white-space: pre-line;
+  color: var(--ts);
+  line-height: 1.6;
+}

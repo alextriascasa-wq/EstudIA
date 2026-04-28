@@ -32,6 +32,10 @@ const Social = lazy(() => import('@/features/social/Social').then((m) => ({ defa
 const CloudSync = lazy(() =>
   import('@/features/cloud/CloudSync').then((m) => ({ default: m.CloudSync })),
 );
+const Plan = lazy(() => import('@/features/plan/Plan').then((m) => ({ default: m.Plan })));
+const Profile = lazy(() =>
+  import('@/features/profile/Profile').then((m) => ({ default: m.Profile })),
+);
 import { useAppStore } from '@/store/useAppStore';
 import { useCloudSync } from '@/hooks/useCloudSync';
 import { filterDueFlashcards } from '@/lib/srs';
@@ -78,6 +82,8 @@ export default function App(): JSX.Element {
             <Route path="/social" element={<Social />} />
             <Route path="/techniques" element={<Techniques />} />
             <Route path="/cloud" element={<CloudSync />} />
+            <Route path="/plan" element={<Plan />} />
+            <Route path="/perfil" element={<Profile />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
