@@ -5,7 +5,12 @@ import type { StepProps } from '../types';
 
 const OPTIONS: Obstacle[] = ['memory', 'time', 'focus', 'motivation', 'comprehension'];
 
-export function StepObstacle({ value, onChange, onNext, onBack }: StepProps<'obstacle'>): JSX.Element {
+export function StepObstacle({
+  value,
+  onChange,
+  onNext,
+  onBack,
+}: StepProps<'obstacle'>): JSX.Element {
   const { t } = useTranslation();
   return (
     <div className="ob-step">

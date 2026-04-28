@@ -83,9 +83,7 @@ export function OnboardingWizard(): JSX.Element | null {
   const cur = steps[stepIdx]!;
   const phase = PHASES[cur];
   const totalPhaseSteps = steps.filter((s) => PHASES[s] === phase).length;
-  const phaseStepIdx = steps
-    .slice(0, stepIdx + 1)
-    .filter((s) => PHASES[s] === phase).length;
+  const phaseStepIdx = steps.slice(0, stepIdx + 1).filter((s) => PHASES[s] === phase).length;
 
   const next = (): void => setStepIdx((i) => Math.min(i + 1, steps.length - 1));
   const back = (): void => setStepIdx((i) => Math.max(0, i - 1));

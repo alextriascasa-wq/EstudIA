@@ -23,8 +23,7 @@ export function Dashboard(): JSX.Element {
   const hasCompletedOnboarding = useAppStore((s) => s.hasCompletedOnboarding);
   const profileBannerDismissed = useAppStore((s) => s.profileBannerDismissed);
   const dismissProfileBanner = useAppStore((s) => s.dismissProfileBanner);
-  const showProfileBanner =
-    hasCompletedOnboarding && !studyProfile && !profileBannerDismissed;
+  const showProfileBanner = hasCompletedOnboarding && !studyProfile && !profileBannerDismissed;
 
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
   const todayTasks = useMemo(() => tasks.filter((t) => t.date === today()), [tasks]);

@@ -5,7 +5,12 @@ import type { StepProps } from '../types';
 
 const OPTIONS: PreferredStudyTime[] = ['morning', 'afternoon', 'evening', 'night', 'flexible'];
 
-export function StepTime({ value, onChange, onNext, onBack }: StepProps<'preferredTime'>): JSX.Element {
+export function StepTime({
+  value,
+  onChange,
+  onNext,
+  onBack,
+}: StepProps<'preferredTime'>): JSX.Element {
   const { t } = useTranslation();
   return (
     <div className="ob-step">

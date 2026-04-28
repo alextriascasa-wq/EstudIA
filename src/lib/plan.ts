@@ -14,7 +14,11 @@ function pickModulesByObstacle(p: StudyProfile): ModuleRecommendation[] {
   switch (p.obstacle) {
     case 'memory':
       out.push({ module: 'cards', priority: 'essential', reasonKey: 'plan.reasons.cardsMemory' });
-      out.push({ module: 'feynman', priority: 'recommended', reasonKey: 'plan.reasons.feynmanMemory' });
+      out.push({
+        module: 'feynman',
+        priority: 'recommended',
+        reasonKey: 'plan.reasons.feynmanMemory',
+      });
       break;
     case 'comprehension':
       out.push({ module: 'feynman', priority: 'essential', reasonKey: 'plan.reasons.feynmanComp' });
@@ -22,7 +26,11 @@ function pickModulesByObstacle(p: StudyProfile): ModuleRecommendation[] {
       break;
     case 'focus':
       out.push({ module: 'timer', priority: 'essential', reasonKey: 'plan.reasons.timerFocus' });
-      out.push({ module: 'sounds', priority: 'recommended', reasonKey: 'plan.reasons.soundsFocus' });
+      out.push({
+        module: 'sounds',
+        priority: 'recommended',
+        reasonKey: 'plan.reasons.soundsFocus',
+      });
       break;
     case 'time':
       out.push({ module: 'timer', priority: 'essential', reasonKey: 'plan.reasons.timerTime' });
@@ -30,7 +38,11 @@ function pickModulesByObstacle(p: StudyProfile): ModuleRecommendation[] {
       break;
     case 'motivation':
       out.push({ module: 'timer', priority: 'essential', reasonKey: 'plan.reasons.timerMotiv' });
-      out.push({ module: 'recovery', priority: 'recommended', reasonKey: 'plan.reasons.recoveryMotiv' });
+      out.push({
+        module: 'recovery',
+        priority: 'recommended',
+        reasonKey: 'plan.reasons.recoveryMotiv',
+      });
       break;
   }
   return out;
@@ -56,15 +68,10 @@ function buildModules(p: StudyProfile): ModuleRecommendation[] {
     }
   }
 
-  return mods.slice().sort(
-    (a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority],
-  );
+  return mods.slice().sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]);
 }
 
-function buildDailyTemplate(
-  modules: ModuleRecommendation[],
-  dailyMinutes: number,
-): DailyBlock[] {
+function buildDailyTemplate(modules: ModuleRecommendation[], dailyMinutes: number): DailyBlock[] {
   const essentials = modules.filter((m) => m.priority === 'essential');
   const recommended = modules.filter((m) => m.priority === 'recommended');
 

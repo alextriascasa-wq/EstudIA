@@ -101,7 +101,12 @@ export function Profile(): JSX.Element {
             <button
               key={s}
               className="tag"
-              onClick={() => set('subjects', draft.subjects.filter((x) => x !== s))}
+              onClick={() =>
+                set(
+                  'subjects',
+                  draft.subjects.filter((x) => x !== s),
+                )
+              }
             >
               {s} ×
             </button>

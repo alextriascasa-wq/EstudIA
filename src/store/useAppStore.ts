@@ -349,9 +349,7 @@ export const useAppStore = create<AppStore>()(
 
       updateActiveExam: (patch) => {
         set((prev) => ({
-          activeExam: prev.activeExam
-            ? { ...prev.activeExam, ...patch }
-            : prev.activeExam,
+          activeExam: prev.activeExam ? { ...prev.activeExam, ...patch } : prev.activeExam,
         }));
       },
 
