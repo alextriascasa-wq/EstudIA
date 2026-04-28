@@ -4,6 +4,18 @@ import type { SessionLength } from '@/types';
 import type { StepProps } from '../types';
 
 const OPTIONS: SessionLength[] = [15, 30, 60, 90];
+const ICONS: Record<SessionLength, string> = {
+  15: '⚡',
+  30: '⏱️',
+  60: '🎯',
+  90: '🔥',
+};
+const COLORS: Record<SessionLength, string> = {
+  15: 'cyan',
+  30: 'emerald',
+  60: 'amber',
+  90: 'coral',
+};
 
 export function StepMinutes({
   value,
@@ -20,14 +32,20 @@ export function StepMinutes({
         {OPTIONS.map((opt) => (
           <button
             key={opt}
-            className={`mc${value === opt ? ' on' : ''}`}
+            className={`ob-mc ob-c-${COLORS[opt]}${value === opt ? ' on' : ''}`}
             onClick={() => {
               onChange(opt);
               onNext();
             }}
           >
-            <strong>{t('onboarding.options.minutes.label', { min: opt })}</strong>
-            <span>{t(`onboarding.options.minutes.${opt}.desc`)}</span>
+            <span className="ob-mc-icon">{ICONS[opt]}</span>
+            <div className="ob-mc-body">
+              <strong className="ob-mc-title">
+                {t('onboarding.options.minutes.label', { min: opt })}
+              </strong>
+              <span className="ob-mc-desc">{t(`onboarding.options.minutes.${opt}.desc`)}</span>
+            </div>
+            {value === opt && <span className="ob-mc-check">✓</span>}
           </button>
         ))}
       </div>

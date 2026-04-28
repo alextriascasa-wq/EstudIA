@@ -4,6 +4,20 @@ import type { PreferredStudyTime } from '@/types';
 import type { StepProps } from '../types';
 
 const OPTIONS: PreferredStudyTime[] = ['morning', 'afternoon', 'evening', 'night', 'flexible'];
+const ICONS: Record<PreferredStudyTime, string> = {
+  morning: '🌅',
+  afternoon: '☀️',
+  evening: '🌆',
+  night: '🌙',
+  flexible: '🔄',
+};
+const COLORS: Record<PreferredStudyTime, string> = {
+  morning: 'amber',
+  afternoon: 'coral',
+  evening: 'rose',
+  night: 'violet',
+  flexible: 'emerald',
+};
 
 export function StepTime({
   value,
@@ -20,14 +34,18 @@ export function StepTime({
         {OPTIONS.map((opt) => (
           <button
             key={opt}
-            className={`mc${value === opt ? ' on' : ''}`}
+            className={`ob-mc ob-c-${COLORS[opt]}${value === opt ? ' on' : ''}`}
             onClick={() => {
               onChange(opt);
               onNext();
             }}
           >
-            <strong>{t(`onboarding.options.time.${opt}.title`)}</strong>
-            <span>{t(`onboarding.options.time.${opt}.desc`)}</span>
+            <span className="ob-mc-icon">{ICONS[opt]}</span>
+            <div className="ob-mc-body">
+              <strong className="ob-mc-title">{t(`onboarding.options.time.${opt}.title`)}</strong>
+              <span className="ob-mc-desc">{t(`onboarding.options.time.${opt}.desc`)}</span>
+            </div>
+            {value === opt && <span className="ob-mc-check">✓</span>}
           </button>
         ))}
       </div>

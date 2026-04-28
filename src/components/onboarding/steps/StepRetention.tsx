@@ -4,6 +4,20 @@ import type { SelfRetention } from '@/types';
 import type { StepProps } from '../types';
 
 const STEPS: SelfRetention[] = [1, 2, 3, 4, 5];
+const EMOJIS: Record<SelfRetention, string> = {
+  1: '🥱',
+  2: '😐',
+  3: '🙂',
+  4: '😊',
+  5: '🤩',
+};
+const COLORS: Record<SelfRetention, string> = {
+  1: 'rose',
+  2: 'coral',
+  3: 'amber',
+  4: 'emerald',
+  5: 'cyan',
+};
 
 export function StepRetention({
   value,
@@ -12,7 +26,6 @@ export function StepRetention({
   onBack,
 }: StepProps<'selfRetention'>): JSX.Element {
   const { t } = useTranslation();
-  const current = value ?? 3;
   return (
     <div className="ob-step">
       <h2>{t('onboarding.steps.retention.title')}</h2>
@@ -22,10 +35,12 @@ export function StepRetention({
         {STEPS.map((s) => (
           <button
             key={s}
-            className={`mc ob-ret-btn${current === s ? ' on' : ''}`}
+            className={`ob-mc ob-ret-btn ob-c-${COLORS[s]}${value === s ? ' on' : ''}`}
             onClick={() => onChange(s)}
           >
-            <strong>{s}</strong>
+            <span className="ob-mc-icon" style={{ fontSize: 40 }}>
+              {EMOJIS[s]}
+            </span>
           </button>
         ))}
       </div>

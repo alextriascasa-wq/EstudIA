@@ -207,15 +207,16 @@ export function OnboardingWizard(): JSX.Element | null {
       <div className="ob-modal c glow">
         {phase !== null && (
           <div className="ob-progress">
-            <span className="ob-phase-label">
-              {t(`onboarding.phases.${phase}`)} · {phaseStepIdx}/{totalPhaseSteps}
-            </span>
-            <div className="pb">
-              <motion.div
-                className="fill"
-                animate={{ width: `${(phaseStepIdx / totalPhaseSteps) * 100}%` }}
-              />
+            <div className="ob-phase-dots">
+              {[1, 2, 3].map((p) => {
+                const cls =
+                  p === phase ? 'active' : p < phase ? 'done' : '';
+                return <span key={p} className={`ob-phase-dot ${cls}`} />;
+              })}
             </div>
+            <span className="ob-phase-label">
+              {t(`onboarding.phases.${phase}`)} · {phaseStepIdx} / {totalPhaseSteps}
+            </span>
           </div>
         )}
         <AnimatePresence mode="wait">
