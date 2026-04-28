@@ -5,6 +5,33 @@ import { useStudyProfile, usePlan, useImprovement } from '@/hooks/usePlan';
 import { useAppStore } from '@/store/useAppStore';
 import { generatePlanNarrative } from '@/lib/planAI';
 import { showToast } from '@/components/ui/Toast';
+import type { RecommendedModule } from '@/types';
+
+const MODULE_ICONS: Record<RecommendedModule, string> = {
+  cards: '🧠',
+  feynman: '💬',
+  timer: '⏱️',
+  exams: '📝',
+  languages: '🌍',
+  sounds: '🎵',
+  recovery: '💚',
+};
+
+const MODULE_COLORS: Record<RecommendedModule, string> = {
+  cards: 'amber',
+  feynman: 'coral',
+  timer: 'cyan',
+  exams: 'emerald',
+  languages: 'emerald',
+  sounds: 'violet',
+  recovery: 'rose',
+};
+
+const PRIORITY_COLORS: Record<'essential' | 'recommended' | 'optional', string> = {
+  essential: 'amber',
+  recommended: 'coral',
+  optional: 'muted',
+};
 
 export function Plan(): JSX.Element {
   const { t, i18n } = useTranslation();
@@ -48,7 +75,7 @@ export function Plan(): JSX.Element {
       </header>
 
       <div className="c zeig plan-improvement">
-        <div className="ob-stat-big">+{improvement.delta}%</div>
+        <div className="plan-imp-stat">+{improvement.delta}%</div>
         <div className="lbl">{t('onboarding.results.deltaLabel')}</div>
         <ul className="ob-breakdown-list">
           <li>
@@ -70,12 +97,19 @@ export function Plan(): JSX.Element {
           if (mods.length === 0) return null;
           return (
             <div key={pri} className="plan-module-group">
-              <h3>{t(key)}</h3>
-              <div className="g3">
+              <h3 className={`plan-pri plan-pri-${PRIORITY_COLORS[pri]}`}>{t(key)}</h3>
+              <div className="plan-mc-grid">
                 {mods.map((m) => (
-                  <Link key={m.module} to={`/${m.module}`} className="mc">
-                    <strong>{t(`nav.${m.module}`)}</strong>
-                    <span>{t(m.reasonKey)}</span>
+                  <Link
+                    key={m.module}
+                    to={`/${m.module}`}
+                    className={`plan-mc plan-c-${MODULE_COLORS[m.module]}`}
+                  >
+                    <span className="plan-mc-icon">{MODULE_ICONS[m.module]}</span>
+                    <div className="plan-mc-body">
+                      <strong className="plan-mc-title">{t(`nav.${m.module}`)}</strong>
+                      <span className="plan-mc-desc">{t(m.reasonKey)}</span>
+                    </div>
                   </Link>
                 ))}
               </div>
@@ -86,11 +120,14 @@ export function Plan(): JSX.Element {
 
       <div className="c plan-daily">
         <h3>{t('plan.dailyTemplate')}</h3>
-        <div className="g3">
+        <div className="plan-daily-grid">
           {plan.dailyTemplate.map((b) => (
-            <div key={b.order} className="mc">
-              <strong>{t(`nav.${b.module}`)}</strong>
-              <span>{b.minutes} min</span>
+            <div key={b.order} className={`plan-mc plan-c-${MODULE_COLORS[b.module]}`}>
+              <span className="plan-mc-icon">{MODULE_ICONS[b.module]}</span>
+              <div className="plan-mc-body">
+                <strong className="plan-mc-title">{t(`nav.${b.module}`)}</strong>
+                <span className="plan-mc-desc plan-mc-min">{b.minutes} min</span>
+              </div>
             </div>
           ))}
         </div>
@@ -98,10 +135,12 @@ export function Plan(): JSX.Element {
 
       <div className="c plan-milestones">
         <h3>{t('plan.milestones.title')}</h3>
-        <ul>
+        <ul className="plan-milestones-list">
           {plan.milestones.map((m) => (
             <li key={m.whenISO}>
-              <strong>{m.whenISO}</strong> · {t(m.goalKey)} · {m.target}
+              <span className="plan-ms-date">{m.whenISO}</span>
+              <span className="plan-ms-goal">{t(m.goalKey)}</span>
+              <span className="plan-ms-target">{m.target}</span>
             </li>
           ))}
         </ul>

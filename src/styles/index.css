@@ -2553,6 +2553,159 @@
   line-height: 1.6;
 }
 
+/* ─── Plan page v2 — module cards w/ icons + colors ─────────────────────── */
+
+.plan-imp-stat {
+  font-size: 72px;
+  font-weight: 900;
+  font-family: 'Fraunces', serif;
+  color: var(--ok);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.plan-pri {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+.plan-pri-amber {
+  background: color-mix(in srgb, var(--a) 18%, var(--s));
+  color: var(--a);
+  border: 1px solid color-mix(in srgb, var(--a) 35%, transparent);
+}
+.plan-pri-coral {
+  background: color-mix(in srgb, var(--p) 18%, var(--s));
+  color: var(--p);
+  border: 1px solid color-mix(in srgb, var(--p) 35%, transparent);
+}
+.plan-pri-muted {
+  background: var(--s2);
+  color: var(--tm);
+  border: 1px solid var(--b);
+}
+
+.plan-mc-grid,
+.plan-daily-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.plan-mc {
+  --opt-c: #D4A017;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--opt-c) 10%, var(--s)), var(--s));
+  border: 1.5px solid color-mix(in srgb, var(--opt-c) 30%, transparent);
+  border-radius: var(--radius);
+  padding: 14px 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-spring);
+  overflow: hidden;
+}
+.plan-mc::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--opt-c);
+  opacity: 0.55;
+  transition: var(--transition);
+}
+.plan-mc:hover {
+  transform: translateY(-2px);
+  border-color: var(--opt-c);
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--opt-c) 22%, transparent);
+}
+.plan-mc:hover::after { opacity: 1; }
+
+.plan-mc-icon {
+  font-size: 30px;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px color-mix(in srgb, var(--opt-c) 35%, transparent));
+}
+.plan-mc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+.plan-mc-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--t);
+  line-height: 1.3;
+}
+.plan-mc-desc {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ts);
+  line-height: 1.5;
+}
+.plan-mc-min {
+  font-weight: 700;
+  color: var(--opt-c);
+  font-size: 13px;
+}
+
+.plan-c-amber   { --opt-c: #D4A017; }
+.plan-c-coral   { --opt-c: #E05C3A; }
+.plan-c-emerald { --opt-c: #10b981; }
+.plan-c-cyan    { --opt-c: #06b6d4; }
+.plan-c-rose    { --opt-c: #f43f5e; }
+.plan-c-violet  { --opt-c: #8b5cf6; }
+
+.plan-milestones-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.plan-milestones-list li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-left: 3px solid var(--a);
+  border-radius: var(--radius-sm);
+}
+.plan-ms-date {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--a);
+  white-space: nowrap;
+}
+.plan-ms-goal {
+  font-size: 14px;
+  color: var(--t);
+}
+.plan-ms-target {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ok);
+  font-family: 'Fraunces', serif;
+}
+
 /* ─── Onboarding Wizard v2 — colorful, gradient, iconic ─────────────────── */
 
 .ob-overlay {
