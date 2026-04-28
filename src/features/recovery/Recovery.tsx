@@ -21,8 +21,7 @@ export function Recovery(): JSX.Element {
   const timerRef = useRef<number | null>(null);
   const activeRef = useRef<boolean>(false);
 
-  // One random stretch per mount — Pro re-rolls on every render; keeping it
-  // stable while the tab is open is friendlier to the user.
+  // One random stretch per mount — stable while the tab is open.
   const stretch = useMemo(() => {
     const pick = STRETCHES[Math.floor(Math.random() * STRETCHES.length)];
     return pick ?? STRETCHES[0]!;
@@ -91,40 +90,14 @@ export function Recovery(): JSX.Element {
       </div>
       <div className="g2">
         {/* NSDR */}
-        <div className="c glow" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36, marginBottom: 12 }}>🧘</div>
-          <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 8 }}>
-            {t('recovery.nsdr.title')}
-          </h3>
-          <p
-            style={{
-              fontSize: 12,
-              color: 'var(--ts)',
-              lineHeight: 1.5,
-              marginBottom: 18,
-            }}
-          >
-            {t('recovery.nsdr.desc')}
-          </p>
-          <div
-            style={{
-              background: 'var(--al)',
-              borderRadius: 'var(--radius-sm)',
-              padding: 16,
-              textAlign: 'left',
-            }}
-          >
+        <div className="c glow text-center">
+          <div className="rec-icon">🧘</div>
+          <h3 className="rec-card-title">{t('recovery.nsdr.title')}</h3>
+          <p className="rec-card-desc">{t('recovery.nsdr.desc')}</p>
+          <div className="rec-steps-box">
             {(t('recovery.nsdr.steps', { returnObjects: true }) as string[]).map((s, i) => (
-              <div
-                key={s}
-                style={{
-                  display: 'flex',
-                  gap: 8,
-                  marginBottom: 5,
-                  fontSize: 12,
-                }}
-              >
-                <span style={{ color: 'var(--a)', fontWeight: 700 }}>{i + 1}.</span>
+              <div key={s} className="rec-step">
+                <span className="rec-step-num">{i + 1}.</span>
                 <span>{s}</span>
               </div>
             ))}
@@ -132,21 +105,10 @@ export function Recovery(): JSX.Element {
         </div>
 
         {/* Breathing 4-4-6 */}
-        <div className="c glow" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36, marginBottom: 12 }}>🌬️</div>
-          <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 8 }}>
-            {t('recovery.breath.title')}
-          </h3>
-          <p
-            style={{
-              fontSize: 12,
-              color: 'var(--ts)',
-              lineHeight: 1.5,
-              marginBottom: 18,
-            }}
-          >
-            {t('recovery.breath.desc')}
-          </p>
+        <div className="c glow text-center">
+          <div className="rec-icon">🌬️</div>
+          <h3 className="rec-card-title">{t('recovery.breath.title')}</h3>
+          <p className="rec-card-desc">{t('recovery.breath.desc')}</p>
           {active ? (
             <>
               <div
@@ -154,13 +116,7 @@ export function Recovery(): JSX.Element {
               >
                 {t(`recovery.breath.${phase}`)}
               </div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: 'var(--ts)',
-                  margin: '10px 0',
-                }}
-              >
+              <div className="rec-breath-progress">
                 {t('recovery.breath.progress', { n: count + 1 })}
               </div>
               <button className="bs" onClick={stop}>
@@ -170,7 +126,7 @@ export function Recovery(): JSX.Element {
           ) : (
             <>
               <div className="breath-circle">{t('recovery.breath.press')}</div>
-              <button className="bp" style={{ marginTop: 16 }} onClick={start}>
+              <button className="bp mt-4" onClick={start}>
                 {t('recovery.breath.cycles')}
               </button>
             </>
@@ -180,63 +136,27 @@ export function Recovery(): JSX.Element {
 
       {/* Random stretch */}
       <div className="c">
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-          <div
-            style={{
-              width: 60,
-              height: 60,
-              borderRadius: '50%',
-              background: 'var(--il)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 28,
-            }}
-          >
-            {stretch.ico}
-          </div>
-          <div style={{ flex: 1 }}>
+        <div className="rec-stretch-row">
+          <div className="rec-stretch-icon">{stretch.ico}</div>
+          <div className="flex-1">
             <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 5 }}>
               {t(`recovery.stretches.${stretch.id}.name`)}
             </h3>
             <p style={{ fontSize: 13, color: 'var(--ts)', lineHeight: 1.5 }}>
               {t(`recovery.stretches.${stretch.id}.desc`)}
             </p>
-            <span
-              className="badge"
-              style={{
-                background: 'var(--okl)',
-                color: 'var(--ok)',
-                marginTop: 6,
-              }}
-            >
-              ~{stretch.dur}s
-            </span>
+            <span className="badge badge-ok mt-1.5">~{stretch.dur}s</span>
           </div>
         </div>
       </div>
 
       {/* Forbidden during break */}
-      <div
-        className="c"
-        style={{ background: 'var(--errl)', borderColor: 'rgba(239,68,68,.15)' }}
-      >
-        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-          <span style={{ fontSize: 18, marginTop: 2 }}>⛔</span>
+      <div className="c c-danger">
+        <div className="info-row">
+          <span className="info-icon">⛔</span>
           <div>
-            <h4
-              style={{
-                fontSize: 14,
-                fontWeight: 700,
-                color: 'var(--err)',
-                marginBottom: 5,
-              }}
-            >
-              {t('recovery.forbidden.title')}
-            </h4>
-            <p style={{ fontSize: 13, lineHeight: 1.6 }}>
-              {t('recovery.forbidden.desc')}
-            </p>
+            <h4 className="danger-title">{t('recovery.forbidden.title')}</h4>
+            <p className="info-body">{t('recovery.forbidden.desc')}</p>
           </div>
         </div>
       </div>

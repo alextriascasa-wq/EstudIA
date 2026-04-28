@@ -6,8 +6,7 @@ export function Techniques(): JSX.Element {
   const { t } = useTranslation();
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
-  const toggle = (name: string): void =>
-    setOpen((prev) => ({ ...prev, [name]: !prev[name] }));
+  const toggle = (name: string): void => setOpen((prev) => ({ ...prev, [name]: !prev[name] }));
 
   return (
     <div className="sec">
@@ -16,127 +15,49 @@ export function Techniques(): JSX.Element {
         <p>{t('headers.techniques.desc')}</p>
       </div>
 
-      <div
-        className="c"
-        style={{ background: 'var(--errl)', borderColor: 'rgba(239,68,68,.15)' }}
-      >
-        <div style={{ display: 'flex', gap: 12 }}>
-          <span style={{ fontSize: 18 }}>⛔</span>
+      <div className="c c-danger">
+        <div className="info-row">
+          <span className="info-icon">⛔</span>
           <div>
-            <h4 style={{ fontSize: 14, fontWeight: 700, color: 'var(--err)' }}>
-              NO funcionen: Rellegir, Subratllar, Resums passius
-            </h4>
-            <p style={{ fontSize: 12, lineHeight: 1.6 }}>
-              Impacte NUL demostrat. El cervell confon familiaritat visual amb
-              aprenentatge.
+            <h4 className="danger-title">NO funcionen: Rellegir, Subratllar, Resums passius</h4>
+            <p className="info-body">
+              Impacte NUL demostrat. El cervell confon familiaritat visual amb aprenentatge.
             </p>
           </div>
         </div>
       </div>
 
-      {TECHNIQUES.map((t) => {
-        const isOpen = open[t.nm] ?? false;
+      {TECHNIQUES.map((tech) => {
+        const isOpen = open[tech.nm] ?? false;
         return (
-          <div
-            key={t.nm}
-            className="c glow"
-            style={{ padding: 0, overflow: 'hidden', cursor: 'pointer' }}
-            onClick={() => toggle(t.nm)}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '18px 20px',
-              }}
-            >
-              <div
-                style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: 'var(--radius-sm)',
-                  background: t.bg,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 21,
-                }}
-              >
-                {t.ico}
+          <div key={tech.nm} className="c glow tech-card" onClick={() => toggle(tech.nm)}>
+            <div className="tech-card-row">
+              <div className="tech-icon" style={{ background: tech.bg }}>
+                {tech.ico}
               </div>
-              <div style={{ flex: 1 }}>
-                <div
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                  }}
-                >
-                  {t.nm}
-                  <span
-                    className="badge"
-                    style={{
-                      background: t.rat === 'Alta' ? 'var(--okl)' : 'var(--wl)',
-                      color: t.rat === 'Alta' ? 'var(--ok)' : 'var(--w)',
-                    }}
-                  >
-                    {t.rat}
+              <div className="flex-1">
+                <div className="tech-card-name">
+                  {tech.nm}
+                  <span className={`badge ${tech.rat === 'Alta' ? 'badge-ok' : 'badge-w'}`}>
+                    {tech.rat}
                   </span>
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--ts)', marginTop: 2 }}>
-                  {t.sum}
-                </div>
+                <div className="tech-card-sum">{tech.sum}</div>
               </div>
-              <span
-                style={{
-                  color: 'var(--tm)',
-                  transition: 'var(--transition)',
-                  transform: isOpen ? 'rotate(90deg)' : 'none',
-                  display: 'inline-block',
-                }}
-              >
-                ›
-              </span>
+              <span className={`tech-chevron${isOpen ? ' open' : ''}`}>›</span>
             </div>
             {isOpen && (
-              <div
-                style={{
-                  padding: '0 20px 18px',
-                  borderTop: '1px solid var(--bl)',
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div style={{ paddingTop: 14 }}>
-                  {t.steps.map((s, i) => (
-                    <div
-                      key={s}
-                      style={{ display: 'flex', gap: 10, marginBottom: 7 }}
-                    >
+              <div className="tech-content" onClick={(e) => e.stopPropagation()}>
+                <div className="tech-steps">
+                  {tech.steps.map((s, i) => (
+                    <div key={s} className="tech-step">
                       <div
-                        style={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: 7,
-                          background: t.bg,
-                          color: t.col,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: 11,
-                          fontWeight: 700,
-                          flexShrink: 0,
-                        }}
+                        className="tech-step-num"
+                        style={{ background: tech.bg, color: tech.col }}
                       >
                         {i + 1}
                       </div>
-                      <span
-                        style={{ fontSize: 12, lineHeight: 1.5, paddingTop: 3 }}
-                      >
-                        {s}
-                      </span>
+                      <span className="tech-step-text">{s}</span>
                     </div>
                   ))}
                 </div>

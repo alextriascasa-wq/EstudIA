@@ -1,147 +1,126 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
+import { useFriends } from './hooks/useFriends';
+import { FriendsList } from './FriendsList';
+import { ActivityFeed } from './ActivityFeed';
+import { ChallengeList } from './ChallengeList';
+import { CreateChallenge } from './CreateChallenge';
 import { Leaderboard } from './Leaderboard';
-import { FriendCard } from './FriendCard';
 import { ShareModal } from './ShareModal';
+import type { Friend } from '@/types';
 import { MOCK_FRIENDS } from '@/lib/mockFriends';
-import type { Friend, SharedResource } from '@/types';
-import { showToast } from '@/components/ui/Toast';
+
+type SocialTab = 'friends' | 'feed' | 'challenges' | 'leaderboard';
+
+const TABS: { id: SocialTab; icon: string; labelKey: string }[] = [
+  { id: 'friends', icon: '👥', labelKey: 'social.friends' },
+  { id: 'feed', icon: '📡', labelKey: 'social.feed.title' },
+  { id: 'challenges', icon: '⚔️', labelKey: 'social.challenges' },
+  { id: 'leaderboard', icon: '🏆', labelKey: 'social.leaderboard' },
+];
 
 export function Social(): JSX.Element {
-  const { friends, sharedResources, friendCode } = useAppStore();
-  const patch = useAppStore(s => s.patch);
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<SocialTab>('friends');
+  const [showCreate, setShowCreate] = useState(false);
+  const [sortBy, setSortBy] = useState<'xp' | 'streak' | 'weeklyMinutes'>('xp');
+  const [shareTarget, setShareTarget] = useState<Friend | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'ranking' | 'friends' | 'inbox'>('ranking');
-  const [sortRankingBy, setSortRankingBy] = useState<'xp' | 'streak' | 'weeklyMinutes'>('xp');
-  const [friendToShare, setFriendToShare] = useState<Friend | null>(null);
+  const user = useAppStore((s) => s.authState.user);
+  const storeFriends = useAppStore((s) => s.friends);
+  const leaderboardFriends = storeFriends.length > 0 ? storeFriends : MOCK_FRIENDS;
 
-  // Initialize mock friends if empty
-  useEffect(() => {
-    if (friends.length === 0) {
-      patch({ friends: MOCK_FRIENDS });
-    }
-  }, [friends.length, patch]);
-
-  const activeFriends = friends.length > 0 ? friends : MOCK_FRIENDS;
-
-  const handleAcceptResource = (res: SharedResource) => {
-    // In a real app we'd merge it into decks or quizzes
-    showToast({ title: '✅ Recurs importat', desc: `S'ha desat "${res.name}" a la teva biblioteca.` });
-    const updated = sharedResources.filter(r => r.id !== res.id);
-    patch({ sharedResources: updated });
-  };
-
-  const handleRejectResource = (res: SharedResource) => {
-    const updated = sharedResources.filter(r => r.id !== res.id);
-    patch({ sharedResources: updated });
-  };
+  // accepted Friendship[] needed for ActivityFeed + CreateChallenge
+  const { accepted } = useFriends();
 
   return (
     <div className="sec">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-        <div>
-          <h2 style={{ fontSize: 28, fontWeight: 900 }}>Ecosistema Social</h2>
-          <p style={{ color: 'var(--ts)', marginTop: 4 }}>
-            Estudia amb amics, competeix per veure qui puja més nivell i comparteix coneixement.
-          </p>
-        </div>
-        <div className="c" style={{ padding: '8px 16px', background: 'var(--al)', border: '1px solid var(--a)' }}>
-          <div style={{ fontSize: 11, color: 'var(--ts)', fontWeight: 600, textTransform: 'uppercase' }}>El teu codi d'amic</div>
-          <div style={{ fontSize: 18, fontWeight: 900, color: 'var(--a)' }}>{friendCode}</div>
-        </div>
+      <div className="sec-hdr">
+        <h2>{t('social.title')}</h2>
+        <p>{t('social.subtitle')}</p>
       </div>
 
-      <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
-        <button 
-          className={`bs ${activeTab === 'ranking' ? 'on' : ''}`} 
-          onClick={() => setActiveTab('ranking')}
-        >
-          🏆 Rànquing
-        </button>
-        <button 
-          className={`bs ${activeTab === 'friends' ? 'on' : ''}`} 
-          onClick={() => setActiveTab('friends')}
-        >
-          👥 Els meus Amics ({activeFriends.length})
-        </button>
-        <button 
-          className={`bs ${activeTab === 'inbox' ? 'on' : ''}`} 
-          onClick={() => setActiveTab('inbox')}
-        >
-          📥 Safata d'entrada 
-          {sharedResources.length > 0 && (
-            <span style={{ background: 'var(--err)', color: '#fff', borderRadius: '50%', width: 20, height: 20, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, marginLeft: 8 }}>
-              {sharedResources.length}
-            </span>
-          )}
-        </button>
+      {/* Sub-navigation */}
+      <div className="social-tabs">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            className={`social-tab-btn${activeTab === tab.id ? ' on' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span>{tab.icon}</span>
+            <span>{t(tab.labelKey)}</span>
+          </button>
+        ))}
       </div>
 
-      {activeTab === 'ranking' && (
+      {/* Friends */}
+      {activeTab === 'friends' &&
+        (user ? (
+          <FriendsList />
+        ) : (
+          <div className="c empty">
+            <p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p>
+          </div>
+        ))}
+
+      {/* Activity feed */}
+      {activeTab === 'feed' &&
+        (user ? (
+          <ActivityFeed accepted={accepted} />
+        ) : (
+          <div className="c empty">
+            <p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p>
+          </div>
+        ))}
+
+      {/* Challenges */}
+      {activeTab === 'challenges' &&
+        (user ? (
+          <>
+            {accepted.length > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+                <button className="bp" onClick={() => setShowCreate(true)}>
+                  ⚔️ {t('social.createChallenge')}
+                </button>
+              </div>
+            )}
+            <ChallengeList />
+          </>
+        ) : (
+          <div className="c empty">
+            <p style={{ color: 'var(--ts)' }}>{t('social.loginRequired')}</p>
+          </div>
+        ))}
+
+      {/* Leaderboard */}
+      {activeTab === 'leaderboard' && (
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-            <span style={{ fontSize: 13, color: 'var(--ts)', alignSelf: 'center' }}>Ordenar per:</span>
-            <select className="inp" style={{ width: 200 }} value={sortRankingBy} onChange={(e) => setSortRankingBy(e.target.value as any)}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 16 }}>
+            <span style={{ fontSize: 13, color: 'var(--ts)' }}>{t('social.sortBy')}:</span>
+            <select
+              className="inp"
+              style={{ width: 200 }}
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+            >
               <option value="xp">Total XP</option>
-              <option value="streak">Racha 🔥</option>
-              <option value="weeklyMinutes">Temps aquesta setmana</option>
+              <option value="streak">🔥 {t('social.streak')}</option>
+              <option value="weeklyMinutes">{t('social.weeklyMinutes')}</option>
             </select>
           </div>
-          <Leaderboard sortedFriends={activeFriends} sortBy={sortRankingBy} />
+          <Leaderboard sortedFriends={leaderboardFriends} sortBy={sortBy} />
         </div>
       )}
 
-      {activeTab === 'friends' && (
-        <div className="g4">
-          <div className="c card-hover glass" style={{ border: '1px dashed var(--a)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', minHeight: 200 }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>➕</div>
-            <h4 style={{ fontWeight: 800, marginBottom: 8 }}>Afegir Amic</h4>
-            <p style={{ fontSize: 12, color: 'var(--ts)', marginBottom: 16 }}>Afegeix algú pel seu codi d'amic</p>
-            <input type="text" className="inp" placeholder="Ex: SF-A1B2C" style={{ width: '80%', marginBottom: 12 }} />
-            <button className="bp" style={{ width: '80%' }}>Afegir</button>
-          </div>
-
-          {activeFriends.map(f => (
-            <FriendCard key={f.id} friend={f} onShare={setFriendToShare} />
-          ))}
-        </div>
+      {/* Create challenge modal */}
+      {showCreate && accepted.length > 0 && (
+        <CreateChallenge friends={accepted} onClose={() => setShowCreate(false)} />
       )}
 
-      {activeTab === 'inbox' && (
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          {sharedResources.length === 0 ? (
-            <div className="c empty">
-              <span style={{ fontSize: 40 }}>📥</span>
-              <h3 style={{ fontSize: 16, fontWeight: 800, marginTop: 16 }}>No tens recursos nous</h3>
-              <p>Quan els teus amics et comparteixin baralles o apunts, apareixeran aquí.</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {sharedResources.map(res => (
-                <div key={res.id} className="c glass" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <div style={{ fontSize: 32 }}>
-                    {res.type === 'deck' ? '📇' : res.type === 'quiz' ? '📝' : '✍️'}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ fontWeight: 800 }}>{res.name}</h4>
-                    <p style={{ fontSize: 13, color: 'var(--ts)' }}>
-                      Enviat per <strong>{res.fromName}</strong> · {res.date}
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <button className="bs" onClick={() => handleRejectResource(res)}>Rebutjar</button>
-                    <button className="bp" onClick={() => handleAcceptResource(res)}>Acceptar</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {friendToShare && (
-        <ShareModal friend={friendToShare} onClose={() => setFriendToShare(null)} />
-      )}
+      {/* Legacy share modal */}
+      {shareTarget && <ShareModal friend={shareTarget} onClose={() => setShareTarget(null)} />}
     </div>
   );
 }

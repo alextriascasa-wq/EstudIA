@@ -44,12 +44,7 @@ export function Stats(): JSX.Element {
   const topCards = [
     { l: 'Últims 7 dies', v: `${totalMins7}m`, sub: 'temps total', c: 'var(--a)' },
     { l: 'Mitjana diària', v: `${avgMin7}m`, sub: 'objectiu: 120m', c: 'var(--p)' },
-    {
-      l: 'Cards 7d',
-      v: totalCards7,
-      sub: `${totalCorrect7} correctes`,
-      c: 'var(--i)',
-    },
+    { l: 'Cards 7d', v: totalCards7, sub: `${totalCorrect7} correctes`, c: 'var(--i)' },
     {
       l: 'Precisió 7d',
       v: totalCards7 > 0 ? `${Math.round((totalCorrect7 / totalCards7) * 100)}%` : '--',
@@ -66,10 +61,7 @@ export function Stats(): JSX.Element {
     { l: 'Total flashcards', v: state.quizTotal },
     {
       l: 'Precisió global',
-      v:
-        state.quizTotal > 0
-          ? `${Math.round((state.quizCorrect / state.quizTotal) * 100)}%`
-          : '--',
+      v: state.quizTotal > 0 ? `${Math.round((state.quizCorrect / state.quizTotal) * 100)}%` : '--',
     },
     { l: 'Decks creats', v: state.decks.length + state.langDecks.length },
     { l: 'Nivell', v: state.level },
@@ -82,13 +74,14 @@ export function Stats(): JSX.Element {
         <p>{t('headers.stats.desc')}</p>
       </div>
 
+      {/* KPI CARDS */}
       <div className="g4">
         {topCards.map((s) => (
           <div key={s.l} className="c sc">
             <div className="top">
-              <span>{s.l}</span>
+              <span className="t-label">{s.l}</span>
             </div>
-            <div className="val" style={{ color: s.c }}>
+            <div className="val t-mono" style={{ color: s.c }}>
               {s.v}
             </div>
             <div className="sub">{s.sub}</div>
@@ -96,31 +89,26 @@ export function Stats(): JSX.Element {
         ))}
       </div>
 
+      {/* ACHIEVEMENTS */}
       <div className="c">
-        <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 14 }}>
-          🏅 Assoliments ({state.achievements.length}/{ACHIEVEMENTS.length})
-        </h3>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 8,
-          }}
-        >
+        <div className="card-hdr">
+          🏅 Assoliments
+          <span className="t-label" style={{ marginLeft: 'auto' }}>
+            {state.achievements.length}/{ACHIEVEMENTS.length}
+          </span>
+        </div>
+        <div className="g2">
           {ACHIEVEMENTS.map((a) => {
             const unlocked = state.achievements.includes(a.id);
             return (
               <div key={a.id} className={`ach ${unlocked ? 'unlocked' : 'locked'}`}>
-                <div className="ach-ico">{a.ico}</div>
+                <div className="ach-ico">{unlocked ? a.ico : '🔒'}</div>
                 <div className="ach-info">
-                  <div className="ach-name">{unlocked ? a.name : '???'}</div>
+                  <div className="ach-name">{unlocked ? a.name : '—'}</div>
                   <div className="ach-desc">{a.desc}</div>
                 </div>
                 {unlocked && (
-                  <span
-                    className="badge"
-                    style={{ background: 'var(--okl)', color: 'var(--ok)' }}
-                  >
+                  <span className="badge" style={{ background: 'var(--okl)', color: 'var(--ok)' }}>
                     ✓
                   </span>
                 )}
@@ -130,23 +118,22 @@ export function Stats(): JSX.Element {
         </div>
       </div>
 
+      {/* HEATMAP */}
       <div className="c">
-        <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 14 }}>
-          🔥 Activitat (Últims 120 dies)
-        </h3>
-        <div className="heatmap" style={{ marginBottom: 12 }}>
+        <div className="card-hdr">🔥 Activitat (Últims 120 dies)</div>
+        <div className="heatmap">
           {heatmapCells.map((c) => (
-            <div 
-              key={c.date} 
-              className="hm-cell" 
-              data-lvl={c.lvl} 
-              title={`${c.date}: ${c.val} minuts d'estudi`} 
+            <div
+              key={c.date}
+              className="hm-cell"
+              data-lvl={c.lvl}
+              title={`${c.date}: ${c.val} minuts d'estudi`}
             />
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 6, fontSize: 11, color: 'var(--ts)', alignItems: 'center' }}>
+        <div className="hm-legend">
           <span>Menys</span>
-          <div className="hm-cell" data-lvl="0" style={{ background: 'var(--bg)', border: '1px solid var(--b)' }} />
+          <div className="hm-cell" data-lvl="0" />
           <div className="hm-cell" data-lvl="1" />
           <div className="hm-cell" data-lvl="2" />
           <div className="hm-cell" data-lvl="3" />
@@ -155,23 +142,14 @@ export function Stats(): JSX.Element {
         </div>
       </div>
 
+      {/* GLOBAL STATS */}
       <div className="c">
-        <h3 style={{ fontSize: 15, fontWeight: 800, marginBottom: 14 }}>
-          📈 Estadístiques globals
-        </h3>
+        <div className="card-hdr">📈 Estadístiques globals</div>
         <div className="g2">
           {globalStats.map((s) => (
-            <div
-              key={s.l}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: '10px 0',
-                borderBottom: '1px solid var(--bl)',
-              }}
-            >
-              <span style={{ color: 'var(--ts)', fontSize: 13 }}>{s.l}</span>
-              <span style={{ fontWeight: 700, fontSize: 13 }}>{s.v}</span>
+            <div key={s.l} className="stat-row">
+              <span>{s.l}</span>
+              <span>{s.v}</span>
             </div>
           ))}
         </div>

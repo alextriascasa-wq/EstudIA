@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { uid, today } from '@/lib/date';
 import { generateExam, correctExam } from '@/lib/examAI';
-import type { QuizType, QuizQuestion, Quiz } from '@/types';
+import type { QuizType, Quiz, QuizQuestion } from '@/types';
 import { motion } from 'framer-motion';
 
 export function ExamSimulator(): JSX.Element {
@@ -10,23 +10,25 @@ export function ExamSimulator(): JSX.Element {
   const save = useAppStore((s) => s.save);
   const quizzes = useAppStore((s) => s.quizzes) || [];
   const addXP = useAppStore((s) => s.addXP);
+  const activeExam = useAppStore((s) => s.activeExam);
+  const startActiveExam = useAppStore((s) => s.startActiveExam);
+  const updateActiveExam = useAppStore((s) => s.updateActiveExam);
+  const clearActiveExam = useAppStore((s) => s.clearActiveExam);
 
   // Flow states: 'setup' | 'loading' | 'taking' | 'results'
-  const [view, setView] = useState<'setup' | 'loading' | 'taking' | 'results'>('setup');
-  
+  const [view, setView] = useState<'setup' | 'loading' | 'taking' | 'results'>(
+    activeExam ? 'taking' : 'setup'
+  );
+
   // Setup State
   const [topic, setTopic] = useState('');
   const [type, setType] = useState<QuizType>('test');
   const [count, setCount] = useState<number>(5);
 
-  // Active Exam State
-  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [currentIdx, setCurrentIdx] = useState(0);
-
-  // Results State
+  // Results / Error State
   const [score, setScore] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [resultsQuestions, setResultsQuestions] = useState<QuizQuestion[]>([]);
 
   const startGeneration = async () => {
     if (!topic.trim()) return;
@@ -34,55 +36,65 @@ export function ExamSimulator(): JSX.Element {
     setView('loading');
     try {
       const qs = await generateExam(topic, type, count, 'ca');
-      setQuestions(qs);
-      setAnswers({});
-      setCurrentIdx(0);
+      startActiveExam({
+        topic,
+        type,
+        questions: qs,
+        answers: {},
+        currentIdx: 0,
+        startedAt: new Date().toISOString(),
+      });
       setView('taking');
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error(e);
-      setError(e?.message || 'Error generant examen.');
+      setError(e instanceof Error ? e.message : 'Error generant examen.');
       setView('setup');
     }
   };
 
   const handleAnswer = (val: string) => {
-    const q = questions[currentIdx];
-    setAnswers({ ...answers, [q.id]: val });
+    if (!activeExam) return;
+    const q = activeExam.questions[activeExam.currentIdx];
+    if (!q) return;
+    updateActiveExam({ answers: { ...activeExam.answers, [q.id]: val } });
   };
 
+  const goTo = (idx: number) => updateActiveExam({ currentIdx: idx });
+
   const submitExam = async () => {
+    if (!activeExam) return;
+    // Snapshot before any await — survives external clears
+    const { topic: examTopic, type: examType, questions: examQuestions, answers: examAnswers } = activeExam;
     setView('loading');
     let finalScore = 0;
-    let finalQuestions = [...questions];
+    let finalQuestions = [...examQuestions];
 
-    if (type === 'test' || type === 'tf') {
+    if (examType === 'test' || examType === 'tf') {
       // Instant correction
       let correctCount = 0;
-      finalQuestions = questions.map((q) => {
-        const isCorrect = answers[q.id] === q.correctAnswer;
+      finalQuestions = examQuestions.map((q) => {
+        const isCorrect = examAnswers[q.id] === q.correctAnswer;
         if (isCorrect) correctCount++;
-        return { ...q, userAnswer: answers[q.id], isCorrect };
+        return { ...q, userAnswer: examAnswers[q.id], isCorrect };
       });
-      finalScore = Math.round((correctCount / questions.length) * 100);
-      setQuestions(finalQuestions);
+      finalScore = Math.round((correctCount / examQuestions.length) * 100);
     } else {
       // AI correction for open ended
       try {
-        const answeredQs = questions.map(q => ({ ...q, userAnswer: answers[q.id] || '' }));
+        const answeredQs = examQuestions.map((q) => ({ ...q, userAnswer: examAnswers[q.id] || '' }));
         const corrections = await correctExam(answeredQs, 'ca');
-        
+
         let correctCount = 0;
-        finalQuestions = questions.map(q => {
-          const cor = corrections.find(c => c.id === q.id);
+        finalQuestions = examQuestions.map((q) => {
+          const cor = corrections.find((c) => c.id === q.id);
           const isCorrect = cor ? cor.isCorrect : false;
           if (isCorrect) correctCount++;
-          return { ...q, userAnswer: answers[q.id], isCorrect, feedback: cor?.feedback };
+          return { ...q, userAnswer: examAnswers[q.id], isCorrect, feedback: cor?.feedback };
         });
-        finalScore = Math.round((correctCount / questions.length) * 100);
-        setQuestions(finalQuestions);
-      } catch (e: any) {
+        finalScore = Math.round((correctCount / examQuestions.length) * 100);
+      } catch (e: unknown) {
         console.error(e);
-        setError(e?.message || 'Error corregint examen.');
+        setError(e instanceof Error ? e.message : 'Error corregint examen.');
         setView('taking');
         return;
       }
@@ -90,19 +102,22 @@ export function ExamSimulator(): JSX.Element {
 
     setScore(finalScore);
     addXP(Math.round(finalScore / 2)); // Give up to 50 XP
-    
+
     // Save to history (ensuring quizzes is always an array to prevent iOS crash)
     const quiz: Quiz = {
       id: uid(),
-      topic,
-      type,
+      topic: examTopic,
+      type: examType,
       date: today(),
       score: finalScore,
-      questions: finalQuestions
+      questions: finalQuestions,
     };
     patch({ quizzes: [quiz, ...(quizzes || [])] });
     save();
 
+    // Snapshot results locally, then clear the persisted slice so reload doesn't drop user back into submitted exam
+    setResultsQuestions(finalQuestions);
+    clearActiveExam();
     setView('results');
   };
 
@@ -117,21 +132,35 @@ export function ExamSimulator(): JSX.Element {
   }
 
   if (view === 'taking') {
+    if (!activeExam) return <div className="c"><p>No hi ha cap examen actiu.</p></div>;
+    const { questions, answers, currentIdx, type: examType, topic: examTopic } = activeExam;
     const q = questions[currentIdx];
     const isLast = currentIdx === questions.length - 1;
 
     return (
       <div className="c glow" style={{ padding: 30 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20, color: 'var(--ts)', fontSize: 14 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, color: 'var(--ts)', fontSize: 14, flexWrap: 'wrap', gap: 8 }}>
           <span>Pregunta {currentIdx + 1} de {questions.length}</span>
-          <span>Tipus: {type.toUpperCase()}</span>
+          <span>Tema: {examTopic} · Tipus: {examType.toUpperCase()}</span>
+          <button
+            className="bs"
+            style={{ fontSize: 12, padding: '6px 12px' }}
+            onClick={() => {
+              if (confirm('Segur que vols abandonar aquest examen? Es perdrà el progrés.')) {
+                clearActiveExam();
+                setView('setup');
+              }
+            }}
+          >
+            Abandonar examen
+          </button>
         </div>
 
         <h3 style={{ fontSize: 22, fontWeight: 700, marginBottom: 24, lineHeight: 1.4 }}>{q?.q}</h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 30 }}>
-          {type === 'test' && q?.options?.map(opt => (
-            <button 
+          {examType === 'test' && q?.options?.map(opt => (
+            <button
               key={opt}
               onClick={() => handleAnswer(opt)}
               style={{
@@ -145,8 +174,8 @@ export function ExamSimulator(): JSX.Element {
             </button>
           ))}
 
-          {type === 'tf' && ['Cert', 'Fals'].map(opt => (
-            <button 
+          {examType === 'tf' && ['Cert', 'Fals'].map(opt => (
+            <button
               key={opt}
               onClick={() => handleAnswer(opt)}
               style={{
@@ -160,7 +189,7 @@ export function ExamSimulator(): JSX.Element {
             </button>
           ))}
 
-          {type === 'open' && (
+          {examType === 'open' && (
             <textarea
               className="inp"
               style={{ minHeight: 120, resize: 'vertical', fontSize: 16, padding: 16 }}
@@ -170,7 +199,7 @@ export function ExamSimulator(): JSX.Element {
             />
           )}
 
-          {type === 'practical' && (
+          {examType === 'practical' && (
             <>
               <div style={{ background: 'var(--al)', padding: 14, borderRadius: 12, marginBottom: 12, fontSize: 13, color: 'var(--a)' }}>
                 💡 Escriu el procediment pas a pas i el resultat final.
@@ -187,11 +216,11 @@ export function ExamSimulator(): JSX.Element {
         </div>
 
         <div style={{ display: 'flex', gap: 12 }}>
-          <button className="bp" style={{ background: 'var(--bd)', color: 'var(--t)' }} onClick={() => setCurrentIdx(Math.max(0, currentIdx - 1))} disabled={currentIdx === 0}>
+          <button className="bp" style={{ background: 'var(--bd)', color: 'var(--t)' }} onClick={() => goTo(Math.max(0, currentIdx - 1))} disabled={currentIdx === 0}>
             Anterior
           </button>
           {!isLast ? (
-            <button className="bp" style={{ flex: 1 }} onClick={() => setCurrentIdx(currentIdx + 1)}>
+            <button className="bp" style={{ flex: 1 }} onClick={() => goTo(currentIdx + 1)}>
               Següent
             </button>
           ) : (
@@ -205,6 +234,7 @@ export function ExamSimulator(): JSX.Element {
   }
 
   if (view === 'results') {
+    const questions = resultsQuestions;
     return (
       <div className="c glow" style={{ padding: 30 }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -223,7 +253,7 @@ export function ExamSimulator(): JSX.Element {
                 </span>
               </div>
               <p style={{ fontSize: 16, marginBottom: 12 }}>{q.q}</p>
-              
+
               <div style={{ background: 'var(--al)', padding: 12, borderRadius: 8, marginBottom: 8 }}>
                 <span style={{ color: 'var(--ts)', fontSize: 12, display: 'block', marginBottom: 4 }}>La teva resposta:</span>
                 {q.userAnswer || <em>Sense respondre</em>}
@@ -245,7 +275,10 @@ export function ExamSimulator(): JSX.Element {
           ))}
         </div>
 
-        <button className="bp" style={{ width: '100%', marginTop: 30 }} onClick={() => setView('setup')}>
+        <button className="bp" style={{ width: '100%', marginTop: 30 }} onClick={() => {
+          setTopic('');
+          setView('setup');
+        }}>
           Fer un altre examen
         </button>
       </div>
@@ -283,9 +316,9 @@ export function ExamSimulator(): JSX.Element {
       <div className="g1" style={{ gap: 16 }}>
         <div>
           <label className="lbl">Tema o Apunts</label>
-          <textarea 
-            className="inp" 
-            style={{ height: 100, resize: 'vertical' }} 
+          <textarea
+            className="inp"
+            style={{ height: 100, resize: 'vertical' }}
             placeholder="Ex: La Revolució Francesa, o enganxa aquí el teu temari..."
             value={topic}
             onChange={e => setTopic(e.target.value)}

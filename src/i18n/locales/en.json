@@ -8,7 +8,7 @@
     "timer": "Timer",
     "cards": "Flashcards",
     "feynman": "AI Tutor",
-    "chaos": "Chaos Mode",
+    "zero": "From Scratch",
     "languages": "Languages",
     "sounds": "Sounds",
     "recovery": "Recovery",
@@ -16,7 +16,9 @@
     "stats": "Stats",
     "social": "Social",
     "techniques": "Techniques",
-    "cloud": "Cloud Sync"
+    "cloud": "Cloud Sync",
+    "plan": "Plan",
+    "profile": "Profile"
   },
   "sidebar": {
     "level": "Level",
@@ -45,7 +47,10 @@
     "tomorrow": "TOMORROW",
     "import": "Imported",
     "invalidFile": "Invalid file",
-    "importSuccess": "Data loaded successfully"
+    "importSuccess": "Data loaded successfully",
+    "optional": "optional",
+    "back": "Back",
+    "continue": "Continue"
   },
   "dashboard": {
     "heroTitle": "Welcome back! 👋",
@@ -106,18 +111,83 @@
     "duringFocusDesc": "Phone on airplane mode and OUT of sight. Every minute of Deep Work physically reinforces neural circuits.",
     "duringRestDesc": "Do NOT look at your phone. Walk, look out the window, or do NSDR. Rest must be MODALLY different from work.",
     "modes": {
-      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, review, vocabulary" },
-      "d52": { "nm": "Ultradian", "ideal": "Mixed study, active reading" },
-      "d90": { "nm": "Deep Work", "ideal": "Math, physics, programming" },
-      "d120": { "nm": "Hyper Focus", "ideal": "Complex projects, total flow" }
+      "pom": {
+        "nm": "Pomodoro",
+        "ideal": "Flashcards, review, vocabulary"
+      },
+      "d52": {
+        "nm": "Ultradian",
+        "ideal": "Mixed study, active reading"
+      },
+      "d90": {
+        "nm": "Deep Work",
+        "ideal": "Math, physics, programming"
+      },
+      "d120": {
+        "nm": "Hyper Focus",
+        "ideal": "Complex projects, total flow"
+      }
     },
     "notifOn": "Notifications enabled",
     "notifOff": "Enable notifications",
     "notifFocusDone": "{{mode}} session complete! Time to rest.",
     "notifRestDone": "Break over! Back to focus."
   },
-  "chaos": {
-    "minProblems": "Add at least 3 problems from different topics to start."
+  "zero": {
+    "setup": {
+      "title": "Learn From Scratch",
+      "desc": "Know nothing about the topic? Perfect. The AI will guide you step by step with a worked example.",
+      "notesLabel": "Your notes or topic description",
+      "placeholder": "Paste your notes or describe the exam topic...",
+      "modeLabel": "Subject type",
+      "stem": "Science / Technical",
+      "stemDesc": "Mathematics, Physics, Chemistry...",
+      "humanities": "Humanities / Liberal Arts",
+      "humanitiesDesc": "Literature, History, Philosophy...",
+      "cta": "Generate session",
+      "minLength": "Write at least 50 characters to generate the session."
+    },
+    "loading": "Generating personalized session...",
+    "error": "Error generating the session. Please try again.",
+    "worked": {
+      "title": "Worked Example",
+      "problem": "Problem:",
+      "cta": "Got it, test me"
+    },
+    "practice": {
+      "title": "Try It Yourself",
+      "problem": "Similar exercise:",
+      "answerLabel": "Your answer",
+      "placeholder": "Write your step-by-step solution...",
+      "cta": "Check"
+    },
+    "map": {
+      "title": "Concept Map",
+      "themes": "Main themes",
+      "figures": "Key characters / figures",
+      "quotes": "Key quotes",
+      "timeline": "Timeline",
+      "cta": "Read, now ask me"
+    },
+    "recall": {
+      "title": "Active Recall",
+      "question": "Question:",
+      "rubricLabel": "Evaluation criteria:",
+      "answerLabel": "Your answer",
+      "placeholder": "Answer freely. Include examples from the text if you can.",
+      "cta": "Correct with AI"
+    },
+    "results": {
+      "title": "Results",
+      "firstSession": "first session",
+      "gaps": "Detected gaps",
+      "nsdr": "Rest now!",
+      "nsdrDesc": "Take 10–20 min of rest (NSDR) to consolidate what you've learned.",
+      "flashcards": "Create flashcards for the gaps",
+      "flashcardsCreated": "Flashcards created",
+      "retry": "Try again"
+    },
+    "scienceBadge": "Based on: Sweller (Worked Example Effect) · Dunlosky (Active Recall) · Huberman (NSDR)"
   },
   "stats": {
     "last7d": "Last 7 days",
@@ -142,22 +212,66 @@
       "level": "Level"
     },
     "ach": {
-      "first_session": { "name": "First Step", "desc": "Complete the first focus session" },
-      "streak_3": { "name": "Consistent", "desc": "Get a 3-day streak" },
-      "streak_7": { "name": "Unstoppable", "desc": "Streak of 7 days in a row" },
-      "streak_30": { "name": "Legend", "desc": "30-day streak!" },
-      "cards_50": { "name": "Explorer", "desc": "Review 50 flashcards" },
-      "cards_500": { "name": "Scholar", "desc": "Review 500 flashcards" },
-      "mem_80": { "name": "Iron Memory", "desc": "Reach 80% memory strength" },
-      "hours_10": { "name": "Dedicated", "desc": "Accumulate 10 hours of study" },
-      "hours_50": { "name": "Master", "desc": "Accumulate 50 hours of study" },
-      "hours_100": { "name": "Elite Academic", "desc": "100 hours of total study" },
-      "chaos_10": { "name": "Gladiator", "desc": "Complete 10 rounds of Chaos Mode" },
-      "level_10": { "name": "Veteran", "desc": "Reach level 10" },
-      "level_25": { "name": "Expert", "desc": "Reach level 25" },
-      "level_50": { "name": "Grand Master", "desc": "Reach level 50" },
-      "deep_work": { "name": "Deep Worker", "desc": "Complete a 90+ min session" },
-      "pom_10": { "name": "Pomodoro Master", "desc": "Complete 10 pomodoros" }
+      "first_session": {
+        "name": "First Step",
+        "desc": "Complete the first focus session"
+      },
+      "streak_3": {
+        "name": "Consistent",
+        "desc": "Get a 3-day streak"
+      },
+      "streak_7": {
+        "name": "Unstoppable",
+        "desc": "Streak of 7 days in a row"
+      },
+      "streak_30": {
+        "name": "Legend",
+        "desc": "30-day streak!"
+      },
+      "cards_50": {
+        "name": "Explorer",
+        "desc": "Review 50 flashcards"
+      },
+      "cards_500": {
+        "name": "Scholar",
+        "desc": "Review 500 flashcards"
+      },
+      "mem_80": {
+        "name": "Iron Memory",
+        "desc": "Reach 80% memory strength"
+      },
+      "hours_10": {
+        "name": "Dedicated",
+        "desc": "Accumulate 10 hours of study"
+      },
+      "hours_50": {
+        "name": "Master",
+        "desc": "Accumulate 50 hours of study"
+      },
+      "hours_100": {
+        "name": "Elite Academic",
+        "desc": "100 hours of total study"
+      },
+      "level_10": {
+        "name": "Veteran",
+        "desc": "Reach level 10"
+      },
+      "level_25": {
+        "name": "Expert",
+        "desc": "Reach level 25"
+      },
+      "level_50": {
+        "name": "Grand Master",
+        "desc": "Reach level 50"
+      },
+      "deep_work": {
+        "name": "Deep Worker",
+        "desc": "Complete a 90+ min session"
+      },
+      "pom_10": {
+        "name": "Pomodoro Master",
+        "desc": "Complete 10 pomodoros"
+      }
     }
   },
   "cards": {
@@ -182,7 +296,12 @@
     "gradeBad": "❌ Didn't know it",
     "gradeGood": "✅ Knew it!",
     "sessionDone": "🎉 Session complete!",
-    "sessionDoneDesc": "All concepts reviewed"
+    "sessionDoneDesc": "All concepts reviewed",
+    "aiTarget": {
+      "label": "Where would you like to add the cards?",
+      "new": "New deck",
+      "existing": "Existing deck"
+    }
   },
   "exams": {
     "newExam": "+ New exam",
@@ -198,7 +317,73 @@
     "diffHard": "Hard",
     "submit": "✓ Add",
     "plan": "📋 SRS study plan",
-    "sessions": "{{n}} sessions"
+    "sessions": "{{n}} sessions",
+    "tabs": {
+      "calendar": "Calendar",
+      "simulator": "AI Simulator",
+      "corrector": "AI Corrector"
+    }
+  },
+  "feynman": {
+    "prompt": "What concept do you want to master?",
+    "intro": "Enter a topic and explain it without jargon. The AI detects illusions of competence and asks Socratic questions.",
+    "topicPh": "e.g., Mitosis, Derivatives, The French Revolution...",
+    "start": "Start",
+    "newTopic": "New topic",
+    "send": "Send",
+    "comprehension": "Comprehension",
+    "levelHigh": "HIGH",
+    "levelMed": "MED",
+    "levelLow": "LOW",
+    "listenStop": "Stop recording",
+    "listenStart": "Speak into microphone",
+    "phListening": "Listening...",
+    "phThinking": "Thinking...",
+    "phExplain": "Explain in your own words...",
+    "noSpeech": "Your browser doesn't support speech recognition.",
+    "aiReal": "🟢 Real AI",
+    "aiBasic": "⚙️ Basic mode",
+    "titleFallback": "Basic mode activated (offline or rate limit).",
+    "titleAi": "AI with Gemini.",
+    "remaining": "({{n}} left)",
+    "firstMsg": "Alright! I'll be a very curious 5-year-old 🧒\n\nExplain to me: <strong>\"{{topic}}\"</strong>\n\nWhat is it? I need you to explain it so simply that anyone on the street could understand. No complicated words!"
+  },
+  "cloud": {
+    "title": "Cloud Sync",
+    "desc": "Keep your progress safe so you never lose it and access it from any device.",
+    "loading": "Loading...",
+    "loginTitle": "Sign In",
+    "loginDesc": "This uses Supabase to keep your cards and XP level safe.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "login": "Log in",
+    "signup": "Sign up",
+    "connected": "Connected to Cloud",
+    "push": "⬆️ Push Local State",
+    "pull": "⬇️ Pull From Cloud",
+    "logout": "Sign Out",
+    "signupOk": "Sign-up successful. Check your email to confirm (if required).",
+    "loginOk": "Signed in successfully.",
+    "pushing": "Uploading data to cloud...",
+    "pushErr": "Upload error: {{msg}}",
+    "pushOk": "✅ Data saved to cloud successfully!",
+    "pulling": "Downloading data...",
+    "pullErr": "Download error: {{msg}}",
+    "pullOk": "✅ Data synced successfully! Progress restored.",
+    "pullEmpty": "Cloud is empty. Push your data first.",
+    "errorGeneric": "Error: {{msg}}",
+    "magicLinkSent": "Email sent! Check your inbox and click the link.",
+    "sendMagicLink": "Send magic link",
+    "authMagic": "Magic link",
+    "authPassword": "Password",
+    "statusIdle": "Synced",
+    "syncing": "Syncing...",
+    "syncError": "Sync error",
+    "offline": "Offline",
+    "syncStatusLabel": "Status",
+    "lastSyncLabel": "Last sync",
+    "syncAuto": "Data syncs automatically whenever you make changes.",
+    "never": "Never"
   },
   "recovery": {
     "nsdr": {
@@ -228,23 +413,304 @@
       "desc": "Phone, social media, YouTube. Rest must be MODALLY different: walk, breathe, stretch."
     },
     "stretches": {
-      "neck": { "name": "Neck rotation", "desc": "Slowly rotate your head in circles: 5 times each side." },
-      "arms": { "name": "Arm stretch", "desc": "Interlace fingers and stretch upward 15s. Repeat 3 times." },
-      "twist": { "name": "Spinal twist", "desc": "Seated, twist torso left 15s, right 15s. Repeat twice." },
-      "forward": { "name": "Forward fold", "desc": "Standing, bend forward letting arms dangle. 20 seconds." },
-      "cervical": { "name": "Cervical stretch", "desc": "Tilt head to one side 15s, then the other. Repeat." }
+      "neck": {
+        "name": "Neck rotation",
+        "desc": "Slowly rotate your head in circles: 5 times each side."
+      },
+      "arms": {
+        "name": "Arm stretch",
+        "desc": "Interlace fingers and stretch upward 15s. Repeat 3 times."
+      },
+      "twist": {
+        "name": "Spinal twist",
+        "desc": "Seated, twist torso left 15s, right 15s. Repeat twice."
+      },
+      "forward": {
+        "name": "Forward fold",
+        "desc": "Standing, bend forward letting arms dangle. 20 seconds."
+      },
+      "cervical": {
+        "name": "Cervical stretch",
+        "desc": "Tilt head to one side 15s, then the other. Repeat."
+      }
     }
   },
   "headers": {
-    "timer": { "title": "⏱ Scientific Timer", "desc": "Deep Work, Pomodoro and Ultradian" },
-    "cards": { "title": "📇 Flashcards — Successive Relearning", "desc": "Rule of 3 + automatic Spaced Repetition (SRS)" },
-    "feynman": { "title": "🧒 AI Tutor — Illusion Destroyer", "desc": "Enhanced Feynman technique. Explain concepts without jargon and the AI detects fake understanding." },
-    "chaos": { "title": "⚡ Chaos Mode — Interleaved Practice", "desc": "Mix problems from different topics. Train inductive discrimination." },
-    "languages": { "title": "🌍 Languages — Vocabulary + SRS", "desc": "Learn new words with spaced repetition" },
-    "sounds": { "title": "🎵 Ambient Sound Mixer", "desc": "Craft your perfect soundscape to focus" },
-    "recovery": { "title": "🌙 Recovery Station", "desc": "NSDR, breathing and stretches. REAL rest for the brain." },
-    "exams": { "title": "📅 Exams & Study Plan", "desc": "Automatic SRS based on difficulty" },
-    "stats": { "title": "📊 Advanced Stats", "desc": "Real data on your academic performance" },
-    "techniques": { "title": "📚 Scientific Techniques", "desc": "Based on Dunlosky et al. (2013)" }
+    "timer": {
+      "title": "⏱ Scientific Timer",
+      "desc": "Deep Work, Pomodoro and Ultradian"
+    },
+    "cards": {
+      "title": "📇 Flashcards — Successive Relearning",
+      "desc": "Rule of 3 + automatic Spaced Repetition (SRS)"
+    },
+    "feynman": {
+      "title": "🧒 AI Tutor — Illusion Destroyer",
+      "desc": "Enhanced Feynman technique. Explain concepts without jargon and the AI detects fake understanding."
+    },
+    "zero": {
+      "title": "🧭 From Scratch",
+      "desc": "Learn from zero with worked examples and AI-guided active recall"
+    },
+    "languages": {
+      "title": "🌍 Languages — Vocabulary + SRS",
+      "desc": "Learn new words with spaced repetition"
+    },
+    "sounds": {
+      "title": "🎵 Ambient Sound Mixer",
+      "desc": "Craft your perfect soundscape to focus"
+    },
+    "recovery": {
+      "title": "🌙 Recovery Station",
+      "desc": "NSDR, breathing and stretches. REAL rest for the brain."
+    },
+    "exams": {
+      "title": "📅 Exams & Study Plan",
+      "desc": "Automatic SRS based on difficulty"
+    },
+    "stats": {
+      "title": "📊 Advanced Stats",
+      "desc": "Real data on your academic performance"
+    },
+    "techniques": {
+      "title": "📚 Scientific Techniques",
+      "desc": "Based on Dunlosky et al. (2013)"
+    }
+  },
+  "conv": {
+    "tab": "Converse",
+    "vocabTab": "Vocabulary",
+    "pickScenario": "Pick a scenario",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "fluency": "Fluency",
+    "endSession": "End",
+    "holdToSpeak": "Type or hold to speak",
+    "addToDeckCta": "Add {{n}} cards to deck",
+    "sessionDone": "Session complete",
+    "newConv": "New conversation",
+    "noDecks": "Select a deck first",
+    "emptyTranscript": "No speech detected",
+    "correctionTypes": {
+      "grammar": "Grammar",
+      "vocabulary": "Vocabulary",
+      "fluency": "Fluency"
+    },
+    "scenarios": {
+      "cafe": "At the café",
+      "shop": "At the shop",
+      "doctor": "At the doctor",
+      "job": "Job interview",
+      "hotel": "Hotel check-in",
+      "phone": "Phone call",
+      "debate": "Film debate",
+      "directions": "Asking for directions"
+    }
+  },
+  "social": {
+    "title": "Social Ecosystem",
+    "subtitle": "Study with friends, compete, and share knowledge.",
+    "friends": "Friends",
+    "leaderboard": "Leaderboard",
+    "challenges": "Challenges",
+    "addFriend": "Add friend",
+    "search": "Search",
+    "searchByEmail": "Search by email",
+    "requestSent": "Request sent",
+    "accept": "Accept",
+    "decline": "Decline",
+    "removeFriend": "Remove friend",
+    "noFriends": "No friends yet",
+    "noFriendsHint": "Search a friend by their email to add them.",
+    "pendingRequests": "Pending requests",
+    "loginRequired": "Log in to access social features.",
+    "unknownUser": "Unknown user",
+    "vs": "vs",
+    "you": "You",
+    "target": "Target",
+    "daysLeft": "days",
+    "days": "days",
+    "subject": "Subject",
+    "subjectPlaceholder": "e.g. Maths",
+    "opponent": "Opponent",
+    "sortBy": "Sort by",
+    "streak": "Streak",
+    "weeklyMinutes": "Weekly minutes",
+    "sendChallenge": "Send challenge",
+    "waitingForOpponent": "Waiting for opponent to accept...",
+    "youWon": "You won!",
+    "youLost": "You lost",
+    "noChallenges": "No active challenges",
+    "noChallengesHint": "Create a challenge with a friend to compete.",
+    "incomingChallenges": "Incoming challenges",
+    "activeChallenges": "Active challenges",
+    "completedChallenges": "Completed challenges",
+    "createChallenge": "Create challenge",
+    "challengeDuration": "Duration",
+    "challengeTarget": "Target (count)",
+    "challengeType.label": "Type",
+    "challengeType.flashcards": "Flashcards",
+    "challengeType.study_time": "Study time",
+    "challengeType.exam": "Exam",
+    "status.pending": "Pending",
+    "status.accepted": "Accepted",
+    "status.active": "Active",
+    "status.completed": "Completed",
+    "status.declined": "Declined",
+    "feed": {
+      "title": "Activity",
+      "cardsCompleted": "completed {{count}} flashcards",
+      "streakMilestone": "has a {{days}}-day streak!",
+      "examDone": "took an exam: {{score}}%",
+      "challengeWon": "won a challenge!",
+      "studySession": "studied for {{minutes}} minutes",
+      "activity": "had some activity"
+    }
+  },
+  "onboarding": {
+    "phases": { "1": "Goal", "2": "Habits", "3": "Self-assessment" },
+    "steps": {
+      "goal": { "title": "What's your goal?", "desc": "We'll help you get there faster." },
+      "level": { "title": "What level are you at?", "desc": "We'll adjust pace and difficulty." },
+      "subjects": { "title": "Which subjects do you study?", "desc": "Add up to {{max}} subjects.", "placeholder": "e.g. Math" },
+      "examDate": { "title": "When is your exam?", "desc": "We'll work milestones backwards from this date.", "skip": "No fixed date" },
+      "method": { "title": "How do you usually study?", "desc": "Be honest." },
+      "minutes": { "title": "How much time per day?", "desc": "We'll match the plan to your availability." },
+      "time": { "title": "When do you prefer to study?", "desc": "A fixed hour anchors the habit." },
+      "obstacle": { "title": "What's your main obstacle?", "desc": "We'll detect where you lose performance." },
+      "retention": { "title": "How much do you remember?", "desc": "Rate yourself from 1 to 5.", "low": "I forget everything", "high": "I remember almost all" }
+    },
+    "options": {
+      "goal": {
+        "exam": { "title": "Pass exams", "desc": "University, high school..." },
+        "language": { "title": "Master a language", "desc": "Vocabulary + fluency" },
+        "cert": { "title": "Certifications", "desc": "IT, medicine, finance..." },
+        "university": { "title": "University studies", "desc": "Deep understanding" },
+        "other": { "title": "Other", "desc": "Learning for pleasure or curiosity" }
+      },
+      "level": {
+        "eso": { "title": "Middle school", "desc": "Lower secondary" },
+        "batx": { "title": "High school", "desc": "Upper secondary / SAT" },
+        "uni": { "title": "University", "desc": "Bachelor or master" },
+        "oposicio": { "title": "Civil service exams", "desc": "Public competitions" },
+        "other": { "title": "Other", "desc": "Personal training" }
+      },
+      "method": {
+        "read": { "title": "I read and highlight", "desc": "Passive reading" },
+        "manual": { "title": "Hand-written notes", "desc": "Write to memorize" },
+        "digital": { "title": "Digital tools", "desc": "Anki, Quizlet, Notion..." },
+        "mixed": { "title": "A mix of everything", "desc": "A bit of each" }
+      },
+      "minutes": {
+        "label": "{{min}} minutes",
+        "15": { "desc": "Daily minimum habit" },
+        "30": { "desc": "Optimal consistency" },
+        "60": { "desc": "Serious prep" },
+        "90": { "desc": "Intensive / exam soon" }
+      },
+      "time": {
+        "morning": { "title": "Morning", "desc": "Fresh brain" },
+        "afternoon": { "title": "Afternoon", "desc": "After class / work" },
+        "evening": { "title": "Evening", "desc": "End of day" },
+        "night": { "title": "Night", "desc": "When everyone sleeps" },
+        "flexible": { "title": "Flexible", "desc": "No fixed time" }
+      },
+      "obstacle": {
+        "memory": { "title": "I forget what I study", "desc": "My mind goes blank" },
+        "time": { "title": "I lack time", "desc": "Syllabus is overwhelming" },
+        "focus": { "title": "I can't concentrate", "desc": "Easily distracted" },
+        "motivation": { "title": "I struggle to start", "desc": "I procrastinate often" },
+        "comprehension": { "title": "I don't fully understand", "desc": "I get lost in the concepts" }
+      }
+    },
+    "processing": {
+      "title": "Building your profile",
+      "p1": "Analyzing your answers...",
+      "p2": "Calculating your current forgetting curve...",
+      "p3": "Generating your personalized plan..."
+    },
+    "results": {
+      "title": "Your plan is ready",
+      "desc": "Calculated from your answers, no magic.",
+      "deltaLabel": "Projected improvement potential",
+      "breakdown": "Why this number?",
+      "projected": "Projected total",
+      "viewPlan": "View full plan",
+      "startNow": "Start now"
+    }
+  },
+  "improvement": {
+    "factors": {
+      "baseline": "Baseline (your current method)",
+      "srs": "Spaced repetition (SRS)",
+      "feynman": "Feynman technique with AI",
+      "spacing": "Short, spaced sessions",
+      "consistency": "Habit at fixed hour",
+      "focus": "Pomodoro + ambient sounds",
+      "memory": "Active-recall flashcards"
+    },
+    "reasons": {
+      "srs": "Replacing passive reading with active recall skyrockets retention.",
+      "srsMixed": "Systematizing SRS multiplies what you already do.",
+      "feynman": "Explaining concepts aloud reveals invisible gaps.",
+      "spacing": "Short well-spaced sessions beat marathons.",
+      "consistency": "Studying at the same time anchors the habit.",
+      "focus": "Pomodoro + background noise cuts distractions.",
+      "memory": "Recall flashcards force the brain to remember."
+    }
+  },
+  "plan": {
+    "title": "Your study plan",
+    "weeklyMinutes": "{{min}} min/week",
+    "modulesEssential": "Essentials",
+    "modulesRecommended": "Recommended",
+    "modulesOptional": "Optional",
+    "dailyTemplate": "Suggested daily structure",
+    "milestones": {
+      "title": "Milestones",
+      "week1Cards": "50 cards reviewed",
+      "month1Streak": "14 days in a row",
+      "examDay": "Exam day",
+      "examMid": "Halfway: 5 Feynman sessions"
+    },
+    "reasons": {
+      "cardsMemory": "Your obstacle is memory — SRS is the direct fix.",
+      "feynmanMemory": "Explaining reinforces recall.",
+      "feynmanComp": "If you don't get it, explaining forces you to.",
+      "cardsComp": "Concept cards lock in key ideas.",
+      "timerFocus": "Pomodoro breaks the session into manageable blocks.",
+      "soundsFocus": "Ambient noise hides distractions.",
+      "timerTime": "Pomodoro makes you produce more in less time.",
+      "cardsTime": "10 min/day reviewing equals 1h weekly.",
+      "timerMotiv": "25 min is short: easier to start.",
+      "recoveryMotiv": "Active recovery prevents burnout.",
+      "languagesGoal": "Your goal is the language — the languages module is the plan's core.",
+      "examsGoal": "Practicing with mock exams prepares the score."
+    },
+    "narrative": {
+      "title": "Personalized with AI",
+      "generate": "Personalize with AI",
+      "regenerate": "Regenerate"
+    },
+    "edit": "Edit profile"
+  },
+  "profile": {
+    "title": "Your study profile",
+    "save": "Save changes",
+    "redo": "Redo onboarding",
+    "saved": "Profile saved"
+  },
+  "dashboardPersonal": {
+    "heroPersonal": "Good day! Today {{minutes}} min toward {{goal}}.",
+    "todayPlan": "Your plan today",
+    "profileBanner": {
+      "title": "Complete your profile",
+      "desc": "60 seconds for a personalized plan.",
+      "cta": "Complete",
+      "dismiss": "Not now"
+    }
   }
 }

@@ -5,6 +5,19 @@
  * Names are kept in English; user-facing strings in Catalan live in the UI layer.
  */
 import type { Card as FSRSCard } from 'ts-fsrs';
+import type { User, Session } from '@supabase/supabase-js';
+
+// ─── Auth / Cloud Sync ────────────────────────────────────────────────────────
+
+export type SyncStatus = 'idle' | 'syncing' | 'error' | 'offline';
+
+/** Ephemeral auth state — stored in AppStore but NOT persisted to IndexedDB. */
+export interface AuthState {
+  user: User | null;
+  session: Session | null;
+  syncStatus: SyncStatus;
+  lastSyncedAt: string | null; // ISO 8601
+}
 
 export type Weekday = 'Dl' | 'Dt' | 'Dc' | 'Dj' | 'Dv' | 'Ds' | 'Dg';
 
@@ -25,12 +38,45 @@ export interface Exam {
 
 export type QuizType = 'test' | 'tf' | 'open' | 'practical';
 
-export interface ChaosProblem {
+export type ZeroSubjectMode = 'stem' | 'humanities';
+
+export interface ZeroSessionResult {
   id: string;
+  date: string; // ISO yyyy-mm-dd
   topic: string;
-  text: string;
-  solution: string;
-  difficulty: ExamDifficulty;
+  mode: ZeroSubjectMode;
+  score: number;
+  gaps: string[];
+}
+
+export interface StemSession {
+  topic: string;
+  concept: string;
+  workedExample: {
+    problem: string;
+    steps: string[];
+    answer: string;
+  };
+  practiceProblems: Array<{
+    problem: string;
+    answer: string;
+    hints: string[];
+  }>;
+}
+
+export interface HumanitiesSession {
+  topic: string;
+  conceptMap: {
+    themes: string[];
+    keyFigures: Array<{ name: string; role: string }>;
+    timeline?: string[];
+    keyQuotes?: string[];
+  };
+  recallQuestions: Array<{
+    question: string;
+    idealAnswer: string;
+    rubric: string[];
+  }>;
 }
 
 export interface QuizQuestion {
@@ -41,6 +87,15 @@ export interface QuizQuestion {
   userAnswer?: string;
   feedback?: string;
   isCorrect?: boolean;
+}
+
+export interface ActiveExamState {
+  topic: string;
+  type: QuizType;
+  questions: QuizQuestion[];
+  answers: Record<string, string>;
+  currentIdx: number;
+  startedAt: string; // ISO timestamp — lets UI show "resumed from X"
 }
 
 export interface Quiz {
@@ -96,6 +151,39 @@ export interface LangDeck {
   name: string;
   lang: string;
   cards: LangCard[];
+}
+
+export interface Scenario {
+  id: string;
+  emoji: string;
+  titleKey: string; // i18n key, e.g. 'conv.scenarios.cafe'
+  character: string; // e.g. 'barista'
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
+export interface ConvCorrection {
+  original: string;
+  corrected: string;
+  explanation: string;
+  type: 'grammar' | 'vocabulary' | 'fluency';
+}
+
+export interface ConvMessage {
+  role: 'user' | 'ai';
+  text: string;
+  corrections: ConvCorrection[]; // empty array for AI messages
+}
+
+export interface ConvSession {
+  id: string;
+  langDeckId: string; // links to existing LangDeck
+  scenarioId: string;
+  language: string; // e.g. 'en', 'fr'
+  messages: ConvMessage[];
+  fluencyScore: number; // 0–100, updated each turn
+  newCards: number; // total vocab cards queued this session
+  startedAt: string; // ISO date string
+  endedAt: string | null;
 }
 
 export type SoundKey = 'rain' | 'cafe' | 'fire' | 'forest' | 'waves' | 'brown';
@@ -169,7 +257,16 @@ export interface AppState {
   sharedResources: SharedResource[];
   friendCode: string;
   league: string;
-  chaosProblems: ChaosProblem[];
+  zeroSessions: ZeroSessionResult[];
+  convSessions: ConvSession[];
+  /** Active exam in progress. null when none running. Persisted across reload/tab switch. */
+  activeExam: ActiveExamState | null;
+  /** Personalized study profile captured in onboarding. null until completed. */
+  studyProfile: StudyProfile | null;
+  /** True after user dismisses the "complete your profile" banner once. */
+  profileBannerDismissed: boolean;
+  /** Optional AI-generated motivational narrative for /plan page. null until refined. */
+  planNarrative: string | null;
 }
 
 export interface StudyTask {
@@ -215,4 +312,131 @@ export type Tab =
   | 'techniques'
   | 'social'
   | 'cloud'
-  | 'chaos';
+  | 'plan'
+  | 'profile';
+
+// ─── Social / Friends ─────────────────────────────────────────────────────────
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  avatarUrl: string | null;
+  xp: number;
+  streak: number;
+  isPublic: boolean;
+}
+
+export interface Friendship {
+  id: string;
+  userId: string;
+  friendId: string;
+  status: 'pending' | 'accepted' | 'blocked';
+  friend?: UserProfile;
+  createdAt: string;
+}
+
+export type ActivityEventType =
+  | 'cards_completed'
+  | 'streak_milestone'
+  | 'exam_done'
+  | 'challenge_won'
+  | 'study_session';
+
+export interface ActivityEvent {
+  id: string;
+  userId: string;
+  type: ActivityEventType;
+  payload: Record<string, unknown>;
+  createdAt: string;
+  user?: UserProfile;
+}
+
+export type ChallengeType = 'flashcards' | 'study_time' | 'exam';
+export type ChallengeStatus = 'pending' | 'accepted' | 'active' | 'completed' | 'declined';
+
+export interface Challenge {
+  id: string;
+  creatorId: string;
+  opponentId: string;
+  type: ChallengeType;
+  params: { durationDays: number; targetCount: number; subject?: string };
+  status: ChallengeStatus;
+  result: { winnerId?: string; creatorScore: number; opponentScore: number } | null;
+  createdAt: string;
+  endsAt: string | null;
+  creator?: UserProfile;
+  opponent?: UserProfile;
+}
+
+// ─── Study Profile / Personalized Plan ────────────────────────────────────────
+
+export type StudyGoal = 'exam' | 'language' | 'cert' | 'university' | 'other';
+export type StudyMethod = 'read' | 'manual' | 'digital' | 'mixed';
+export type Obstacle = 'memory' | 'time' | 'focus' | 'motivation' | 'comprehension';
+export type SessionLength = 15 | 30 | 60 | 90;
+export type AcademicLevel = 'eso' | 'batx' | 'uni' | 'oposicio' | 'other';
+export type PreferredStudyTime = 'morning' | 'afternoon' | 'evening' | 'night' | 'flexible';
+export type SelfRetention = 1 | 2 | 3 | 4 | 5;
+
+export interface StudyProfile {
+  goal: StudyGoal;
+  level: AcademicLevel;
+  subjects: string[]; // free-text tags, max 5
+  method: StudyMethod;
+  obstacle: Obstacle;
+  dailyMinutes: SessionLength;
+  preferredTime: PreferredStudyTime;
+  selfRetention: SelfRetention;
+  examDate: string | null; // ISO yyyy-mm-dd; only when goal ∈ {exam,cert,university}
+  completedAt: string; // ISO timestamp
+  version: 1;
+}
+
+export type RecommendedModule =
+  | 'cards'
+  | 'feynman'
+  | 'timer'
+  | 'exams'
+  | 'languages'
+  | 'sounds'
+  | 'recovery';
+
+export interface ImprovementFactor {
+  key: 'srs' | 'feynman' | 'spacing' | 'consistency' | 'focus' | 'memory';
+  labelKey: string; // i18n key under improvement.factors.*
+  delta: number; // percentage points
+  reasonKey: string; // i18n key under improvement.reasons.*
+}
+
+export interface ImprovementBreakdown {
+  baseline: number; // 0..100
+  factors: ImprovementFactor[];
+  projected: number; // capped at 95
+  delta: number; // projected - baseline
+}
+
+export interface ModuleRecommendation {
+  module: RecommendedModule;
+  priority: 'essential' | 'recommended' | 'optional';
+  reasonKey: string; // i18n key under plan.reasons.*
+}
+
+export interface DailyBlock {
+  order: number;
+  module: RecommendedModule;
+  minutes: number;
+}
+
+export interface PlanMilestone {
+  whenISO: string; // ISO yyyy-mm-dd
+  goalKey: string; // i18n key under plan.milestones.*
+  metric: 'cards_reviewed' | 'feynman_sessions' | 'exam_score' | 'streak_days';
+  target: number;
+}
+
+export interface StudyPlan {
+  weeklyMinutes: number;
+  modules: ModuleRecommendation[]; // sorted essential → recommended → optional
+  dailyTemplate: DailyBlock[];
+  milestones: PlanMilestone[];
+}

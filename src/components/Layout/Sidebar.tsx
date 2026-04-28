@@ -99,6 +99,12 @@ const Icon = {
       <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
     </svg>
   ),
+  Plan: (p: IconProps) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} {...p}>
+      <path d="M12 3l1.9 5.7L19.5 10l-5.6 1.3L12 17l-1.9-5.7L4.5 10l5.6-1.3z" />
+      <path d="M19 14l.7 2.1L21.8 17l-2.1.7L19 19.8l-.7-2.1L16.2 17l2.1-.9z" />
+    </svg>
+  ),
 };
 
 interface NavItem {
@@ -114,6 +120,7 @@ const PRIMARY_NAV: readonly NavItem[] = [
 ];
 
 const SECONDARY_NAV: readonly NavItem[] = [
+  { tab: 'plan', icon: Icon.Plan },
   { tab: 'stats', icon: Icon.Stats },
   { tab: 'feynman', icon: Icon.Feynman },
   { tab: 'techniques', icon: Icon.Techniques },
@@ -201,7 +208,9 @@ export function Sidebar(): JSX.Element {
   return (
     <nav className="sb">
       <div className="sb-brand">
-        <h1 className="brand-logo">Estud<span style={{ color: 'var(--a)', marginLeft: '1px' }}>IA</span></h1>
+        <h1 className="brand-logo">
+          Estud<strong>IA</strong>
+        </h1>
         <p>{t('brand.tagline')}</p>
       </div>
       {PRIMARY_NAV.map((item) => (
@@ -209,80 +218,50 @@ export function Sidebar(): JSX.Element {
           key={item.tab}
           to={`/${item.tab === 'dashboard' ? '' : item.tab}`}
           className={({ isActive }) => `nb${isActive ? ' on' : ''}`}
-          style={{ padding: '12px 12px', fontSize: 14 }}
           end={item.tab === 'dashboard'}
         >
           <item.icon />
-          <span style={{ flex: 1 }}>{t(`nav.${item.tab}`)}</span>
-          {['cards', 'exams'].includes(item.tab) && (
-            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 6, background: 'var(--al)', color: 'var(--a)', marginLeft: 'auto', border: '1px solid rgba(212, 160, 23, 0.3)' }}>
-              IA
-            </span>
-          )}
+          <span>{t(`nav.${item.tab}`)}</span>
+          {['cards', 'exams'].includes(item.tab) && <span className="ai-badge">IA</span>}
         </NavLink>
       ))}
-      
-      <div style={{ margin: '16px 14px 6px', fontSize: 11, fontWeight: 700, color: 'var(--ts)', letterSpacing: 0.5, textTransform: 'uppercase' }}>
-        {t('sidebar.moreTools')}
-      </div>
-      
+
+      <div className="nb-section">{t('sidebar.moreTools')}</div>
+
       {SECONDARY_NAV.map((item) => (
         <NavLink
           key={item.tab}
           to={`/${item.tab === 'dashboard' ? '' : item.tab}`}
           className={({ isActive }) => `nb${isActive ? ' on' : ''}`}
-          style={{ transition: 'transform 0.2s', padding: '8px 14px', fontSize: 13, color: 'var(--tm)' }}
           end={item.tab === 'dashboard'}
         >
-          <item.icon style={{ width: 16, height: 16, opacity: 0.7 }} />
-          <span style={{ flex: 1 }}>{t(`nav.${item.tab}`)}</span>
-          {['feynman'].includes(item.tab) && (
-            <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 5px', borderRadius: 6, background: 'var(--al)', color: 'var(--a)', marginLeft: 'auto', border: '1px solid rgba(212, 160, 23, 0.25)' }}>
-              IA
-            </span>
-          )}
+          <item.icon />
+          <span>{t(`nav.${item.tab}`)}</span>
+          {['feynman'].includes(item.tab) && <span className="ai-badge">IA</span>}
         </NavLink>
       ))}
       <div className="sb-ft">
         <div className="row">
           <span className="k">{t('sidebar.level')}</span>
-          <span className="v" style={{ fontFamily: "'DM Mono', monospace" }}>{level}</span>
+          <span className="v">{level}</span>
         </div>
         <div className="xp-bar">
           <div className="xp-fill" style={{ width: `${pct}%` }} />
         </div>
         <div className="row">
           <span className="k">{t('sidebar.xpOf', { cur, need })}</span>
-          <span className="v" style={{ fontFamily: "'DM Mono', monospace" }}>{t('sidebar.streak', { days: streak })}</span>
+          <span className="v">{t('sidebar.streak', { days: streak })}</span>
         </div>
-        <div
-          className="row"
-          style={{ marginTop: 10, gap: 6, justifyContent: 'flex-start' }}
-        >
-          <span
-            className="k"
-            style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}
-          >
-            {t('sidebar.language')}
-          </span>
-          <div style={{ display: 'flex', gap: 4, marginLeft: 'auto' }}>
+        <div className="row">
+          <span className="k">{t('sidebar.language')}</span>
+          <div className="sb-locale">
             {SUPPORTED_LOCALES.map((loc) => (
               <button
                 key={loc}
+                className="sb-locale-btn"
                 onClick={() => setLocale(loc)}
                 title={LOCALE_META[loc].name}
                 aria-pressed={currentLocale === loc}
-                style={{
-                  padding: '2px 6px',
-                  fontSize: 13,
-                  borderRadius: 6,
-                  border: 'none',
-                  cursor: 'pointer',
-                  background:
-                    currentLocale === loc ? 'var(--al)' : 'transparent',
-                  opacity: currentLocale === loc ? 1 : 0.5,
-                  transition: 'var(--transition)',
-                }}
               >
                 {LOCALE_META[loc].flag}
               </button>
@@ -290,8 +269,8 @@ export function Sidebar(): JSX.Element {
           </div>
         </div>
         {/* Connectivity indicator */}
-        <div className="row" style={{ marginTop: 8 }}>
-          <span className="k" style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+        <div className="row">
+          <span className="k conn-row">
             <span className={`conn-dot${online ? '' : ' off'}`} />
             {online ? 'Online' : 'Offline'}
           </span>
@@ -310,18 +289,11 @@ export function Sidebar(): JSX.Element {
           </button>
         )}
         {!canInstall && isIOSSafari() && (
-          <button
-            className="install-banner ios"
-            onClick={() => setShowIOSHint((p) => !p)}
-          >
+          <button className="install-banner ios" onClick={() => setShowIOSHint((p) => !p)}>
             📲 {t('sidebar.installIOS')}
           </button>
         )}
-        {showIOSHint && (
-          <div className="ios-hint">
-            {t('sidebar.installIOSSteps')}
-          </div>
-        )}
+        {showIOSHint && <div className="ios-hint">{t('sidebar.installIOSSteps')}</div>}
 
         <div className="sb-tools">
           <button onClick={toggle} aria-label={t('sidebar.themeToggle')}>
@@ -330,14 +302,9 @@ export function Sidebar(): JSX.Element {
           <button onClick={onExport} aria-label={t('sidebar.export')}>
             💾
           </button>
-          <label aria-label={t('sidebar.import')} style={{ cursor: 'pointer' }}>
+          <label aria-label={t('sidebar.import')}>
             📂
-            <input
-              type="file"
-              accept=".json"
-              style={{ display: 'none' }}
-              onChange={onImport}
-            />
+            <input type="file" accept=".json" style={{ display: 'none' }} onChange={onImport} />
           </label>
         </div>
       </div>

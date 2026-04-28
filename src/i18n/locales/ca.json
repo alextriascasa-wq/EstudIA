@@ -8,7 +8,7 @@
     "timer": "Timer",
     "cards": "Flashcards",
     "feynman": "Tutor IA",
-    "chaos": "Mode Caos",
+    "zero": "Des de Zero",
     "languages": "Idiomes",
     "sounds": "Sons",
     "recovery": "Recuperació",
@@ -16,7 +16,9 @@
     "stats": "Estadístiques",
     "social": "Social",
     "techniques": "Tècniques",
-    "cloud": "Núvol (Sync)"
+    "cloud": "Núvol (Sync)",
+    "plan": "Pla",
+    "profile": "Perfil"
   },
   "sidebar": {
     "level": "Nivell",
@@ -45,7 +47,10 @@
     "tomorrow": "DEMÀ",
     "import": "Importat",
     "invalidFile": "Fitxer no vàlid",
-    "importSuccess": "Dades carregades correctament"
+    "importSuccess": "Dades carregades correctament",
+    "optional": "opcional",
+    "back": "Enrere",
+    "continue": "Continuar"
   },
   "dashboard": {
     "heroTitle": "Benvingut de nou! 👋",
@@ -106,18 +111,83 @@
     "duringFocusDesc": "Mòbil en mode avió i FORA de la vista. Cada minut de Deep Work reforça físicament els circuits neuronals.",
     "duringRestDesc": "NO miris el mòbil. Camina, mira per la finestra, o fes NSDR. El descans ha de ser MODALMENT diferent del treball.",
     "modes": {
-      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repàs, vocabulari" },
-      "d52": { "nm": "Ultradian", "ideal": "Estudi mixt, lectura activa" },
-      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programació" },
-      "d120": { "nm": "Hyper Focus", "ideal": "Projectes complexos, flux total" }
+      "pom": {
+        "nm": "Pomodoro",
+        "ideal": "Flashcards, repàs, vocabulari"
+      },
+      "d52": {
+        "nm": "Ultradian",
+        "ideal": "Estudi mixt, lectura activa"
+      },
+      "d90": {
+        "nm": "Deep Work",
+        "ideal": "Mates, física, programació"
+      },
+      "d120": {
+        "nm": "Hyper Focus",
+        "ideal": "Projectes complexos, flux total"
+      }
     },
     "notifOn": "Notificacions activades",
     "notifOff": "Activa notificacions",
     "notifFocusDone": "Sessió de {{mode}} completada! Hora de descansar.",
     "notifRestDone": "Descans acabat! Torna al focus."
   },
-  "chaos": {
-    "minProblems": "Afegeix almenys 3 problemes de diferents temes per començar."
+  "zero": {
+    "setup": {
+      "title": "Aprèn des de Zero",
+      "desc": "No saps res del tema? Perfecte. La IA et guiarà pas a pas amb un exemple resolt.",
+      "notesLabel": "Els teus apunts o descripció del tema",
+      "placeholder": "Enganxa els teus apunts o descriu el tema de l'examen...",
+      "modeLabel": "Tipus d'assignatura",
+      "stem": "Ciències / Tècnica",
+      "stemDesc": "Matemàtiques, Física, Química...",
+      "humanities": "Humanitats / Lletres",
+      "humanitiesDesc": "Literatura, Història, Filosofia...",
+      "cta": "Generar sessió",
+      "minLength": "Escriu almenys 50 caràcters per poder generar la sessió."
+    },
+    "loading": "Generant sessió personalitzada...",
+    "error": "Error en generar la sessió. Torna-ho a provar.",
+    "worked": {
+      "title": "Exemple Resolt",
+      "problem": "Problema:",
+      "cta": "Ho entenc, prova-m'ho"
+    },
+    "practice": {
+      "title": "Prova't Tu",
+      "problem": "Exercici similar:",
+      "answerLabel": "La teva resposta",
+      "placeholder": "Escriu la teva solució pas a pas...",
+      "cta": "Comprovar"
+    },
+    "map": {
+      "title": "Mapa Conceptual",
+      "themes": "Temes principals",
+      "figures": "Personatges / Figures clau",
+      "quotes": "Cites clau",
+      "timeline": "Cronologia",
+      "cta": "Llegit, pregunta'm"
+    },
+    "recall": {
+      "title": "Recuperació Activa",
+      "question": "Pregunta:",
+      "rubricLabel": "Criteris d'avaluació:",
+      "answerLabel": "La teva resposta",
+      "placeholder": "Respon lliurement. Inclou exemples del text si pots.",
+      "cta": "Corregir amb IA"
+    },
+    "results": {
+      "title": "Resultats",
+      "firstSession": "primera sessió",
+      "gaps": "Llacunes detectades",
+      "nsdr": "Ara descansa!",
+      "nsdrDesc": "Fes 10–20 min de descans (NSDR) per consolidar el que has après.",
+      "flashcards": "Crear flashcards per les llacunes",
+      "flashcardsCreated": "Flashcards creades",
+      "retry": "Tornar a intentar"
+    },
+    "scienceBadge": "Basat en: Sweller (Worked Example Effect) · Dunlosky (Active Recall) · Huberman (NSDR)"
   },
   "stats": {
     "last7d": "Últims 7 dies",
@@ -142,22 +212,66 @@
       "level": "Nivell"
     },
     "ach": {
-      "first_session": { "name": "Primer Pas", "desc": "Completa la primera sessió de focus" },
-      "streak_3": { "name": "Constant", "desc": "Aconsegueix una ratxa de 3 dies" },
-      "streak_7": { "name": "Imparable", "desc": "Ratxa de 7 dies seguits" },
-      "streak_30": { "name": "Llegenda", "desc": "Ratxa de 30 dies!" },
-      "cards_50": { "name": "Explorador", "desc": "Revisa 50 flashcards" },
-      "cards_500": { "name": "Erudit", "desc": "Revisa 500 flashcards" },
-      "mem_80": { "name": "Memòria d'Acer", "desc": "Arriba al 80% de força de memòria" },
-      "hours_10": { "name": "Dedicat", "desc": "Acumula 10 hores d'estudi" },
-      "hours_50": { "name": "Mestre", "desc": "Acumula 50 hores d'estudi" },
-      "hours_100": { "name": "Acadèmic d'Elit", "desc": "100 hores d'estudi total" },
-      "chaos_10": { "name": "Gladiador", "desc": "Completa 10 rondes de Mode Caos" },
-      "level_10": { "name": "Veterà", "desc": "Arriba al nivell 10" },
-      "level_25": { "name": "Expert", "desc": "Arriba al nivell 25" },
-      "level_50": { "name": "Gran Mestre", "desc": "Arriba al nivell 50" },
-      "deep_work": { "name": "Deep Worker", "desc": "Completa una sessió de 90+ min" },
-      "pom_10": { "name": "Pomodoro Master", "desc": "Completa 10 pomodoros" }
+      "first_session": {
+        "name": "Primer Pas",
+        "desc": "Completa la primera sessió de focus"
+      },
+      "streak_3": {
+        "name": "Constant",
+        "desc": "Aconsegueix una ratxa de 3 dies"
+      },
+      "streak_7": {
+        "name": "Imparable",
+        "desc": "Ratxa de 7 dies seguits"
+      },
+      "streak_30": {
+        "name": "Llegenda",
+        "desc": "Ratxa de 30 dies!"
+      },
+      "cards_50": {
+        "name": "Explorador",
+        "desc": "Revisa 50 flashcards"
+      },
+      "cards_500": {
+        "name": "Erudit",
+        "desc": "Revisa 500 flashcards"
+      },
+      "mem_80": {
+        "name": "Memòria d'Acer",
+        "desc": "Arriba al 80% de força de memòria"
+      },
+      "hours_10": {
+        "name": "Dedicat",
+        "desc": "Acumula 10 hores d'estudi"
+      },
+      "hours_50": {
+        "name": "Mestre",
+        "desc": "Acumula 50 hores d'estudi"
+      },
+      "hours_100": {
+        "name": "Acadèmic d'Elit",
+        "desc": "100 hores d'estudi total"
+      },
+      "level_10": {
+        "name": "Veterà",
+        "desc": "Arriba al nivell 10"
+      },
+      "level_25": {
+        "name": "Expert",
+        "desc": "Arriba al nivell 25"
+      },
+      "level_50": {
+        "name": "Gran Mestre",
+        "desc": "Arriba al nivell 50"
+      },
+      "deep_work": {
+        "name": "Deep Worker",
+        "desc": "Completa una sessió de 90+ min"
+      },
+      "pom_10": {
+        "name": "Pomodoro Master",
+        "desc": "Completa 10 pomodoros"
+      }
     }
   },
   "cards": {
@@ -182,7 +296,12 @@
     "gradeBad": "❌ No ho sabia",
     "gradeGood": "✅ Ho sabia!",
     "sessionDone": "🎉 Sessió completa!",
-    "sessionDoneDesc": "Tots els conceptes revisats"
+    "sessionDoneDesc": "Tots els conceptes revisats",
+    "aiTarget": {
+      "label": "On vols afegir les targetes?",
+      "new": "Nou deck",
+      "existing": "Deck existent"
+    }
   },
   "exams": {
     "newExam": "+ Nou examen",
@@ -198,7 +317,73 @@
     "diffHard": "Difícil",
     "submit": "✓ Afegir",
     "plan": "📋 Pla d'estudi SRS",
-    "sessions": "{{n}} sessions"
+    "sessions": "{{n}} sessions",
+    "tabs": {
+      "calendar": "Calendari",
+      "simulator": "Simulador IA",
+      "corrector": "Corrector IA"
+    }
+  },
+  "feynman": {
+    "prompt": "Quin concepte vols dominar?",
+    "intro": "Escriu un tema i hauràs d'explicar-lo sense jerga. L'IA detecta il·lusions de competència i et fa preguntes socràtiques.",
+    "topicPh": "ex: Mitosi, Derivades, La Revolució Francesa...",
+    "start": "Començar",
+    "newTopic": "Nou tema",
+    "send": "Enviar",
+    "comprehension": "Comprensió",
+    "levelHigh": "ALTA",
+    "levelMed": "MITJA",
+    "levelLow": "BAIXA",
+    "listenStop": "Aturar gravació",
+    "listenStart": "Parlar pel micròfon",
+    "phListening": "Escoltant...",
+    "phThinking": "Penseu...",
+    "phExplain": "Explica amb les teves paraules...",
+    "noSpeech": "El teu navegador no suporta el reconeixement de veu.",
+    "aiReal": "🟢 IA real",
+    "aiBasic": "⚙️ Mode bàsic",
+    "titleFallback": "S'ha activat el mode bàsic (offline o limit d'ús).",
+    "titleAi": "IA amb Gemini.",
+    "remaining": "({{n}} restants)",
+    "firstMsg": "D'acord! Seré un nen de 5 anys molt curiós 🧒\n\nExplica'm: <strong>\"{{topic}}\"</strong>\n\nQuè és això? Necessito que ho expliquis tan fàcil que ho entengui qualsevol persona del carrer. Res de paraules complicades!"
+  },
+  "cloud": {
+    "title": "Sincronització al Núvol",
+    "desc": "Guarda el teu progrés de forma segura per no perdre'l mai i accedeix des de qualsevol dispositiu.",
+    "loading": "Carregant...",
+    "loginTitle": "Inicia Sessió",
+    "loginDesc": "Aquesta funcionalitat usa Supabase per mantenir les teves targetes i nivell XP assegurats.",
+    "emailLabel": "Correu Electrònic",
+    "passwordLabel": "Contrasenya",
+    "login": "Entrar",
+    "signup": "Registrar-se",
+    "connected": "Connectat al Núvol",
+    "push": "⬆️ Pujar Estat Local",
+    "pull": "⬇️ Baixar del Núvol",
+    "logout": "Tancar Sessió",
+    "signupOk": "T'has registrat correctament. Revisa el teu correu per confirmar (si cal).",
+    "loginOk": "Sessió iniciada amb èxit.",
+    "pushing": "Pujant dades al núvol...",
+    "pushErr": "Error pujant: {{msg}}",
+    "pushOk": "✅ Dades guardades al núvol amb èxit!",
+    "pulling": "Descarregant dades...",
+    "pullErr": "Error baixant dades: {{msg}}",
+    "pullOk": "✅ Dades sincronitzades correctament! Has recuperat el teu progrés.",
+    "pullEmpty": "El núvol està buit. Puja les dades primer.",
+    "errorGeneric": "Error: {{msg}}",
+    "magicLinkSent": "Correu enviat! Revisa la teva bústia i fes clic a l'enllaç.",
+    "sendMagicLink": "Enviar enllaç màgic",
+    "authMagic": "Enllaç màgic",
+    "authPassword": "Contrasenya",
+    "statusIdle": "Sincronitzat",
+    "syncing": "Sincronitzant...",
+    "syncError": "Error de sync",
+    "offline": "Sense connexió",
+    "syncStatusLabel": "Estat",
+    "lastSyncLabel": "Última sync",
+    "syncAuto": "Les dades es sincronitzen automàticament cada vegada que fas canvis.",
+    "never": "Mai"
   },
   "recovery": {
     "nsdr": {
@@ -228,23 +413,305 @@
       "desc": "Mòbil, xarxes socials, YouTube. El descans ha de ser MODALMENT diferent: caminar, respirar, estirar."
     },
     "stretches": {
-      "neck": { "name": "Rotació de coll", "desc": "Gira el cap lentament en cercles: 5 vegades a cada costat." },
-      "arms": { "name": "Estirament de braços", "desc": "Entrellaça els dits i estira cap amunt 15s. Repeteix 3 cops." },
-      "twist": { "name": "Torsió espinal", "desc": "Assegut, gira el tors esquerra 15s, dreta 15s. Repeteix 2 cops." },
-      "forward": { "name": "Flexió endavant", "desc": "De peu, inclina't endavant deixant caure els braços. 20 segons." },
-      "cervical": { "name": "Estirament cervical", "desc": "Inclina el cap cap a un costat 15s, després l'altre. Repeteix." }
+      "neck": {
+        "name": "Rotació de coll",
+        "desc": "Gira el cap lentament en cercles: 5 vegades a cada costat."
+      },
+      "arms": {
+        "name": "Estirament de braços",
+        "desc": "Entrellaça els dits i estira cap amunt 15s. Repeteix 3 cops."
+      },
+      "twist": {
+        "name": "Torsió espinal",
+        "desc": "Assegut, gira el tors esquerra 15s, dreta 15s. Repeteix 2 cops."
+      },
+      "forward": {
+        "name": "Flexió endavant",
+        "desc": "De peu, inclina't endavant deixant caure els braços. 20 segons."
+      },
+      "cervical": {
+        "name": "Estirament cervical",
+        "desc": "Inclina el cap cap a un costat 15s, després l'altre. Repeteix."
+      }
     }
   },
   "headers": {
-    "timer": { "title": "⏱ Temporitzador Científic", "desc": "Deep Work, Pomodoro i Ultradian" },
-    "cards": { "title": "📇 Flashcards — Reaprenentatge Successiu", "desc": "Regla del 3 + Repetició Espaïada automàtica (SRS)" },
-    "feynman": { "title": "🧒 Tutor IA — Destructor d'Il·lusions", "desc": "Tècnica Feynman potenciada. Explica conceptes sense jerga i l'IA detecta comprensió falsa." },
-    "chaos": { "title": "⚡ Mode Caos — Pràctica Intercalada", "desc": "Barreja problemes de temes diferents. Entrena discriminació inductiva." },
-    "languages": { "title": "🌍 Idiomes — Vocabulari + SRS", "desc": "Aprèn paraules noves amb el sistema de repetició espaïada" },
-    "sounds": { "title": "🎵 Mixer de Sons Ambientals", "desc": "Crea el teu paisatge sonor perfecte per concentrar-te" },
-    "recovery": { "title": "🌙 Estació de Recuperació", "desc": "NSDR, respiració i estiraments. Descans REAL per al cervell." },
-    "exams": { "title": "📅 Exàmens i Pla d'Estudi", "desc": "SRS automàtic basat en la dificultat" },
-    "stats": { "title": "📊 Estadístiques Avançades", "desc": "Dades reals del teu rendiment acadèmic" },
-    "techniques": { "title": "📚 Tècniques Científiques", "desc": "Basades en Dunlosky et al. (2013)" }
+    "timer": {
+      "title": "⏱ Temporitzador Científic",
+      "desc": "Deep Work, Pomodoro i Ultradian"
+    },
+    "cards": {
+      "title": "📇 Flashcards — Reaprenentatge Successiu",
+      "desc": "Regla del 3 + Repetició Espaïada automàtica (SRS)"
+    },
+    "feynman": {
+      "title": "🧒 Tutor IA — Destructor d'Il·lusions",
+      "desc": "Tècnica Feynman potenciada. Explica conceptes sense jerga i l'IA detecta comprensió falsa."
+    },
+    "zero": {
+      "title": "🧭 Des de Zero",
+      "desc": "Aprèn des de zero amb exemples resolts i recuperació activa guiada per IA"
+    },
+    "languages": {
+      "title": "🌍 Idiomes — Vocabulari + SRS",
+      "desc": "Aprèn paraules noves amb el sistema de repetició espaïada"
+    },
+    "sounds": {
+      "title": "🎵 Mixer de Sons Ambientals",
+      "desc": "Crea el teu paisatge sonor perfecte per concentrar-te"
+    },
+    "recovery": {
+      "title": "🌙 Estació de Recuperació",
+      "desc": "NSDR, respiració i estiraments. Descans REAL per al cervell."
+    },
+    "exams": {
+      "title": "📅 Exàmens i Pla d'Estudi",
+      "desc": "SRS automàtic basat en la dificultat"
+    },
+    "stats": {
+      "title": "📊 Estadístiques Avançades",
+      "desc": "Dades reals del teu rendiment acadèmic"
+    },
+    "techniques": {
+      "title": "📚 Tècniques Científiques",
+      "desc": "Basades en Dunlosky et al. (2013)"
+    }
+  },
+  "conv": {
+    "tab": "Conversa",
+    "vocabTab": "Vocabulari",
+    "pickScenario": "Tria un escenari",
+    "difficulty": {
+      "easy": "Fàcil",
+      "medium": "Mitjà",
+      "hard": "Difícil"
+    },
+    "fluency": "Fluïdesa",
+    "endSession": "Acabar",
+    "holdToSpeak": "Escriu o mantén per parlar",
+    "addToDeckCta": "Afegir {{n}} targetes al deck",
+    "sessionDone": "Sessió completada",
+    "newConv": "Nova conversa",
+    "noDecks": "Selecciona un deck primer",
+    "emptyTranscript": "No s'ha detectat veu",
+    "correctionTypes": {
+      "grammar": "Gramàtica",
+      "vocabulary": "Vocabulari",
+      "fluency": "Fluïdesa"
+    },
+    "scenarios": {
+      "cafe": "Al cafè",
+      "shop": "A la botiga",
+      "doctor": "Al metge",
+      "job": "Entrevista de feina",
+      "hotel": "Check-in a l'hotel",
+      "phone": "Trucada telefònica",
+      "debate": "Debat cinematogràfic",
+      "directions": "Demanar direccions"
+    }
+  },
+  "social": {
+    "title": "Ecosistema Social",
+    "subtitle": "Estudia amb amics, competeix i comparteix coneixement.",
+    "friends": "Amics",
+    "leaderboard": "Ranquing",
+    "challenges": "Reptes",
+    "addFriend": "Afegir amic",
+    "search": "Cercar",
+    "searchByEmail": "Cerca per email",
+    "requestSent": "Sol.licitud enviada",
+    "accept": "Acceptar",
+    "decline": "Declinar",
+    "removeFriend": "Eliminar amic",
+    "noFriends": "Cap amic encara",
+    "noFriendsHint": "Cerca un amic pel seu email per afegir-lo.",
+    "pendingRequests": "Sol.licituds pendents",
+    "loginRequired": "Inicia sessio per accedir a les funcions socials.",
+    "unknownUser": "Usuari desconegut",
+    "vs": "vs",
+    "you": "Tu",
+    "target": "Objectiu",
+    "daysLeft": "dies",
+    "days": "dies",
+    "subject": "Assignatura",
+    "subjectPlaceholder": "Ex: Matematiques",
+    "opponent": "Oponent",
+    "sortBy": "Ordenar per",
+    "streak": "Ratxa",
+    "weeklyMinutes": "Minuts setmanals",
+    "sendChallenge": "Enviar repte",
+    "waitingForOpponent": "Esperant que l oponent accepti...",
+    "youWon": "Has guanyat!",
+    "youLost": "Has perdut",
+    "noChallenges": "Cap repte actiu",
+    "noChallengesHint": "Crea un repte amb un amic per competir.",
+    "incomingChallenges": "Reptes entrants",
+    "activeChallenges": "Reptes actius",
+    "completedChallenges": "Reptes completats",
+    "createChallenge": "Crear repte",
+    "challengeDuration": "Durada",
+    "challengeTarget": "Objectiu (nombre)",
+    "opponent2": "Oponent",
+    "challengeType.label": "Tipus",
+    "challengeType.flashcards": "Flashcards",
+    "challengeType.study_time": "Temps estudi",
+    "challengeType.exam": "Examen",
+    "status.pending": "Pendent",
+    "status.accepted": "Acceptat",
+    "status.active": "Actiu",
+    "status.completed": "Completat",
+    "status.declined": "Rebutjat",
+    "feed": {
+      "title": "Activitat",
+      "cardsCompleted": "ha completat {{count}} flashcards",
+      "streakMilestone": "te una ratxa de {{days}} dies!",
+      "examDone": "ha fet un examen: {{score}}%",
+      "challengeWon": "ha guanyat un repte!",
+      "studySession": "ha estudiat {{minutes}} minuts",
+      "activity": "ha tingut activitat"
+    }
+  },
+  "onboarding": {
+    "phases": { "1": "Objectiu", "2": "Hàbits", "3": "Autoavaluació" },
+    "steps": {
+      "goal": { "title": "Quin és el teu objectiu?", "desc": "T'ajudarem a arribar-hi més ràpid." },
+      "level": { "title": "A quin nivell estudies?", "desc": "Ajustem el ritme i la dificultat." },
+      "subjects": { "title": "Quines matèries estudies?", "desc": "Afegeix fins a {{max}} matèries.", "placeholder": "Ex: Matemàtiques" },
+      "examDate": { "title": "Quan tens l'examen?", "desc": "Calcularem fites enrere des d'aquesta data.", "skip": "No tinc data fixa" },
+      "method": { "title": "Com estudies habitualment?", "desc": "Sigues sincer." },
+      "minutes": { "title": "Quant de temps al dia?", "desc": "Adaptarem el pla a la teva disponibilitat." },
+      "time": { "title": "Quan prefereixes estudiar?", "desc": "L'hora ancora l'hàbit." },
+      "obstacle": { "title": "Quin és el teu obstacle principal?", "desc": "Detectarem on perds rendiment." },
+      "retention": { "title": "Quant recordes del que estudies?", "desc": "Una nota del 1 al 5.", "low": "Oblido tot", "high": "Recordo gairebé tot" }
+    },
+    "options": {
+      "goal": {
+        "exam": { "title": "Aprovar exàmens", "desc": "Universitat, batxillerat..." },
+        "language": { "title": "Dominar un idioma", "desc": "Vocabulari + fluïdesa" },
+        "cert": { "title": "Certificacions", "desc": "IT, medicina, finances..." },
+        "university": { "title": "Estudis universitaris", "desc": "Comprensió profunda" },
+        "other": { "title": "Altres", "desc": "Aprendre per plaer o curiositat" }
+      },
+      "level": {
+        "eso": { "title": "ESO", "desc": "Educació secundària" },
+        "batx": { "title": "Batxillerat", "desc": "Selectivitat / PAU" },
+        "uni": { "title": "Universitat", "desc": "Grau o postgrau" },
+        "oposicio": { "title": "Oposicions", "desc": "Cos públic o concurs" },
+        "other": { "title": "Altres", "desc": "Formació personal" }
+      },
+      "method": {
+        "read": { "title": "Llegeixo i subratllo", "desc": "Lectura passiva" },
+        "manual": { "title": "Resums i esquemes a mà", "desc": "Escriure per memoritzar" },
+        "digital": { "title": "Eines digitals", "desc": "Anki, Quizlet, Notion..." },
+        "mixed": { "title": "Combinació de tot", "desc": "Una mica de cada cosa" }
+      },
+      "minutes": {
+        "label": "{{min}} minuts",
+        "15": { "desc": "Hàbit diari mínim" },
+        "30": { "desc": "Constància òptima" },
+        "60": { "desc": "Preparació seriosa" },
+        "90": { "desc": "Intensiu / examen pròxim" }
+      },
+      "time": {
+        "morning": { "title": "Matí", "desc": "Cervell fresc" },
+        "afternoon": { "title": "Tarda", "desc": "Després de classe / feina" },
+        "evening": { "title": "Vespre", "desc": "Final del dia" },
+        "night": { "title": "Nit", "desc": "Quan tothom dorm" },
+        "flexible": { "title": "Flexible", "desc": "Sense hora fixa" }
+      },
+      "obstacle": {
+        "memory": { "title": "M'oblido del que estudio", "desc": "La ment es queda en blanc" },
+        "time": { "title": "Em falta temps", "desc": "El temari és inabastable" },
+        "focus": { "title": "Em costa concentrar-me", "desc": "Em distrec fàcilment" },
+        "motivation": { "title": "Em costa començar", "desc": "Procrastino sovint" },
+        "comprehension": { "title": "No acabo d'entendre", "desc": "Em perdo en els conceptes" }
+      }
+    },
+    "processing": {
+      "title": "Construint el teu perfil",
+      "p1": "Analitzant les teves respostes...",
+      "p2": "Calculant la teva corba d'oblit actual...",
+      "p3": "Generant el teu pla personalitzat..."
+    },
+    "results": {
+      "title": "El teu pla està llest",
+      "desc": "Calculat sobre les teves respostes, sense màgia.",
+      "deltaLabel": "Potencial de millora projectat",
+      "breakdown": "Per què aquest número?",
+      "projected": "Total projectat",
+      "viewPlan": "Veure pla complet",
+      "startNow": "Començar ara"
+    }
+  },
+  "improvement": {
+    "factors": {
+      "baseline": "Punt de partida (mètode actual)",
+      "srs": "Repetició espaiada (SRS)",
+      "feynman": "Tècnica Feynman amb IA",
+      "spacing": "Sessions curtes i espaiades",
+      "consistency": "Hàbit a hora fixa",
+      "focus": "Pomodoro + sons ambient",
+      "memory": "Targetes de memòria activa"
+    },
+    "reasons": {
+      "srs": "Quan reemplaces lectura passiva per recall actiu, la retenció dispara.",
+      "srsMixed": "Sistematitzar el SRS multiplica el que ja estàs fent.",
+      "feynman": "Explicar conceptes en veu alta detecta llacunes invisibles.",
+      "spacing": "Sessions curtes ben espaiades superen maratons.",
+      "consistency": "Estudiar a la mateixa hora ancora l'hàbit.",
+      "focus": "Pomodoro + soroll de fons redueix distraccions.",
+      "memory": "Targetes amb recall força el cervell a recordar."
+    }
+  },
+  "plan": {
+    "title": "El teu pla d'estudi",
+    "weeklyMinutes": "{{min}} min/setmana",
+    "modulesEssential": "Essencials",
+    "modulesRecommended": "Recomanats",
+    "modulesOptional": "Opcionals",
+    "dailyTemplate": "Estructura diària suggerida",
+    "milestones": {
+      "title": "Fites",
+      "week1Cards": "50 targetes revisades",
+      "month1Streak": "14 dies seguits estudiant",
+      "examDay": "Dia de l'examen",
+      "examMid": "Mig camí: 5 sessions Feynman"
+    },
+    "reasons": {
+      "cardsMemory": "El teu obstacle és la memòria — SRS és la solució directa.",
+      "feynmanMemory": "Explicar reforça el record.",
+      "feynmanComp": "Si no entens, explicar-ho t'obliga a comprendre.",
+      "cardsComp": "Targetes de concepte ajuden a fixar idees clau.",
+      "timerFocus": "Pomodoro trenca la sessió en blocs gestionables.",
+      "soundsFocus": "Soroll ambient amaga distraccions.",
+      "timerTime": "Pomodoro et fa rendir més en menys temps.",
+      "cardsTime": "Repassar 10 min al dia val per 1h setmanal.",
+      "timerMotiv": "25 min són curts: és més fàcil començar.",
+      "recoveryMotiv": "Recuperació activa evita el burnout.",
+      "languagesGoal": "El teu objectiu és l'idioma — el mòdul d'idiomes és el cor del pla.",
+      "examsGoal": "Practicar amb exàmens simulats prepara la nota."
+    },
+    "narrative": {
+      "title": "Personalitzat amb IA",
+      "generate": "Personalitzar amb IA",
+      "regenerate": "Regenerar"
+    },
+    "edit": "Editar perfil"
+  },
+  "profile": {
+    "title": "El teu perfil d'estudi",
+    "save": "Desar canvis",
+    "redo": "Refer onboarding",
+    "saved": "Perfil desat"
+  },
+  "dashboardPersonal": {
+    "heroPersonal": "Bon dia! Avui {{minutes}} min cap a {{goal}}.",
+    "todayPlan": "El teu pla d'avui",
+    "profileBanner": {
+      "title": "Completa el teu perfil",
+      "desc": "60 segons per un pla personalitzat.",
+      "cta": "Completar",
+      "dismiss": "Ara no"
+    }
   }
 }

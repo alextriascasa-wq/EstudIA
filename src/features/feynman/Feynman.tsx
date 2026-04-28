@@ -31,8 +31,7 @@ export function Feynman(): JSX.Element {
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
-      // You could dynamically set this based on i18n, but Catalan is default
-      recognition.lang = 'ca-ES'; 
+      recognition.lang = 'ca-ES';
 
       recognition.onresult = (event: any) => {
         let finalTranscript = '';
@@ -61,7 +60,7 @@ export function Feynman(): JSX.Element {
 
   const toggleListening = () => {
     if (!recognitionRef.current) {
-      alert('El teu navegador no suporta el reconeixement de veu.');
+      alert(t('feynman.noSpeech'));
       return;
     }
     if (isListening) {
@@ -82,18 +81,18 @@ export function Feynman(): JSX.Element {
   }, [messages]);
 
   const start = (): void => {
-    const t = topicDraft.trim();
-    if (!t) return;
-    setTopic(t);
+    const topicTrim = topicDraft.trim();
+    if (!topicTrim) return;
+    setTopic(topicTrim);
     setLevel(0);
     const firstMsg: FeynmanMessage = {
       role: 'ai',
-      text: `D'acord! Seré un nen de 5 anys molt curiós 🧒\n\nExplica'm: <strong>"${t}"</strong>\n\nQuè és això? Necessito que ho expliquis tan fàcil que ho entengui qualsevol persona del carrer. Res de paraules complicades!`,
+      text: t('feynman.firstMsg', { topic: topicTrim }),
       timestamp: new Date().toISOString(),
-      source: 'ai'
+      source: 'ai',
     };
     setMessages([firstMsg]);
-    patch({ feynmanHistory: [...feynmanHistory, { ...firstMsg, topic: t } as any] });
+    patch({ feynmanHistory: [...feynmanHistory, { ...firstMsg, topic: topicTrim } as any] });
     setLastSource(null);
     addXP(5);
   };
@@ -107,8 +106,7 @@ export function Feynman(): JSX.Element {
       text: userText,
       timestamp: new Date().toISOString(),
     };
-    
-    // Optimistic UI
+
     setMessages((prev) => [...prev, userMsg]);
     setDraft('');
     setIsAiLoading(true);
@@ -118,26 +116,29 @@ export function Feynman(): JSX.Element {
 
     try {
       if (!navigator.onLine) throw new Error('Offline');
-      
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
-      
-      const { reply, remaining } = await askFeynman(topic, [...messages, userMsg].map(m => ({
-        role: m.role === 'user' ? 'user' : 'model',
-        text: m.text,
-        timestamp: m.timestamp || new Date().toISOString(),
-        source: 'ai'
-      })), controller.signal);
-      
+
+      const { reply, remaining } = await askFeynman(
+        topic,
+        [...messages, userMsg].map((m) => ({
+          role: m.role === 'user' ? 'user' : 'model',
+          text: m.text,
+          timestamp: m.timestamp || new Date().toISOString(),
+          source: 'ai',
+        })),
+        controller.signal,
+      );
+
       clearTimeout(timeoutId);
-      
+
       aiReplyText = reply;
       source = 'ai';
       setRateRemaining(remaining);
       setLastSource('ai');
     } catch (e) {
       console.warn('Feynman AI failed, falling back to basic mode', e);
-      // Fallback
       const fallbackResult = analyzeFeynmanReply({
         userText,
         topic,
@@ -158,16 +159,11 @@ export function Feynman(): JSX.Element {
     };
 
     setMessages((prev) => [...prev, aiMsg]);
-    
-    // Save to global history
+
     patch({
-      feynmanHistory: [
-        ...feynmanHistory,
-        { ...userMsg, topic } as any,
-        { ...aiMsg, topic } as any
-      ]
+      feynmanHistory: [...feynmanHistory, { ...userMsg, topic } as any, { ...aiMsg, topic } as any],
     });
-    
+
     setIsAiLoading(false);
   };
 
@@ -178,96 +174,68 @@ export function Feynman(): JSX.Element {
     setMessages([]);
   };
 
+  const levelBg = level >= 3 ? 'var(--okl)' : level >= 1 ? 'var(--wl)' : 'var(--errl)';
+  const levelColor = level >= 3 ? 'var(--ok)' : level >= 1 ? 'var(--w)' : 'var(--err)';
+  const srcBg = lastSource === 'ai' ? 'var(--okl)' : 'var(--wl)';
+  const srcColor = lastSource === 'ai' ? 'var(--ok)' : 'var(--w)';
+
   return (
     <div className="sec">
-      <div className="sec-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div className="sec-hdr flex justify-between items-start">
         <div>
           <h2>{t('headers.feynman.title')}</h2>
           <p>{t('headers.feynman.desc')}</p>
         </div>
         {topic && lastSource && (
           <div
-            className="badge"
-            style={{
-              background: lastSource === 'ai' ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)',
-              color: lastSource === 'ai' ? 'var(--ok)' : 'var(--w)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-              fontSize: 11
-            }}
-            title={lastSource === 'fallback' ? "S'ha activat el mode bàsic (offline o limit d'ús)." : "IA amb Gemini."}
+            className="badge feynman-src-badge"
+            style={{ background: srcBg, color: srcColor }}
+            title={lastSource === 'fallback' ? t('feynman.titleFallback') : t('feynman.titleAi')}
           >
-            {lastSource === 'ai' ? '🟢 IA real' : '⚙️ Mode bàsic'}
+            {lastSource === 'ai' ? t('feynman.aiReal') : t('feynman.aiBasic')}
             {rateRemaining !== null && lastSource === 'ai' && (
-              <span style={{opacity: 0.6, marginLeft: 4}}>({rateRemaining} restants)</span>
+              <span className="feynman-src-remaining">
+                {t('feynman.remaining', { n: rateRemaining })}
+              </span>
             )}
           </div>
         )}
       </div>
+
       {!topic ? (
-        <div className="c glow" style={{ textAlign: 'center', padding: 48 }}>
-          <div style={{ fontSize: 52, marginBottom: 18 }}>🧠</div>
-          <h3 style={{ fontSize: 18, fontWeight: 800, marginBottom: 10 }}>
-            Quin concepte vols dominar?
-          </h3>
-          <p
-            style={{
-              fontSize: 13,
-              color: 'var(--ts)',
-              marginBottom: 22,
-              maxWidth: 480,
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            Escriu un tema i hauràs d&apos;explicar-lo sense jerga. L&apos;IA detecta il·lusions
-            de competència i et fa preguntes socràtiques.
-          </p>
-          <div style={{ display: 'flex', gap: 8, maxWidth: 480, margin: '0 auto' }}>
+        <div className="c glow feynman-empty">
+          <div className="feynman-empty-icon">🧠</div>
+          <h3 className="feynman-empty-title">{t('feynman.prompt')}</h3>
+          <p className="feynman-empty-desc">{t('feynman.intro')}</p>
+          <div className="feynman-start-row">
             <input
               className="inp"
-              placeholder="ex: Mitosi, Derivades, La Revolució Francesa..."
-              style={{ fontSize: 14 }}
+              placeholder={t('feynman.topicPh')}
               value={topicDraft}
               onChange={(e) => setTopicDraft(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && start()}
             />
             <button className="bp" onClick={start}>
-              Començar
+              {t('feynman.start')}
             </button>
           </div>
         </div>
       ) : (
         <div className="c">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: 12,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <h3 style={{ fontSize: 15, fontWeight: 800 }}>📝 {topic}</h3>
-              <span
-                className="badge"
-                style={{
-                  background:
-                    level >= 3 ? 'var(--okl)' : level >= 1 ? 'var(--wl)' : 'var(--errl)',
-                  color:
-                    level >= 3 ? 'var(--ok)' : level >= 1 ? 'var(--w)' : 'var(--err)',
-                }}
-              >
-                Comprensió: {level >= 3 ? 'ALTA' : level >= 1 ? 'MITJA' : 'BAIXA'}
+          <div className="feynman-chat-hdr">
+            <div className="feynman-topic-info">
+              <h3 className="t-h3">📝 {topic}</h3>
+              <span className="badge" style={{ background: levelBg, color: levelColor }}>
+                {t('feynman.comprehension')}:{' '}
+                {level >= 3
+                  ? t('feynman.levelHigh')
+                  : level >= 1
+                    ? t('feynman.levelMed')
+                    : t('feynman.levelLow')}
               </span>
             </div>
-            <button
-              className="bs"
-              style={{ padding: '5px 12px', fontSize: 11 }}
-              onClick={resetTopic}
-            >
-              Nou tema
+            <button className="bs bs-sm" onClick={resetTopic}>
+              {t('feynman.newTopic')}
             </button>
           </div>
           <div className="chat-area" ref={chatRef}>
@@ -279,27 +247,27 @@ export function Feynman(): JSX.Element {
               />
             ))}
           </div>
-          <div className="chat-input" style={{ opacity: isAiLoading ? 0.6 : 1, pointerEvents: isAiLoading ? 'none' : 'auto', display: 'flex', gap: 8 }}>
-            <button 
-              className="bs" 
-              style={{ 
-                padding: '0 16px', 
-                background: isListening ? 'var(--err)' : 'var(--bg)', 
-                color: isListening ? '#fff' : 'var(--t)', 
-                borderColor: isListening ? 'var(--err)' : 'var(--b)',
-                transition: 'all 0.2s',
-                animation: isListening ? 'pulse 1.5s infinite' : 'none'
-              }} 
+          <div
+            className="chat-input"
+            style={{ opacity: isAiLoading ? 0.6 : 1, pointerEvents: isAiLoading ? 'none' : 'auto' }}
+          >
+            <button
+              className={`bs feynman-mic${isListening ? ' active' : ''}`}
               onClick={toggleListening}
               disabled={isAiLoading}
-              title={isListening ? "Aturar gravació" : "Parlar pel micròfon"}
+              title={isListening ? t('feynman.listenStop') : t('feynman.listenStart')}
             >
-              <span style={{ fontSize: 20 }}>{isListening ? '🛑' : '🎙️'}</span>
+              <span className="feynman-mic-icon">{isListening ? '🛑' : '🎙️'}</span>
             </button>
             <textarea
-              className="inp"
-              placeholder={isListening ? "Escoltant..." : isAiLoading ? "Penseu..." : "Explica amb les teves paraules..."}
-              style={{ flex: 1, minHeight: 44, resize: 'none', padding: '12px 16px', borderRadius: 8 }}
+              className="inp chat-textarea"
+              placeholder={
+                isListening
+                  ? t('feynman.phListening')
+                  : isAiLoading
+                    ? t('feynman.phThinking')
+                    : t('feynman.phExplain')
+              }
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {
@@ -310,8 +278,8 @@ export function Feynman(): JSX.Element {
               }}
               disabled={isAiLoading}
             />
-            <button className="bp" style={{ padding: '0 24px' }} onClick={send} disabled={isAiLoading || !draft.trim()}>
-              {isAiLoading ? '...' : 'Enviar'}
+            <button className="bp px-6" onClick={send} disabled={isAiLoading || !draft.trim()}>
+              {isAiLoading ? '...' : t('feynman.send')}
             </button>
           </div>
         </div>

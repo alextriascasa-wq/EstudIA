@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
+import { useStudyProfile, usePlan } from '@/hooks/usePlan';
 import { xpInLevel } from '@/lib/xp';
 import { genStudyTasks } from '@/lib/exams';
 import { daysUntil, fmtDate, today } from '@/lib/date';
@@ -11,26 +12,22 @@ export function Dashboard(): JSX.Element {
   const nav = useNavigate();
   const { t } = useTranslation();
 
-  const {
-    streak,
-    exams,
-    doneTasks,
-    weekly,
-    zNote,
-    level,
-    totalXp,
-  } = useAppStore();
+  const { streak, exams, doneTasks, weekly, zNote, level, totalXp } = useAppStore();
 
   const patch = useAppStore((s) => s.patch);
   const save = useAppStore((s) => s.save);
   const addXP = useAppStore((s) => s.addXP);
 
+  const studyProfile = useStudyProfile();
+  const plan = usePlan();
+  const hasCompletedOnboarding = useAppStore((s) => s.hasCompletedOnboarding);
+  const profileBannerDismissed = useAppStore((s) => s.profileBannerDismissed);
+  const dismissProfileBanner = useAppStore((s) => s.dismissProfileBanner);
+  const showProfileBanner = hasCompletedOnboarding && !studyProfile && !profileBannerDismissed;
+
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
   const todayTasks = useMemo(() => tasks.filter((t) => t.date === today()), [tasks]);
-  const upcoming = useMemo(
-    () => exams.filter((e) => daysUntil(e.date) >= 0).slice(0, 4),
-    [exams],
-  );
+  const upcoming = useMemo(() => exams.filter((e) => daysUntil(e.date) >= 0).slice(0, 4), [exams]);
   const doneToday = todayTasks.filter((t) => doneTasks.includes(t.id)).length;
   const { cur, need } = xpInLevel({ level, totalXp });
 
@@ -46,128 +43,160 @@ export function Dashboard(): JSX.Element {
 
   return (
     <div className="sec">
-      {/* HERO / WELCOME HUB */}
-      <div style={{ marginBottom: 10, marginTop: 10 }}>
-        <h1 style={{ fontSize: 34, fontWeight: 700, fontFamily: "'Fraunces', serif", fontOpticalSizing: 'auto', letterSpacing: '-0.8px', marginBottom: 8 }}>
-          {t('dashboard.heroTitle')}
-        </h1>
-        <p style={{ fontSize: 15, color: 'var(--ts)' }}>
+      {showProfileBanner && (
+        <div className="c zeig dash-banner">
+          <div>
+            <strong>{t('dashboardPersonal.profileBanner.title')}</strong>
+            <p>{t('dashboardPersonal.profileBanner.desc')}</p>
+          </div>
+          <div className="dash-banner-actions">
+            <Link to="/perfil" className="bp">
+              {t('dashboardPersonal.profileBanner.cta')}
+            </Link>
+            <button className="bs" onClick={dismissProfileBanner}>
+              {t('dashboardPersonal.profileBanner.dismiss')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {plan && studyProfile && (
+        <div className="c zeig dash-today-plan">
+          <h3>{t('dashboardPersonal.todayPlan')}</h3>
+          <ul className="dash-plan-blocks">
+            {plan.dailyTemplate.map((b) => (
+              <li key={b.order}>
+                <Link to={`/${b.module}`} className="mc dash-plan-block">
+                  <span>{b.minutes} min</span>
+                  <strong>{t(`nav.${b.module}`)}</strong>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {plan && (
+        <div className="g3 dash-recs">
+          {plan.modules.slice(0, 3).map((m) => (
+            <Link key={m.module} to={`/${m.module}`} className="mc">
+              <strong>{t(`nav.${m.module}`)}</strong>
+              <span>{t(m.reasonKey)}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* HERO */}
+      <div>
+        <h1 className="t-hero">{t('dashboard.heroTitle')}</h1>
+        <p className="t-body" style={{ color: 'var(--ts)', marginTop: 8 }}>
           {t('dashboard.heroDesc')}
         </p>
       </div>
 
-      {/* BENTO ROW 1: 2/3 + 1/3 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16, marginBottom: 16 }}>
-        {/* PRIMARY: IA FLASHCARDS */}
-        <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 32, background: 'linear-gradient(135deg, rgba(212, 160, 23, 0.09), rgba(224, 92, 58, 0.06))', border: '1px solid rgba(212, 160, 23, 0.25)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -8, right: -12, fontSize: 90, opacity: 0.04 }}>🧠</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
-            <div style={{ fontSize: 32, filter: 'drop-shadow(0 0 8px rgba(212,160,23,0.4))' }}>✨</div>
-            <span style={{ fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 6, background: 'var(--a)', color: '#0F0D0A', textTransform: 'uppercase', letterSpacing: 0.8 }}>
-              IA Power
-            </span>
+      {/* BENTO ROW 1: 2fr 1fr */}
+      <div className="bento">
+        {/* PRIMARY: AI FLASHCARDS */}
+        <div className="c glow hero-card">
+          <div className="hero-card-bg">🧠</div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 18,
+            }}
+          >
+            <div style={{ fontSize: 32, filter: 'drop-shadow(0 0 8px rgba(212,160,23,0.4))' }}>
+              ✨
+            </div>
+            <span className="ai-power-tag">IA Power</span>
           </div>
-          <h3 style={{ fontSize: 22, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 8, zIndex: 1 }}>{t('dashboard.actionCardsTitle')}</h3>
-          <p style={{ fontSize: 13, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 28, zIndex: 1 }}>
+          <h3
+            className="t-h2"
+            style={{ fontFamily: "'Fraunces', serif", marginBottom: 8, zIndex: 1 }}
+          >
+            {t('dashboard.actionCardsTitle')}
+          </h3>
+          <p
+            className="t-sm"
+            style={{ color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 28, zIndex: 1 }}
+          >
             {t('dashboard.actionCardsDesc')}
           </p>
-          <button className="bp" style={{ width: '100%' }} onClick={() => nav('/cards')}>
+          <button className="bp w-full" onClick={() => nav('/cards')}>
             {t('dashboard.actionCardsBtn')}
           </button>
         </div>
 
         {/* TIMER */}
-        <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 28 }}>
-          <div style={{ fontSize: 32, marginBottom: 16 }}>⏱️</div>
-          <h3 style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 8 }}>{t('dashboard.actionTimerTitle')}</h3>
-          <p style={{ fontSize: 12, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 20 }}>
-            {t('dashboard.actionTimerDesc')}
-          </p>
-          <button className="bs" style={{ width: '100%' }} onClick={() => nav('/timer')}>
+        <div className="c glow feat-card">
+          <div className="feat-card-icon">⏱️</div>
+          <h3>{t('dashboard.actionTimerTitle')}</h3>
+          <p>{t('dashboard.actionTimerDesc')}</p>
+          <button className="bs w-full" onClick={() => nav('/timer')}>
             {t('dashboard.actionTimerBtn')}
           </button>
         </div>
       </div>
 
-      {/* BENTO ROW 2: 1/3 + 2/3 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 16, marginBottom: 20 }}>
-        {/* IA EXAMS */}
-        <div className="c glow" style={{ display: 'flex', flexDirection: 'column', padding: 28 }}>
-          <div style={{ fontSize: 32, marginBottom: 16 }}>📝</div>
-          <h3 style={{ fontSize: 18, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 8 }}>{t('dashboard.actionExamsTitle')}</h3>
-          <p style={{ fontSize: 12, color: 'var(--ts)', lineHeight: 1.6, flex: 1, marginBottom: 20 }}>
-            {t('dashboard.actionExamsDesc')}
-          </p>
-          <button className="bp" style={{ width: '100%' }} onClick={() => nav('/exams')}>
+      {/* BENTO ROW 2: 1fr 2fr */}
+      <div className="bento-r">
+        {/* EXAMS */}
+        <div className="c glow feat-card">
+          <div className="feat-card-icon">📝</div>
+          <h3>{t('dashboard.actionExamsTitle')}</h3>
+          <p>{t('dashboard.actionExamsDesc')}</p>
+          <button className="bp w-full" onClick={() => nav('/exams')}>
             {t('dashboard.actionExamsBtn')}
           </button>
         </div>
 
         {/* 7-DAY STREAK */}
-        <div className="c grad glow" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 32px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: 44, filter: streak > 0 ? 'drop-shadow(0 0 12px rgba(212, 160, 23, 0.5))' : 'grayscale(1)', transform: streak > 0 ? 'scale(1.1)' : 'scale(1)', transition: 'all 0.3s' }}>
-              🔥
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 500, fontFamily: "'DM Mono', monospace", color: streak > 0 ? 'var(--a)' : 'var(--ts)', marginTop: 4 }}>
+        <div className="c grad glow streak-wrap">
+          <div className="streak-count">
+            <div className={`streak-fire${streak > 0 ? ' active' : ''}`}>🔥</div>
+            <div className={`streak-num t-mono${streak > 0 ? ' active' : ' inactive'}`}>
               {streak}
             </div>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Fraunces', serif", marginBottom: 14 }}>{t('dashboard.streakTitle')}</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
+          <div className="streak-days">
+            <div className="streak-days-title">{t('dashboard.streakTitle')}</div>
+            <div className="streak-discs">
               {weekly.map((d, i) => {
-                 const isActive = d.m > 0;
-                 return (
-                   <div key={d.d + i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                     <div style={{
-                       width: 34, height: 34, borderRadius: '50%',
-                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                       background: isActive ? 'linear-gradient(135deg, var(--a), var(--ad))' : 'var(--bg)',
-                       border: `2px solid ${isActive ? 'var(--a)' : 'var(--b)'}`,
-                       color: isActive ? '#0F0D0A' : 'var(--ts)',
-                       fontWeight: 800, fontSize: 13,
-                       boxShadow: isActive ? '0 0 12px rgba(212, 160, 23, 0.35)' : 'none'
-                     }}>
-                       {isActive ? '✓' : ''}
-                     </div>
-                     <div style={{ fontSize: 10, fontWeight: 700, color: isActive ? 'var(--a)' : 'var(--ts)' }}>
-                       {d.d}
-                     </div>
-                   </div>
-                 )
+                const isActive = d.m > 0;
+                return (
+                  <div key={d.d + i} className="streak-day">
+                    <div className={`streak-disc${isActive ? ' act' : ''}`}>
+                      {isActive ? '✓' : ''}
+                    </div>
+                    <div className={`streak-disc-lbl${isActive ? ' act' : ' off'}`}>{d.d}</div>
+                  </div>
+                );
               })}
             </div>
           </div>
         </div>
       </div>
+
       <div className="g2">
-        {/* LEVEL & STREAK INFO */}
+        {/* LEFT COLUMN */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {/* LEVEL BAR */}
-          <div className="c grad" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 24px' }}>
-            <div
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, var(--a), var(--ad))',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 20,
-                fontWeight: 500,
-                fontFamily: "'DM Mono', monospace",
-                color: '#0F0D0A',
-                boxShadow: '0 4px 15px rgba(212, 160, 23, 0.35)',
-              }}
-            >
-              {level}
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Fraunces', serif" }}>{t('sidebar.level')} {level}</span>
-                <span style={{ fontSize: 12, color: 'var(--ts)', fontFamily: "'DM Mono', monospace" }}>{cur}/{need} XP</span>
+          <div
+            className="c grad"
+            style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 24px' }}
+          >
+            <div className="level-avatar t-mono">{level}</div>
+            <div className="level-info">
+              <div className="level-info-row">
+                <span>
+                  {t('sidebar.level')} {level}
+                </span>
+                <span>
+                  {cur}/{need} XP
+                </span>
               </div>
               <div className="pb pb-lg">
                 <div
@@ -183,39 +212,30 @@ export function Dashboard(): JSX.Element {
 
           {/* DAILY TIP */}
           <div className="c grad2" style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 'var(--radius-sm)',
-                background: 'rgba(255,255,255,.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 19,
-                flexShrink: 0,
-              }}
-            >
-              💡
-            </div>
+            <div className="dash-tip-icon">💡</div>
             <div>
-              <h4 style={{ fontSize: 14, fontWeight: 700, marginBottom: 5 }}>{t('dashboard.tipTitle')}</h4>
-              <p style={{ fontSize: 12, color: 'var(--ts)', lineHeight: 1.65 }}>{tip}</p>
+              <div className="dash-tip-title">{t('dashboard.tipTitle')}</div>
+              <div className="dash-tip-body">{tip}</div>
             </div>
           </div>
 
           {/* ZEIGARNIK */}
           <div className="c zeig">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, paddingLeft: 10 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                marginBottom: 10,
+                paddingLeft: 10,
+              }}
+            >
               <span style={{ fontSize: 17 }}>🧩</span>
-              <div>
-                <h4 style={{ fontSize: 14, fontWeight: 700 }}>{t('dashboard.zeigTitle')}</h4>
-              </div>
+              <h4 className="t-h3">{t('dashboard.zeigTitle')}</h4>
             </div>
             <textarea
               className="inp"
               placeholder={t('dashboard.zeigPlaceholder')}
-              style={{ paddingLeft: 18 }}
               defaultValue={zNote}
               onBlur={(e) => {
                 patch({ zNote: e.target.value });
@@ -227,14 +247,15 @@ export function Dashboard(): JSX.Element {
 
         {/* TODAY'S PLAN */}
         <div className="c">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, borderLeft: '3px solid var(--a)', paddingLeft: 12 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Fraunces', serif" }}>{t('dashboard.todayPlan')}</h3>
+          <div className="plan-hdr">
+            <h3>{t('dashboard.todayPlan')}</h3>
             <span className="badge" style={{ background: 'var(--al)', color: 'var(--a)' }}>
               {doneToday}/{todayTasks.length}
             </span>
           </div>
           {todayTasks.length === 0 ? (
-            <div className="empty" style={{ padding: 24 }}>
+            <div className="empty-state">
+              <div className="empty-icon">📋</div>
               <p>{t('dashboard.noTasks')}</p>
             </div>
           ) : (
@@ -249,20 +270,26 @@ export function Dashboard(): JSX.Element {
                   <div className="nm">{task.examName}</div>
                   <div className="ds">{task.session}</div>
                 </div>
-                <span className="tg">{task.daysBefore === 0 ? t('common.today') : `${task.daysBefore}d`}</span>
+                <span className="tg">
+                  {task.daysBefore === 0 ? t('common.today') : `${task.daysBefore}d`}
+                </span>
               </div>
             ))
           )}
 
-          {/* UPCOMING EXAMS IN PLAN */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 24, marginBottom: 14, borderLeft: '3px solid var(--b)', paddingLeft: 12 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: "'Fraunces', serif" }}>{t('dashboard.upcomingExams')}</h3>
-            <button className="bs" style={{ padding: '5px 12px', fontSize: 11 }} onClick={() => nav('/exams')}>
+          <div className="plan-hdr plan-hdr-b" style={{ marginTop: 24 }}>
+            <h3>{t('dashboard.upcomingExams')}</h3>
+            <button
+              className="bs"
+              style={{ padding: '5px 12px', fontSize: 11 }}
+              onClick={() => nav('/exams')}
+            >
               {t('dashboard.addShort')}
             </button>
           </div>
           {upcoming.length === 0 ? (
-            <div className="empty" style={{ padding: 24 }}>
+            <div className="empty-state">
+              <div className="empty-icon">📅</div>
               <p>{t('dashboard.noExams')}</p>
             </div>
           ) : (
@@ -270,14 +297,13 @@ export function Dashboard(): JSX.Element {
               const d = daysUntil(e.date);
               const uc = d <= 2 ? 'var(--err)' : d <= 7 ? 'var(--w)' : 'var(--ok)';
               return (
-                <div
-                  key={e.id}
-                  style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 13px', borderRadius: 'var(--radius-sm)', background: 'var(--bg)', marginBottom: 6 }}
-                >
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: uc }} />
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600 }}>{e.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--ts)' }}>{e.subject} · {fmtDate(e.date)}</div>
+                <div key={e.id} className="exam-item">
+                  <div className="exam-dot" style={{ background: uc }} />
+                  <div className="exam-item-info">
+                    <div className="exam-item-name">{e.name}</div>
+                    <div className="exam-item-sub">
+                      {e.subject} · {fmtDate(e.date)}
+                    </div>
                   </div>
                   <span className="badge" style={{ color: uc, background: `${uc}15` }}>
                     {d === 0 ? t('common.today') : d === 1 ? t('common.tomorrow') : `${d}d`}

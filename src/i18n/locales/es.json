@@ -8,7 +8,7 @@
     "timer": "Timer",
     "cards": "Flashcards",
     "feynman": "Tutor IA",
-    "chaos": "Modo Caos",
+    "zero": "Desde Cero",
     "languages": "Idiomas",
     "sounds": "Sonidos",
     "recovery": "Recuperación",
@@ -16,7 +16,9 @@
     "stats": "Estadísticas",
     "social": "Social",
     "techniques": "Técnicas",
-    "cloud": "Nube (Sync)"
+    "cloud": "Nube (Sync)",
+    "plan": "Plan",
+    "profile": "Perfil"
   },
   "sidebar": {
     "level": "Nivel",
@@ -45,7 +47,10 @@
     "tomorrow": "MAÑANA",
     "import": "Importado",
     "invalidFile": "Fichero no válido",
-    "importSuccess": "Datos cargados correctamente"
+    "importSuccess": "Datos cargados correctamente",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "optional": "opcional"
   },
   "dashboard": {
     "heroTitle": "¡Bienvenido de nuevo! 👋",
@@ -106,18 +111,83 @@
     "duringFocusDesc": "Móvil en modo avión y FUERA de la vista. Cada minuto de Deep Work refuerza físicamente los circuitos neuronales.",
     "duringRestDesc": "NO mires el móvil. Camina, mira por la ventana o haz NSDR. El descanso debe ser MODALMENTE distinto del trabajo.",
     "modes": {
-      "pom": { "nm": "Pomodoro", "ideal": "Flashcards, repaso, vocabulario" },
-      "d52": { "nm": "Ultradiano", "ideal": "Estudio mixto, lectura activa" },
-      "d90": { "nm": "Deep Work", "ideal": "Mates, física, programación" },
-      "d120": { "nm": "Hyper Focus", "ideal": "Proyectos complejos, flujo total" }
+      "pom": {
+        "nm": "Pomodoro",
+        "ideal": "Flashcards, repaso, vocabulario"
+      },
+      "d52": {
+        "nm": "Ultradiano",
+        "ideal": "Estudio mixto, lectura activa"
+      },
+      "d90": {
+        "nm": "Deep Work",
+        "ideal": "Mates, física, programación"
+      },
+      "d120": {
+        "nm": "Hyper Focus",
+        "ideal": "Proyectos complejos, flujo total"
+      }
     },
     "notifOn": "Notificaciones activadas",
     "notifOff": "Activar notificaciones",
     "notifFocusDone": "Sesión de {{mode}} completada. ¡Hora de descansar!",
     "notifRestDone": "Descanso terminado. ¡Vuelve al focus!"
   },
-  "chaos": {
-    "minProblems": "Añade al menos 3 problemas de diferentes temas para empezar."
+  "zero": {
+    "setup": {
+      "title": "Aprende desde Cero",
+      "desc": "¿No sabes nada del tema? Perfecto. La IA te guiará paso a paso con un ejemplo resuelto.",
+      "notesLabel": "Tus apuntes o descripción del tema",
+      "placeholder": "Pega tus apuntes o describe el tema del examen...",
+      "modeLabel": "Tipo de asignatura",
+      "stem": "Ciencias / Técnica",
+      "stemDesc": "Matemáticas, Física, Química...",
+      "humanities": "Humanidades / Letras",
+      "humanitiesDesc": "Literatura, Historia, Filosofía...",
+      "cta": "Generar sesión",
+      "minLength": "Escribe al menos 50 caracteres para generar la sesión."
+    },
+    "loading": "Generando sesión personalizada...",
+    "error": "Error al generar la sesión. Inténtalo de nuevo.",
+    "worked": {
+      "title": "Ejemplo Resuelto",
+      "problem": "Problema:",
+      "cta": "Lo entiendo, ponme a prueba"
+    },
+    "practice": {
+      "title": "Pruébate",
+      "problem": "Ejercicio similar:",
+      "answerLabel": "Tu respuesta",
+      "placeholder": "Escribe tu solución paso a paso...",
+      "cta": "Comprobar"
+    },
+    "map": {
+      "title": "Mapa Conceptual",
+      "themes": "Temas principales",
+      "figures": "Personajes / Figuras clave",
+      "quotes": "Citas clave",
+      "timeline": "Cronología",
+      "cta": "Leído, pregúntame"
+    },
+    "recall": {
+      "title": "Recuperación Activa",
+      "question": "Pregunta:",
+      "rubricLabel": "Criterios de evaluación:",
+      "answerLabel": "Tu respuesta",
+      "placeholder": "Responde libremente. Incluye ejemplos del texto si puedes.",
+      "cta": "Corregir con IA"
+    },
+    "results": {
+      "title": "Resultados",
+      "firstSession": "primera sesión",
+      "gaps": "Lagunas detectadas",
+      "nsdr": "¡Descansa ahora!",
+      "nsdrDesc": "Haz 10–20 min de descanso (NSDR) para consolidar lo que has aprendido.",
+      "flashcards": "Crear flashcards para las lagunas",
+      "flashcardsCreated": "Flashcards creadas",
+      "retry": "Volver a intentar"
+    },
+    "scienceBadge": "Basado en: Sweller (Worked Example Effect) · Dunlosky (Active Recall) · Huberman (NSDR)"
   },
   "stats": {
     "last7d": "Últimos 7 días",
@@ -142,22 +212,66 @@
       "level": "Nivel"
     },
     "ach": {
-      "first_session": { "name": "Primer Paso", "desc": "Completa la primera sesión de focus" },
-      "streak_3": { "name": "Constante", "desc": "Consigue una racha de 3 días" },
-      "streak_7": { "name": "Imparable", "desc": "Racha de 7 días seguidos" },
-      "streak_30": { "name": "Leyenda", "desc": "¡Racha de 30 días!" },
-      "cards_50": { "name": "Explorador", "desc": "Revisa 50 flashcards" },
-      "cards_500": { "name": "Erudito", "desc": "Revisa 500 flashcards" },
-      "mem_80": { "name": "Memoria de Acero", "desc": "Llega al 80% de fuerza de memoria" },
-      "hours_10": { "name": "Dedicado", "desc": "Acumula 10 horas de estudio" },
-      "hours_50": { "name": "Maestro", "desc": "Acumula 50 horas de estudio" },
-      "hours_100": { "name": "Académico de Élite", "desc": "100 horas de estudio total" },
-      "chaos_10": { "name": "Gladiador", "desc": "Completa 10 rondas de Modo Caos" },
-      "level_10": { "name": "Veterano", "desc": "Llega al nivel 10" },
-      "level_25": { "name": "Experto", "desc": "Llega al nivel 25" },
-      "level_50": { "name": "Gran Maestro", "desc": "Llega al nivel 50" },
-      "deep_work": { "name": "Deep Worker", "desc": "Completa una sesión de 90+ min" },
-      "pom_10": { "name": "Pomodoro Master", "desc": "Completa 10 pomodoros" }
+      "first_session": {
+        "name": "Primer Paso",
+        "desc": "Completa la primera sesión de focus"
+      },
+      "streak_3": {
+        "name": "Constante",
+        "desc": "Consigue una racha de 3 días"
+      },
+      "streak_7": {
+        "name": "Imparable",
+        "desc": "Racha de 7 días seguidos"
+      },
+      "streak_30": {
+        "name": "Leyenda",
+        "desc": "¡Racha de 30 días!"
+      },
+      "cards_50": {
+        "name": "Explorador",
+        "desc": "Revisa 50 flashcards"
+      },
+      "cards_500": {
+        "name": "Erudito",
+        "desc": "Revisa 500 flashcards"
+      },
+      "mem_80": {
+        "name": "Memoria de Acero",
+        "desc": "Llega al 80% de fuerza de memoria"
+      },
+      "hours_10": {
+        "name": "Dedicado",
+        "desc": "Acumula 10 horas de estudio"
+      },
+      "hours_50": {
+        "name": "Maestro",
+        "desc": "Acumula 50 horas de estudio"
+      },
+      "hours_100": {
+        "name": "Académico de Élite",
+        "desc": "100 horas de estudio total"
+      },
+      "level_10": {
+        "name": "Veterano",
+        "desc": "Llega al nivel 10"
+      },
+      "level_25": {
+        "name": "Experto",
+        "desc": "Llega al nivel 25"
+      },
+      "level_50": {
+        "name": "Gran Maestro",
+        "desc": "Llega al nivel 50"
+      },
+      "deep_work": {
+        "name": "Deep Worker",
+        "desc": "Completa una sesión de 90+ min"
+      },
+      "pom_10": {
+        "name": "Pomodoro Master",
+        "desc": "Completa 10 pomodoros"
+      }
     }
   },
   "cards": {
@@ -182,7 +296,12 @@
     "gradeBad": "❌ No lo sabía",
     "gradeGood": "✅ ¡Lo sabía!",
     "sessionDone": "🎉 ¡Sesión completa!",
-    "sessionDoneDesc": "Todos los conceptos repasados"
+    "sessionDoneDesc": "Todos los conceptos repasados",
+    "aiTarget": {
+      "label": "¿Dónde quieres añadir las tarjetas?",
+      "new": "Nuevo deck",
+      "existing": "Deck existente"
+    }
   },
   "exams": {
     "newExam": "+ Nuevo examen",
@@ -198,7 +317,73 @@
     "diffHard": "Difícil",
     "submit": "✓ Añadir",
     "plan": "📋 Plan de estudio SRS",
-    "sessions": "{{n}} sesiones"
+    "sessions": "{{n}} sesiones",
+    "tabs": {
+      "calendar": "Calendario",
+      "simulator": "Simulador IA",
+      "corrector": "Corrector IA"
+    }
+  },
+  "feynman": {
+    "prompt": "¿Qué concepto quieres dominar?",
+    "intro": "Escribe un tema y explícalo sin jerga. La IA detecta ilusiones de competencia y te hace preguntas socráticas.",
+    "topicPh": "ej: Mitosis, Derivadas, La Revolución Francesa...",
+    "start": "Comenzar",
+    "newTopic": "Nuevo tema",
+    "send": "Enviar",
+    "comprehension": "Comprensión",
+    "levelHigh": "ALTA",
+    "levelMed": "MEDIA",
+    "levelLow": "BAJA",
+    "listenStop": "Parar grabación",
+    "listenStart": "Hablar por el micrófono",
+    "phListening": "Escuchando...",
+    "phThinking": "Pensando...",
+    "phExplain": "Explica con tus palabras...",
+    "noSpeech": "Tu navegador no soporta el reconocimiento de voz.",
+    "aiReal": "🟢 IA real",
+    "aiBasic": "⚙️ Modo básico",
+    "titleFallback": "Modo básico activado (offline o límite de uso).",
+    "titleAi": "IA con Gemini.",
+    "remaining": "({{n}} restantes)",
+    "firstMsg": "¡De acuerdo! Seré un niño de 5 años muy curioso 🧒\n\nExplícame: <strong>\"{{topic}}\"</strong>\n\n¿Qué es eso? Necesito que lo expliques tan fácil que lo entienda cualquier persona de la calle. ¡Nada de palabras complicadas!"
+  },
+  "cloud": {
+    "title": "Sincronización en la Nube",
+    "desc": "Guarda tu progreso de forma segura para no perderlo nunca y accede desde cualquier dispositivo.",
+    "loading": "Cargando...",
+    "loginTitle": "Iniciar Sesión",
+    "loginDesc": "Esta funcionalidad usa Supabase para mantener tus tarjetas y nivel XP seguros.",
+    "emailLabel": "Correo Electrónico",
+    "passwordLabel": "Contraseña",
+    "login": "Entrar",
+    "signup": "Registrarse",
+    "connected": "Conectado a la Nube",
+    "push": "⬆️ Subir Estado Local",
+    "pull": "⬇️ Bajar de la Nube",
+    "logout": "Cerrar Sesión",
+    "signupOk": "Te has registrado correctamente. Revisa tu correo para confirmar (si es necesario).",
+    "loginOk": "Sesión iniciada con éxito.",
+    "pushing": "Subiendo datos a la nube...",
+    "pushErr": "Error subiendo: {{msg}}",
+    "pushOk": "✅ ¡Datos guardados en la nube con éxito!",
+    "pulling": "Descargando datos...",
+    "pullErr": "Error bajando datos: {{msg}}",
+    "pullOk": "✅ ¡Datos sincronizados correctamente! Has recuperado tu progreso.",
+    "pullEmpty": "La nube está vacía. Sube los datos primero.",
+    "errorGeneric": "Error: {{msg}}",
+    "magicLinkSent": "Email enviado. Revisa tu bandeja y haz clic en el enlace.",
+    "sendMagicLink": "Enviar enlace mágico",
+    "authMagic": "Enlace mágico",
+    "authPassword": "Contraseña",
+    "statusIdle": "Sincronizado",
+    "syncing": "Sincronizando...",
+    "syncError": "Error de sync",
+    "offline": "Sin conexión",
+    "syncStatusLabel": "Estado",
+    "lastSyncLabel": "Última sync",
+    "syncAuto": "Los datos se sincronizan automáticamente con cada cambio.",
+    "never": "Nunca"
   },
   "recovery": {
     "nsdr": {
@@ -228,23 +413,304 @@
       "desc": "Móvil, redes sociales, YouTube. El descanso debe ser MODALMENTE distinto: caminar, respirar, estirar."
     },
     "stretches": {
-      "neck": { "name": "Rotación de cuello", "desc": "Gira la cabeza lentamente en círculos: 5 veces a cada lado." },
-      "arms": { "name": "Estiramiento de brazos", "desc": "Entrelaza los dedos y estira hacia arriba 15s. Repite 3 veces." },
-      "twist": { "name": "Torsión espinal", "desc": "Sentado, gira el torso izquierda 15s, derecha 15s. Repite 2 veces." },
-      "forward": { "name": "Flexión adelante", "desc": "De pie, inclínate adelante dejando caer los brazos. 20 segundos." },
-      "cervical": { "name": "Estiramiento cervical", "desc": "Inclina la cabeza a un lado 15s, después al otro. Repite." }
+      "neck": {
+        "name": "Rotación de cuello",
+        "desc": "Gira la cabeza lentamente en círculos: 5 veces a cada lado."
+      },
+      "arms": {
+        "name": "Estiramiento de brazos",
+        "desc": "Entrelaza los dedos y estira hacia arriba 15s. Repite 3 veces."
+      },
+      "twist": {
+        "name": "Torsión espinal",
+        "desc": "Sentado, gira el torso izquierda 15s, derecha 15s. Repite 2 veces."
+      },
+      "forward": {
+        "name": "Flexión adelante",
+        "desc": "De pie, inclínate adelante dejando caer los brazos. 20 segundos."
+      },
+      "cervical": {
+        "name": "Estiramiento cervical",
+        "desc": "Inclina la cabeza a un lado 15s, después al otro. Repite."
+      }
     }
   },
   "headers": {
-    "timer": { "title": "⏱ Temporizador Científico", "desc": "Deep Work, Pomodoro y Ultradiano" },
-    "cards": { "title": "📇 Flashcards — Reaprendizaje Sucesivo", "desc": "Regla del 3 + Repetición Espaciada automática (SRS)" },
-    "feynman": { "title": "🧒 Tutor IA — Destructor de Ilusiones", "desc": "Técnica Feynman potenciada. Explica conceptos sin jerga y la IA detecta comprensión falsa." },
-    "chaos": { "title": "⚡ Modo Caos — Práctica Intercalada", "desc": "Mezcla problemas de temas distintos. Entrena discriminación inductiva." },
-    "languages": { "title": "🌍 Idiomas — Vocabulario + SRS", "desc": "Aprende palabras nuevas con repetición espaciada" },
-    "sounds": { "title": "🎵 Mixer de Sonidos Ambientales", "desc": "Crea tu paisaje sonoro perfecto para concentrarte" },
-    "recovery": { "title": "🌙 Estación de Recuperación", "desc": "NSDR, respiración y estiramientos. Descanso REAL para el cerebro." },
-    "exams": { "title": "📅 Exámenes y Plan de Estudio", "desc": "SRS automático basado en la dificultad" },
-    "stats": { "title": "📊 Estadísticas Avanzadas", "desc": "Datos reales de tu rendimiento académico" },
-    "techniques": { "title": "📚 Técnicas Científicas", "desc": "Basadas en Dunlosky et al. (2013)" }
+    "timer": {
+      "title": "⏱ Temporizador Científico",
+      "desc": "Deep Work, Pomodoro y Ultradiano"
+    },
+    "cards": {
+      "title": "📇 Flashcards — Reaprendizaje Sucesivo",
+      "desc": "Regla del 3 + Repetición Espaciada automática (SRS)"
+    },
+    "feynman": {
+      "title": "🧒 Tutor IA — Destructor de Ilusiones",
+      "desc": "Técnica Feynman potenciada. Explica conceptos sin jerga y la IA detecta comprensión falsa."
+    },
+    "zero": {
+      "title": "🧭 Desde Cero",
+      "desc": "Aprende desde cero con ejemplos resueltos y recuperación activa guiada por IA"
+    },
+    "languages": {
+      "title": "🌍 Idiomas — Vocabulario + SRS",
+      "desc": "Aprende palabras nuevas con repetición espaciada"
+    },
+    "sounds": {
+      "title": "🎵 Mixer de Sonidos Ambientales",
+      "desc": "Crea tu paisaje sonoro perfecto para concentrarte"
+    },
+    "recovery": {
+      "title": "🌙 Estación de Recuperación",
+      "desc": "NSDR, respiración y estiramientos. Descanso REAL para el cerebro."
+    },
+    "exams": {
+      "title": "📅 Exámenes y Plan de Estudio",
+      "desc": "SRS automático basado en la dificultad"
+    },
+    "stats": {
+      "title": "📊 Estadísticas Avanzadas",
+      "desc": "Datos reales de tu rendimiento académico"
+    },
+    "techniques": {
+      "title": "📚 Técnicas Científicas",
+      "desc": "Basadas en Dunlosky et al. (2013)"
+    }
+  },
+  "conv": {
+    "tab": "Conversar",
+    "vocabTab": "Vocabulario",
+    "pickScenario": "Elige un escenario",
+    "difficulty": {
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil"
+    },
+    "fluency": "Fluidez",
+    "endSession": "Terminar",
+    "holdToSpeak": "Escribe o mantén para hablar",
+    "addToDeckCta": "Añadir {{n}} tarjetas al deck",
+    "sessionDone": "Sesión completada",
+    "newConv": "Nueva conversación",
+    "noDecks": "Selecciona un deck primero",
+    "emptyTranscript": "No se detectó voz",
+    "correctionTypes": {
+      "grammar": "Gramática",
+      "vocabulary": "Vocabulario",
+      "fluency": "Fluidez"
+    },
+    "scenarios": {
+      "cafe": "En el café",
+      "shop": "En la tienda",
+      "doctor": "En el médico",
+      "job": "Entrevista de trabajo",
+      "hotel": "Check-in en el hotel",
+      "phone": "Llamada telefónica",
+      "debate": "Debate cinematográfico",
+      "directions": "Pedir indicaciones"
+    }
+  },
+  "social": {
+    "title": "Ecosistema Social",
+    "subtitle": "Estudia con amigos, compite y comparte conocimiento.",
+    "friends": "Amigos",
+    "leaderboard": "Ranking",
+    "challenges": "Retos",
+    "addFriend": "Anadir amigo",
+    "search": "Buscar",
+    "searchByEmail": "Buscar por email",
+    "requestSent": "Solicitud enviada",
+    "accept": "Aceptar",
+    "decline": "Declinar",
+    "removeFriend": "Eliminar amigo",
+    "noFriends": "Sin amigos aun",
+    "noFriendsHint": "Busca un amigo por su email para anadirlo.",
+    "pendingRequests": "Solicitudes pendientes",
+    "loginRequired": "Inicia sesion para acceder a las funciones sociales.",
+    "unknownUser": "Usuario desconocido",
+    "vs": "vs",
+    "you": "Tu",
+    "target": "Objetivo",
+    "daysLeft": "dias",
+    "days": "dias",
+    "subject": "Asignatura",
+    "subjectPlaceholder": "Ej: Matematicas",
+    "opponent": "Oponente",
+    "sortBy": "Ordenar por",
+    "streak": "Racha",
+    "weeklyMinutes": "Minutos semanales",
+    "sendChallenge": "Enviar reto",
+    "waitingForOpponent": "Esperando que el oponente acepte...",
+    "youWon": "Has ganado!",
+    "youLost": "Has perdido",
+    "noChallenges": "Sin retos activos",
+    "noChallengesHint": "Crea un reto con un amigo para competir.",
+    "incomingChallenges": "Retos entrantes",
+    "activeChallenges": "Retos activos",
+    "completedChallenges": "Retos completados",
+    "createChallenge": "Crear reto",
+    "challengeDuration": "Duracion",
+    "challengeTarget": "Objetivo (numero)",
+    "challengeType.label": "Tipo",
+    "challengeType.flashcards": "Flashcards",
+    "challengeType.study_time": "Tiempo estudio",
+    "challengeType.exam": "Examen",
+    "status.pending": "Pendiente",
+    "status.accepted": "Aceptado",
+    "status.active": "Activo",
+    "status.completed": "Completado",
+    "status.declined": "Rechazado",
+    "feed": {
+      "title": "Actividad",
+      "cardsCompleted": "completo {{count}} flashcards",
+      "streakMilestone": "tiene una racha de {{days}} dias!",
+      "examDone": "hizo un examen: {{score}}%",
+      "challengeWon": "gano un reto!",
+      "studySession": "estudio {{minutes}} minutos",
+      "activity": "tuvo actividad"
+    }
+  },
+  "onboarding": {
+    "phases": { "1": "Objetivo", "2": "Hábitos", "3": "Autoevaluación" },
+    "steps": {
+      "goal": { "title": "¿Cuál es tu objetivo?", "desc": "Te ayudaremos a llegar más rápido." },
+      "level": { "title": "¿En qué nivel estudias?", "desc": "Ajustamos el ritmo y la dificultad." },
+      "subjects": { "title": "¿Qué materias estudias?", "desc": "Añade hasta {{max}} materias.", "placeholder": "Ej: Matemáticas" },
+      "examDate": { "title": "¿Cuándo es tu examen?", "desc": "Calcularemos hitos hacia atrás desde esta fecha.", "skip": "No tengo fecha fija" },
+      "method": { "title": "¿Cómo estudias normalmente?", "desc": "Sé sincero." },
+      "minutes": { "title": "¿Cuánto tiempo al día?", "desc": "Adaptaremos el plan a tu disponibilidad." },
+      "time": { "title": "¿Cuándo prefieres estudiar?", "desc": "La hora ancla el hábito." },
+      "obstacle": { "title": "¿Cuál es tu mayor obstáculo?", "desc": "Detectaremos dónde pierdes rendimiento." },
+      "retention": { "title": "¿Cuánto recuerdas de lo que estudias?", "desc": "Una nota del 1 al 5.", "low": "Olvido todo", "high": "Recuerdo casi todo" }
+    },
+    "options": {
+      "goal": {
+        "exam": { "title": "Aprobar exámenes", "desc": "Universidad, bachillerato..." },
+        "language": { "title": "Dominar un idioma", "desc": "Vocabulario + fluidez" },
+        "cert": { "title": "Certificaciones", "desc": "IT, medicina, finanzas..." },
+        "university": { "title": "Estudios universitarios", "desc": "Comprensión profunda" },
+        "other": { "title": "Otro", "desc": "Aprender por placer o curiosidad" }
+      },
+      "level": {
+        "eso": { "title": "ESO", "desc": "Educación secundaria" },
+        "batx": { "title": "Bachillerato", "desc": "Selectividad / PAU" },
+        "uni": { "title": "Universidad", "desc": "Grado o postgrado" },
+        "oposicio": { "title": "Oposiciones", "desc": "Cuerpo público o concurso" },
+        "other": { "title": "Otro", "desc": "Formación personal" }
+      },
+      "method": {
+        "read": { "title": "Leo y subrayo", "desc": "Lectura pasiva" },
+        "manual": { "title": "Resúmenes y esquemas a mano", "desc": "Escribir para memorizar" },
+        "digital": { "title": "Herramientas digitales", "desc": "Anki, Quizlet, Notion..." },
+        "mixed": { "title": "Combinación de todo", "desc": "Un poco de cada cosa" }
+      },
+      "minutes": {
+        "label": "{{min}} minutos",
+        "15": { "desc": "Hábito diario mínimo" },
+        "30": { "desc": "Constancia óptima" },
+        "60": { "desc": "Preparación seria" },
+        "90": { "desc": "Intensivo / examen próximo" }
+      },
+      "time": {
+        "morning": { "title": "Mañana", "desc": "Cerebro fresco" },
+        "afternoon": { "title": "Tarde", "desc": "Después de clase / trabajo" },
+        "evening": { "title": "Anochecer", "desc": "Final del día" },
+        "night": { "title": "Noche", "desc": "Cuando todos duermen" },
+        "flexible": { "title": "Flexible", "desc": "Sin hora fija" }
+      },
+      "obstacle": {
+        "memory": { "title": "Olvido lo que estudio", "desc": "La mente se queda en blanco" },
+        "time": { "title": "Me falta tiempo", "desc": "El temario es inabarcable" },
+        "focus": { "title": "Me cuesta concentrarme", "desc": "Me distraigo fácilmente" },
+        "motivation": { "title": "Me cuesta empezar", "desc": "Procrastino a menudo" },
+        "comprehension": { "title": "No acabo de entender", "desc": "Me pierdo en los conceptos" }
+      }
+    },
+    "processing": {
+      "title": "Construyendo tu perfil",
+      "p1": "Analizando tus respuestas...",
+      "p2": "Calculando tu curva de olvido actual...",
+      "p3": "Generando tu plan personalizado..."
+    },
+    "results": {
+      "title": "Tu plan está listo",
+      "desc": "Calculado a partir de tus respuestas, sin magia.",
+      "deltaLabel": "Potencial de mejora proyectado",
+      "breakdown": "¿Por qué este número?",
+      "projected": "Total proyectado",
+      "viewPlan": "Ver plan completo",
+      "startNow": "Empezar ahora"
+    }
+  },
+  "improvement": {
+    "factors": {
+      "baseline": "Punto de partida (método actual)",
+      "srs": "Repetición espaciada (SRS)",
+      "feynman": "Técnica Feynman con IA",
+      "spacing": "Sesiones cortas y espaciadas",
+      "consistency": "Hábito a hora fija",
+      "focus": "Pomodoro + sonidos ambiente",
+      "memory": "Tarjetas de memoria activa"
+    },
+    "reasons": {
+      "srs": "Reemplazar lectura pasiva por recall activo dispara la retención.",
+      "srsMixed": "Sistematizar el SRS multiplica lo que ya haces.",
+      "feynman": "Explicar conceptos en voz alta detecta lagunas invisibles.",
+      "spacing": "Sesiones cortas bien espaciadas superan maratones.",
+      "consistency": "Estudiar a la misma hora ancla el hábito.",
+      "focus": "Pomodoro + ruido de fondo reduce distracciones.",
+      "memory": "Tarjetas con recall fuerzan al cerebro a recordar."
+    }
+  },
+  "plan": {
+    "title": "Tu plan de estudio",
+    "weeklyMinutes": "{{min}} min/semana",
+    "modulesEssential": "Esenciales",
+    "modulesRecommended": "Recomendados",
+    "modulesOptional": "Opcionales",
+    "dailyTemplate": "Estructura diaria sugerida",
+    "milestones": {
+      "title": "Hitos",
+      "week1Cards": "50 tarjetas revisadas",
+      "month1Streak": "14 días seguidos estudiando",
+      "examDay": "Día del examen",
+      "examMid": "A medio camino: 5 sesiones Feynman"
+    },
+    "reasons": {
+      "cardsMemory": "Tu obstáculo es la memoria — SRS es la solución directa.",
+      "feynmanMemory": "Explicar refuerza el recuerdo.",
+      "feynmanComp": "Si no entiendes, explicarlo te obliga a comprender.",
+      "cardsComp": "Tarjetas de concepto fijan ideas clave.",
+      "timerFocus": "Pomodoro divide la sesión en bloques manejables.",
+      "soundsFocus": "Ruido ambiente oculta distracciones.",
+      "timerTime": "Pomodoro te hace rendir más en menos tiempo.",
+      "cardsTime": "Repasar 10 min al día equivale a 1h semanal.",
+      "timerMotiv": "25 min son cortos: es más fácil empezar.",
+      "recoveryMotiv": "Recuperación activa evita el burnout.",
+      "languagesGoal": "Tu objetivo es el idioma — el módulo de idiomas es el corazón del plan.",
+      "examsGoal": "Practicar con exámenes simulados prepara la nota."
+    },
+    "narrative": {
+      "title": "Personalizado con IA",
+      "generate": "Personalizar con IA",
+      "regenerate": "Regenerar"
+    },
+    "edit": "Editar perfil"
+  },
+  "profile": {
+    "title": "Tu perfil de estudio",
+    "save": "Guardar cambios",
+    "redo": "Rehacer onboarding",
+    "saved": "Perfil guardado"
+  },
+  "dashboardPersonal": {
+    "heroPersonal": "¡Buen día! Hoy {{minutes}} min hacia {{goal}}.",
+    "todayPlan": "Tu plan de hoy",
+    "profileBanner": {
+      "title": "Completa tu perfil",
+      "desc": "60 segundos para un plan personalizado.",
+      "cta": "Completar",
+      "dismiss": "Ahora no"
+    }
   }
 }

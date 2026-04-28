@@ -1,10 +1,20 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AppState, DailyLogEntry } from '@/types';
+import type { User, Session } from '@supabase/supabase-js';
+import type {
+  AppState,
+  AuthState,
+  DailyLogEntry,
+  ConvMessage,
+  LangCard,
+  ConvSession,
+  StudyProfile,
+  SyncStatus,
+} from '@/types';
 import { DEFAULT_STATE, STATE_KEY } from './defaults';
 import { createIdbStorage } from './persist';
 import { mergeLegacy, readLegacyLocalStorage } from './migration';
-import { today } from '@/lib/date';
+import { today, uid } from '@/lib/date';
 import { ACHIEVEMENTS } from '@/lib/achievements';
 import { XP_TABLE } from '@/lib/xp';
 import { showToast } from '@/components/ui/Toast';
@@ -34,9 +44,46 @@ export interface StoreActions {
   rolloverIfNeeded: () => void;
   /** Increment daily metrics (minutes, cards, sessions, etc.). */
   incrementDailyLog: (data: Partial<Omit<DailyLogEntry, 'date'>>) => void;
+  /** Start a new ConvIA session, returns the session id. */
+  startConvSession: (langDeckId: string, scenarioId: string) => string;
+  /** Append a message to a ConvIA session. */
+  addConvMessage: (sessionId: string, message: ConvMessage) => void;
+  /** Mark a ConvIA session as ended with a final fluency score. */
+  endConvSession: (sessionId: string, fluencyScore: number) => void;
+  /** Add vocab cards from corrections to the linked lang deck. */
+  queueConvCards: (
+    sessionId: string,
+    cards: Pick<LangCard, 'word' | 'translation' | 'example'>[],
+  ) => void;
+  /** Set authenticated user + session. Called by useCloudSync on auth state change. */
+  setAuth: (user: User | null, session: Session | null) => void;
+  /** Update sync status + optionally record lastSyncedAt timestamp. */
+  setSyncStatus: (status: SyncStatus, lastSyncedAt?: string) => void;
+  /** Start an active exam — replaces any prior in-progress exam. */
+  startActiveExam: (exam: import('@/types').ActiveExamState) => void;
+  /** Patch the running exam (answers, index, questions after correction). No-op if none. */
+  updateActiveExam: (patch: Partial<import('@/types').ActiveExamState>) => void;
+  /** Clear the in-progress exam (call on submit or explicit cancel). */
+  clearActiveExam: () => void;
+  /** Replace the entire study profile (full wizard submission). */
+  setStudyProfile: (p: StudyProfile) => void;
+  /** Patch existing study profile (used by /perfil edit). No-op if null. */
+  updateStudyProfile: (patch: Partial<StudyProfile>) => void;
+  /** Mark the "complete your profile" banner as dismissed. */
+  dismissProfileBanner: () => void;
+  /** Persist AI-generated narrative for the plan page. */
+  setPlanNarrative: (text: string | null) => void;
 }
 
-export type AppStore = AppState & StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean };
+const DEFAULT_AUTH_STATE: AuthState = {
+  user: null,
+  session: null,
+  syncStatus: 'idle',
+  lastSyncedAt: null,
+};
+
+export type AppStore = AppState &
+  StoreActions & { _toastQueue: ToastInput[]; _hasHydrated: boolean; authState: AuthState };
 
 /** Initial state, hydrated from legacy `sfpro` on first boot. */
 const initialState: AppState = mergeLegacy(readLegacyLocalStorage());
@@ -47,6 +94,7 @@ export const useAppStore = create<AppStore>()(
       ...initialState,
       _toastQueue: [],
       _hasHydrated: false,
+      authState: DEFAULT_AUTH_STATE,
 
       setState: (s) => set({ ...s }),
 
@@ -73,7 +121,7 @@ export const useAppStore = create<AppStore>()(
           let { xp, totalXp, level } = prev;
           xp += amount;
           totalXp += amount;
-          
+
           while (level < 50 && totalXp >= (XP_TABLE[level] ?? Infinity)) {
             level++;
             leveled.push(level);
@@ -129,32 +177,30 @@ export const useAppStore = create<AppStore>()(
         if (prev.lastDate && prev.lastDate !== t) {
           const lastDateObj = new Date(prev.lastDate);
           const todayObj = new Date(t);
-          const diffDays = Math.floor(
-            (todayObj.getTime() - lastDateObj.getTime()) / 864e5
-          );
+          const diffDays = Math.floor((todayObj.getTime() - lastDateObj.getTime()) / 864e5);
 
           set((s) => {
             let { streak, weekly, todaySess, cardsToday } = s;
-            
-            // Streak logic: 
+
+            // Streak logic:
             // If diff is 1 and we studied on lastDate (todaySess > 0 before reset), we increment.
-            // If diff > 1, we lost the streak (reset to 1 or 0). 
+            // If diff > 1, we lost the streak (reset to 1 or 0).
             if (diffDays === 1) {
-              if (s.todaySess === 0) streak = 1; 
+              if (s.todaySess === 0) streak = 1;
               else streak++;
             } else if (diffDays > 1) {
               streak = 1;
             }
-            
+
             todaySess = 0;
             cardsToday = 0;
-            
+
             // Weekly reset on Monday
             const dow = new Date().getDay(); // 0=Sun, 1=Mon
             if (dow === 1 && diffDays >= 1) {
               weekly = DEFAULT_STATE.weekly.map((w) => ({ ...w }));
             }
-            
+
             return { streak, weekly, todaySess, cardsToday, lastDate: t };
           });
           get().save();
@@ -175,24 +221,24 @@ export const useAppStore = create<AppStore>()(
           }
 
           let { heatmap, quizTotal, quizCorrect, cardsToday, totalMin, todaySess, pomCount } = prev;
-          
+
           if (data.minutes) {
             entry.minutes += data.minutes;
             totalMin += data.minutes;
-            heatmap = { ...heatmap, [t] : (heatmap[t] || 0) + data.minutes };
+            heatmap = { ...heatmap, [t]: (heatmap[t] || 0) + data.minutes };
           }
-          
+
           if (data.cards) {
             entry.cards += data.cards;
             quizTotal += data.cards;
             cardsToday += data.cards;
           }
-          
+
           if (data.correct) {
             entry.correct += data.correct;
             quizCorrect += data.correct;
           }
-          
+
           if (data.sessions) {
             entry.sessions += data.sessions;
             todaySess += data.sessions;
@@ -204,8 +250,134 @@ export const useAppStore = create<AppStore>()(
 
           const memStrength = quizTotal > 0 ? Math.round((quizCorrect / quizTotal) * 100) : 0;
 
-          return { dailyLog, heatmap, quizTotal, quizCorrect, cardsToday, memStrength, totalMin, todaySess, pomCount };
+          return {
+            dailyLog,
+            heatmap,
+            quizTotal,
+            quizCorrect,
+            cardsToday,
+            memStrength,
+            totalMin,
+            todaySess,
+            pomCount,
+          };
         });
+        get().save();
+      },
+
+      startConvSession: (langDeckId, scenarioId) => {
+        const deck = get().langDecks.find((d) => d.id === langDeckId);
+        const language = deck?.lang ?? 'en';
+        const id = uid();
+        const session: ConvSession = {
+          id,
+          langDeckId,
+          scenarioId,
+          language,
+          messages: [],
+          fluencyScore: 0,
+          newCards: 0,
+          startedAt: new Date().toISOString(),
+          endedAt: null,
+        };
+        set((prev) => ({ convSessions: [...prev.convSessions, session] }));
+        return id;
+      },
+
+      addConvMessage: (sessionId, message) => {
+        set((prev) => ({
+          convSessions: prev.convSessions.map((s) =>
+            s.id === sessionId ? { ...s, messages: [...s.messages, message] } : s,
+          ),
+        }));
+      },
+
+      endConvSession: (sessionId, fluencyScore) => {
+        set((prev) => ({
+          convSessions: prev.convSessions.map((s) =>
+            s.id === sessionId ? { ...s, fluencyScore, endedAt: new Date().toISOString() } : s,
+          ),
+        }));
+        get().save();
+      },
+
+      setAuth: (user, session) => {
+        set((prev) => ({
+          authState: { ...prev.authState, user, session },
+        }));
+      },
+
+      setSyncStatus: (status, lastSyncedAt) => {
+        set((prev) => ({
+          authState: {
+            ...prev.authState,
+            syncStatus: status,
+            ...(lastSyncedAt !== undefined ? { lastSyncedAt } : {}),
+          },
+        }));
+      },
+
+      queueConvCards: (sessionId, cards) => {
+        const session = get().convSessions.find((s) => s.id === sessionId);
+        if (!session) return;
+        const newLangCards: LangCard[] = cards.map((c) => ({
+          id: uid(),
+          word: c.word,
+          translation: c.translation,
+          example: c.example,
+          hits: 0,
+          sessionHits: 0,
+          nextReview: today(),
+          interval: 1,
+          strength: 0,
+        }));
+        const newLangDecks = get().langDecks.map((d) =>
+          d.id === session.langDeckId ? { ...d, cards: [...d.cards, ...newLangCards] } : d,
+        );
+        set((prev) => ({
+          langDecks: newLangDecks,
+          convSessions: prev.convSessions.map((s) =>
+            s.id === sessionId ? { ...s, newCards: s.newCards + cards.length } : s,
+          ),
+        }));
+        get().save();
+      },
+
+      startActiveExam: (exam) => {
+        set({ activeExam: exam });
+      },
+
+      updateActiveExam: (patch) => {
+        set((prev) => ({
+          activeExam: prev.activeExam ? { ...prev.activeExam, ...patch } : prev.activeExam,
+        }));
+      },
+
+      clearActiveExam: () => {
+        set({ activeExam: null });
+      },
+
+      setStudyProfile: (p) => {
+        set({ studyProfile: p, hasCompletedOnboarding: true });
+        get().save();
+      },
+
+      updateStudyProfile: (patch) => {
+        set((prev) => ({
+          studyProfile: prev.studyProfile
+            ? { ...prev.studyProfile, ...patch, completedAt: new Date().toISOString() }
+            : prev.studyProfile,
+        }));
+        get().save();
+      },
+
+      dismissProfileBanner: () => {
+        set({ profileBannerDismissed: true });
+        get().save();
+      },
+
+      setPlanNarrative: (text) => {
+        set({ planNarrative: text });
         get().save();
       },
     }),
@@ -246,7 +418,12 @@ export const useAppStore = create<AppStore>()(
         sharedResources: s.sharedResources,
         friendCode: s.friendCode,
         league: s.league,
-        chaosProblems: s.chaosProblems,
+        zeroSessions: s.zeroSessions,
+        convSessions: s.convSessions,
+        activeExam: s.activeExam,
+        studyProfile: s.studyProfile,
+        profileBannerDismissed: s.profileBannerDismissed,
+        planNarrative: s.planNarrative,
       }),
     },
   ),
