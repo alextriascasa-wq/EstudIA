@@ -16,7 +16,9 @@
     "stats": "Estadístiques",
     "social": "Social",
     "techniques": "Tècniques",
-    "cloud": "Núvol (Sync)"
+    "cloud": "Núvol (Sync)",
+    "plan": "Pla",
+    "profile": "Perfil"
   },
   "sidebar": {
     "level": "Nivell",
@@ -46,7 +48,9 @@
     "import": "Importat",
     "invalidFile": "Fitxer no vàlid",
     "importSuccess": "Dades carregades correctament",
-    "optional": "opcional"
+    "optional": "opcional",
+    "back": "Enrere",
+    "continue": "Continuar"
   },
   "dashboard": {
     "heroTitle": "Benvingut de nou! 👋",
@@ -565,6 +569,149 @@
       "challengeWon": "ha guanyat un repte!",
       "studySession": "ha estudiat {{minutes}} minuts",
       "activity": "ha tingut activitat"
+    }
+  },
+  "onboarding": {
+    "phases": { "1": "Objectiu", "2": "Hàbits", "3": "Autoavaluació" },
+    "steps": {
+      "goal": { "title": "Quin és el teu objectiu?", "desc": "T'ajudarem a arribar-hi més ràpid." },
+      "level": { "title": "A quin nivell estudies?", "desc": "Ajustem el ritme i la dificultat." },
+      "subjects": { "title": "Quines matèries estudies?", "desc": "Afegeix fins a {{max}} matèries.", "placeholder": "Ex: Matemàtiques" },
+      "examDate": { "title": "Quan tens l'examen?", "desc": "Calcularem fites enrere des d'aquesta data.", "skip": "No tinc data fixa" },
+      "method": { "title": "Com estudies habitualment?", "desc": "Sigues sincer." },
+      "minutes": { "title": "Quant de temps al dia?", "desc": "Adaptarem el pla a la teva disponibilitat." },
+      "time": { "title": "Quan prefereixes estudiar?", "desc": "L'hora ancora l'hàbit." },
+      "obstacle": { "title": "Quin és el teu obstacle principal?", "desc": "Detectarem on perds rendiment." },
+      "retention": { "title": "Quant recordes del que estudies?", "desc": "Una nota del 1 al 5.", "low": "Oblido tot", "high": "Recordo gairebé tot" }
+    },
+    "options": {
+      "goal": {
+        "exam": { "title": "Aprovar exàmens", "desc": "Universitat, batxillerat..." },
+        "language": { "title": "Dominar un idioma", "desc": "Vocabulari + fluïdesa" },
+        "cert": { "title": "Certificacions", "desc": "IT, medicina, finances..." },
+        "university": { "title": "Estudis universitaris", "desc": "Comprensió profunda" },
+        "other": { "title": "Altres", "desc": "Aprendre per plaer o curiositat" }
+      },
+      "level": {
+        "eso": { "title": "ESO", "desc": "Educació secundària" },
+        "batx": { "title": "Batxillerat", "desc": "Selectivitat / PAU" },
+        "uni": { "title": "Universitat", "desc": "Grau o postgrau" },
+        "oposicio": { "title": "Oposicions", "desc": "Cos públic o concurs" },
+        "other": { "title": "Altres", "desc": "Formació personal" }
+      },
+      "method": {
+        "read": { "title": "Llegeixo i subratllo", "desc": "Lectura passiva" },
+        "manual": { "title": "Resums i esquemes a mà", "desc": "Escriure per memoritzar" },
+        "digital": { "title": "Eines digitals", "desc": "Anki, Quizlet, Notion..." },
+        "mixed": { "title": "Combinació de tot", "desc": "Una mica de cada cosa" }
+      },
+      "minutes": {
+        "label": "{{min}} minuts",
+        "15": { "desc": "Hàbit diari mínim" },
+        "30": { "desc": "Constància òptima" },
+        "60": { "desc": "Preparació seriosa" },
+        "90": { "desc": "Intensiu / examen pròxim" }
+      },
+      "time": {
+        "morning": { "title": "Matí", "desc": "Cervell fresc" },
+        "afternoon": { "title": "Tarda", "desc": "Després de classe / feina" },
+        "evening": { "title": "Vespre", "desc": "Final del dia" },
+        "night": { "title": "Nit", "desc": "Quan tothom dorm" },
+        "flexible": { "title": "Flexible", "desc": "Sense hora fixa" }
+      },
+      "obstacle": {
+        "memory": { "title": "M'oblido del que estudio", "desc": "La ment es queda en blanc" },
+        "time": { "title": "Em falta temps", "desc": "El temari és inabastable" },
+        "focus": { "title": "Em costa concentrar-me", "desc": "Em distrec fàcilment" },
+        "motivation": { "title": "Em costa començar", "desc": "Procrastino sovint" },
+        "comprehension": { "title": "No acabo d'entendre", "desc": "Em perdo en els conceptes" }
+      }
+    },
+    "processing": {
+      "title": "Construint el teu perfil",
+      "p1": "Analitzant les teves respostes...",
+      "p2": "Calculant la teva corba d'oblit actual...",
+      "p3": "Generant el teu pla personalitzat..."
+    },
+    "results": {
+      "title": "El teu pla està llest",
+      "desc": "Calculat sobre les teves respostes, sense màgia.",
+      "deltaLabel": "Potencial de millora projectat",
+      "breakdown": "Per què aquest número?",
+      "projected": "Total projectat",
+      "viewPlan": "Veure pla complet",
+      "startNow": "Començar ara"
+    }
+  },
+  "improvement": {
+    "factors": {
+      "baseline": "Punt de partida (mètode actual)",
+      "srs": "Repetició espaiada (SRS)",
+      "feynman": "Tècnica Feynman amb IA",
+      "spacing": "Sessions curtes i espaiades",
+      "consistency": "Hàbit a hora fixa",
+      "focus": "Pomodoro + sons ambient",
+      "memory": "Targetes de memòria activa"
+    },
+    "reasons": {
+      "srs": "Quan reemplaces lectura passiva per recall actiu, la retenció dispara.",
+      "srsMixed": "Sistematitzar el SRS multiplica el que ja estàs fent.",
+      "feynman": "Explicar conceptes en veu alta detecta llacunes invisibles.",
+      "spacing": "Sessions curtes ben espaiades superen maratons.",
+      "consistency": "Estudiar a la mateixa hora ancora l'hàbit.",
+      "focus": "Pomodoro + soroll de fons redueix distraccions.",
+      "memory": "Targetes amb recall força el cervell a recordar."
+    }
+  },
+  "plan": {
+    "title": "El teu pla d'estudi",
+    "weeklyMinutes": "{{min}} min/setmana",
+    "modulesEssential": "Essencials",
+    "modulesRecommended": "Recomanats",
+    "modulesOptional": "Opcionals",
+    "dailyTemplate": "Estructura diària suggerida",
+    "milestones": {
+      "title": "Fites",
+      "week1Cards": "50 targetes revisades",
+      "month1Streak": "14 dies seguits estudiant",
+      "examDay": "Dia de l'examen",
+      "examMid": "Mig camí: 5 sessions Feynman"
+    },
+    "reasons": {
+      "cardsMemory": "El teu obstacle és la memòria — SRS és la solució directa.",
+      "feynmanMemory": "Explicar reforça el record.",
+      "feynmanComp": "Si no entens, explicar-ho t'obliga a comprendre.",
+      "cardsComp": "Targetes de concepte ajuden a fixar idees clau.",
+      "timerFocus": "Pomodoro trenca la sessió en blocs gestionables.",
+      "soundsFocus": "Soroll ambient amaga distraccions.",
+      "timerTime": "Pomodoro et fa rendir més en menys temps.",
+      "cardsTime": "Repassar 10 min al dia val per 1h setmanal.",
+      "timerMotiv": "25 min són curts: és més fàcil començar.",
+      "recoveryMotiv": "Recuperació activa evita el burnout.",
+      "languagesGoal": "El teu objectiu és l'idioma — el mòdul d'idiomes és el cor del pla.",
+      "examsGoal": "Practicar amb exàmens simulats prepara la nota."
+    },
+    "narrative": {
+      "title": "Personalitzat amb IA",
+      "generate": "Personalitzar amb IA",
+      "regenerate": "Regenerar"
+    },
+    "edit": "Editar perfil"
+  },
+  "profile": {
+    "title": "El teu perfil d'estudi",
+    "save": "Desar canvis",
+    "redo": "Refer onboarding",
+    "saved": "Perfil desat"
+  },
+  "dashboardPersonal": {
+    "heroPersonal": "Bon dia! Avui {{minutes}} min cap a {{goal}}.",
+    "todayPlan": "El teu pla d'avui",
+    "profileBanner": {
+      "title": "Completa el teu perfil",
+      "desc": "60 segons per un pla personalitzat.",
+      "cta": "Completar",
+      "dismiss": "Ara no"
     }
   }
 }

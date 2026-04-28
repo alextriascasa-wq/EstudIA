@@ -16,7 +16,9 @@
     "stats": "Stats",
     "social": "Social",
     "techniques": "Techniques",
-    "cloud": "Cloud Sync"
+    "cloud": "Cloud Sync",
+    "plan": "Plan",
+    "profile": "Profile"
   },
   "sidebar": {
     "level": "Level",
@@ -46,7 +48,9 @@
     "import": "Imported",
     "invalidFile": "Invalid file",
     "importSuccess": "Data loaded successfully",
-    "optional": "optional"
+    "optional": "optional",
+    "back": "Back",
+    "continue": "Continue"
   },
   "dashboard": {
     "heroTitle": "Welcome back! 👋",
@@ -564,6 +568,149 @@
       "challengeWon": "won a challenge!",
       "studySession": "studied for {{minutes}} minutes",
       "activity": "had some activity"
+    }
+  },
+  "onboarding": {
+    "phases": { "1": "Goal", "2": "Habits", "3": "Self-assessment" },
+    "steps": {
+      "goal": { "title": "What's your goal?", "desc": "We'll help you get there faster." },
+      "level": { "title": "What level are you at?", "desc": "We'll adjust pace and difficulty." },
+      "subjects": { "title": "Which subjects do you study?", "desc": "Add up to {{max}} subjects.", "placeholder": "e.g. Math" },
+      "examDate": { "title": "When is your exam?", "desc": "We'll work milestones backwards from this date.", "skip": "No fixed date" },
+      "method": { "title": "How do you usually study?", "desc": "Be honest." },
+      "minutes": { "title": "How much time per day?", "desc": "We'll match the plan to your availability." },
+      "time": { "title": "When do you prefer to study?", "desc": "A fixed hour anchors the habit." },
+      "obstacle": { "title": "What's your main obstacle?", "desc": "We'll detect where you lose performance." },
+      "retention": { "title": "How much do you remember?", "desc": "Rate yourself from 1 to 5.", "low": "I forget everything", "high": "I remember almost all" }
+    },
+    "options": {
+      "goal": {
+        "exam": { "title": "Pass exams", "desc": "University, high school..." },
+        "language": { "title": "Master a language", "desc": "Vocabulary + fluency" },
+        "cert": { "title": "Certifications", "desc": "IT, medicine, finance..." },
+        "university": { "title": "University studies", "desc": "Deep understanding" },
+        "other": { "title": "Other", "desc": "Learning for pleasure or curiosity" }
+      },
+      "level": {
+        "eso": { "title": "Middle school", "desc": "Lower secondary" },
+        "batx": { "title": "High school", "desc": "Upper secondary / SAT" },
+        "uni": { "title": "University", "desc": "Bachelor or master" },
+        "oposicio": { "title": "Civil service exams", "desc": "Public competitions" },
+        "other": { "title": "Other", "desc": "Personal training" }
+      },
+      "method": {
+        "read": { "title": "I read and highlight", "desc": "Passive reading" },
+        "manual": { "title": "Hand-written notes", "desc": "Write to memorize" },
+        "digital": { "title": "Digital tools", "desc": "Anki, Quizlet, Notion..." },
+        "mixed": { "title": "A mix of everything", "desc": "A bit of each" }
+      },
+      "minutes": {
+        "label": "{{min}} minutes",
+        "15": { "desc": "Daily minimum habit" },
+        "30": { "desc": "Optimal consistency" },
+        "60": { "desc": "Serious prep" },
+        "90": { "desc": "Intensive / exam soon" }
+      },
+      "time": {
+        "morning": { "title": "Morning", "desc": "Fresh brain" },
+        "afternoon": { "title": "Afternoon", "desc": "After class / work" },
+        "evening": { "title": "Evening", "desc": "End of day" },
+        "night": { "title": "Night", "desc": "When everyone sleeps" },
+        "flexible": { "title": "Flexible", "desc": "No fixed time" }
+      },
+      "obstacle": {
+        "memory": { "title": "I forget what I study", "desc": "My mind goes blank" },
+        "time": { "title": "I lack time", "desc": "Syllabus is overwhelming" },
+        "focus": { "title": "I can't concentrate", "desc": "Easily distracted" },
+        "motivation": { "title": "I struggle to start", "desc": "I procrastinate often" },
+        "comprehension": { "title": "I don't fully understand", "desc": "I get lost in the concepts" }
+      }
+    },
+    "processing": {
+      "title": "Building your profile",
+      "p1": "Analyzing your answers...",
+      "p2": "Calculating your current forgetting curve...",
+      "p3": "Generating your personalized plan..."
+    },
+    "results": {
+      "title": "Your plan is ready",
+      "desc": "Calculated from your answers, no magic.",
+      "deltaLabel": "Projected improvement potential",
+      "breakdown": "Why this number?",
+      "projected": "Projected total",
+      "viewPlan": "View full plan",
+      "startNow": "Start now"
+    }
+  },
+  "improvement": {
+    "factors": {
+      "baseline": "Baseline (your current method)",
+      "srs": "Spaced repetition (SRS)",
+      "feynman": "Feynman technique with AI",
+      "spacing": "Short, spaced sessions",
+      "consistency": "Habit at fixed hour",
+      "focus": "Pomodoro + ambient sounds",
+      "memory": "Active-recall flashcards"
+    },
+    "reasons": {
+      "srs": "Replacing passive reading with active recall skyrockets retention.",
+      "srsMixed": "Systematizing SRS multiplies what you already do.",
+      "feynman": "Explaining concepts aloud reveals invisible gaps.",
+      "spacing": "Short well-spaced sessions beat marathons.",
+      "consistency": "Studying at the same time anchors the habit.",
+      "focus": "Pomodoro + background noise cuts distractions.",
+      "memory": "Recall flashcards force the brain to remember."
+    }
+  },
+  "plan": {
+    "title": "Your study plan",
+    "weeklyMinutes": "{{min}} min/week",
+    "modulesEssential": "Essentials",
+    "modulesRecommended": "Recommended",
+    "modulesOptional": "Optional",
+    "dailyTemplate": "Suggested daily structure",
+    "milestones": {
+      "title": "Milestones",
+      "week1Cards": "50 cards reviewed",
+      "month1Streak": "14 days in a row",
+      "examDay": "Exam day",
+      "examMid": "Halfway: 5 Feynman sessions"
+    },
+    "reasons": {
+      "cardsMemory": "Your obstacle is memory — SRS is the direct fix.",
+      "feynmanMemory": "Explaining reinforces recall.",
+      "feynmanComp": "If you don't get it, explaining forces you to.",
+      "cardsComp": "Concept cards lock in key ideas.",
+      "timerFocus": "Pomodoro breaks the session into manageable blocks.",
+      "soundsFocus": "Ambient noise hides distractions.",
+      "timerTime": "Pomodoro makes you produce more in less time.",
+      "cardsTime": "10 min/day reviewing equals 1h weekly.",
+      "timerMotiv": "25 min is short: easier to start.",
+      "recoveryMotiv": "Active recovery prevents burnout.",
+      "languagesGoal": "Your goal is the language — the languages module is the plan's core.",
+      "examsGoal": "Practicing with mock exams prepares the score."
+    },
+    "narrative": {
+      "title": "Personalized with AI",
+      "generate": "Personalize with AI",
+      "regenerate": "Regenerate"
+    },
+    "edit": "Edit profile"
+  },
+  "profile": {
+    "title": "Your study profile",
+    "save": "Save changes",
+    "redo": "Redo onboarding",
+    "saved": "Profile saved"
+  },
+  "dashboardPersonal": {
+    "heroPersonal": "Good day! Today {{minutes}} min toward {{goal}}.",
+    "todayPlan": "Your plan today",
+    "profileBanner": {
+      "title": "Complete your profile",
+      "desc": "60 seconds for a personalized plan.",
+      "cta": "Complete",
+      "dismiss": "Not now"
     }
   }
 }
