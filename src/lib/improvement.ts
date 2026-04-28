@@ -1,8 +1,4 @@
-import type {
-  StudyProfile,
-  ImprovementBreakdown,
-  ImprovementFactor,
-} from '@/types';
+import type { StudyProfile, ImprovementBreakdown, ImprovementFactor } from '@/types';
 
 const BASELINE_BY_METHOD: Record<StudyProfile['method'], number> = {
   read: 15,
@@ -12,10 +8,7 @@ const BASELINE_BY_METHOD: Record<StudyProfile['method'], number> = {
 };
 
 export function computeImprovement(p: StudyProfile): ImprovementBreakdown {
-  const baseline = Math.max(
-    0,
-    BASELINE_BY_METHOD[p.method] + (p.selfRetention - 3) * 5,
-  );
+  const baseline = Math.max(0, BASELINE_BY_METHOD[p.method] + (p.selfRetention - 3) * 5);
 
   const factors: ImprovementFactor[] = [];
 

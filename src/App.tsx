@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Sidebar } from '@/components/Layout/Sidebar';
 import { ToastHost } from '@/components/ui/Toast';
 import { XPPopupHost } from '@/components/ui/XPPopup';
-import { OnboardingModal } from '@/components/ui/OnboardingModal';
+import { OnboardingWizard } from '@/components/onboarding/OnboardingWizard';
 import { BottomNav } from '@/components/Layout/BottomNav';
 
 const Dashboard = lazy(() =>
@@ -61,7 +61,7 @@ export default function App(): JSX.Element {
 
   return (
     <>
-      <OnboardingModal />
+      <OnboardingWizard />
       <Sidebar />
       <main className="mn">
         <Suspense fallback={<div className="route-loading" />}>
