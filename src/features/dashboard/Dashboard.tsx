@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
+import { useStudyProfile, usePlan } from '@/hooks/usePlan';
 import { xpInLevel } from '@/lib/xp';
 import { genStudyTasks } from '@/lib/exams';
 import { daysUntil, fmtDate, today } from '@/lib/date';
@@ -16,6 +17,14 @@ export function Dashboard(): JSX.Element {
   const patch = useAppStore((s) => s.patch);
   const save = useAppStore((s) => s.save);
   const addXP = useAppStore((s) => s.addXP);
+
+  const studyProfile = useStudyProfile();
+  const plan = usePlan();
+  const hasCompletedOnboarding = useAppStore((s) => s.hasCompletedOnboarding);
+  const profileBannerDismissed = useAppStore((s) => s.profileBannerDismissed);
+  const dismissProfileBanner = useAppStore((s) => s.dismissProfileBanner);
+  const showProfileBanner =
+    hasCompletedOnboarding && !studyProfile && !profileBannerDismissed;
 
   const tasks = useMemo(() => genStudyTasks(exams), [exams]);
   const todayTasks = useMemo(() => tasks.filter((t) => t.date === today()), [tasks]);
@@ -35,6 +44,50 @@ export function Dashboard(): JSX.Element {
 
   return (
     <div className="sec">
+      {showProfileBanner && (
+        <div className="c zeig dash-banner">
+          <div>
+            <strong>{t('dashboardPersonal.profileBanner.title')}</strong>
+            <p>{t('dashboardPersonal.profileBanner.desc')}</p>
+          </div>
+          <div className="dash-banner-actions">
+            <Link to="/perfil" className="bp">
+              {t('dashboardPersonal.profileBanner.cta')}
+            </Link>
+            <button className="bs" onClick={dismissProfileBanner}>
+              {t('dashboardPersonal.profileBanner.dismiss')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {plan && studyProfile && (
+        <div className="c zeig dash-today-plan">
+          <h3>{t('dashboardPersonal.todayPlan')}</h3>
+          <ul className="dash-plan-blocks">
+            {plan.dailyTemplate.map((b) => (
+              <li key={b.order}>
+                <Link to={`/${b.module}`} className="mc dash-plan-block">
+                  <span>{b.minutes} min</span>
+                  <strong>{t(`nav.${b.module}`)}</strong>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {plan && (
+        <div className="g3 dash-recs">
+          {plan.modules.slice(0, 3).map((m) => (
+            <Link key={m.module} to={`/${m.module}`} className="mc">
+              <strong>{t(`nav.${m.module}`)}</strong>
+              <span>{t(m.reasonKey)}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+
       {/* HERO */}
       <div>
         <h1 className="t-hero">{t('dashboard.heroTitle')}</h1>
